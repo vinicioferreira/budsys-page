@@ -1,4 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ModalContatoComponent } from './modal-contato/modal-contato.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -49,6 +51,8 @@ export class AppComponent implements OnInit {
   videoAtual = 0;
   currentVideoUrl = this.videos[this.videoAtual];
   isManualChange = false; // Flag para verificar se a troca é manual
+
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit() {
     this.iniciarCarrossel();
@@ -153,5 +157,12 @@ export class AppComponent implements OnInit {
   trocarImagemProxima() {
     this.currentImageIndex = (this.currentImageIndex + 1) % this.dashboardImages.length;
     this.currentDashboardImage = this.dashboardImages[this.currentImageIndex];
+  }
+
+  abrirModal() {
+    this.dialog.open(ModalContatoComponent, {
+      width: '400px',
+      disableClose: false
+    });
   }
 }
