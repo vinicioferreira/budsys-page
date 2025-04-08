@@ -7,7 +7,7 @@ body {
   background-color: #fff;
 }
 
-/* Estilo do cabeçalho */
+/* Responsividade para o Header */
 header {
   background: #084d6e;
   color: white;
@@ -16,6 +16,7 @@ header {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  margin: 0;
 }
 
 /* Logo no cabeçalho */
@@ -30,6 +31,7 @@ nav {
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
+  justify-content: center;
 }
 
 nav a {
@@ -41,6 +43,11 @@ nav a {
 
 nav a:hover {
   color: #FF743E;
+}
+
+nav .btn {
+  margin-top: 10px;
+  padding: 0.6rem 1.2rem;
 }
 
 /* Botões principais */
@@ -63,7 +70,7 @@ nav a:hover {
   color: #d9f2ff;
 }
 
-/* Seção hero (herói) */
+/* Hero Section */
 .hero {
   display: flex;
   flex-wrap: wrap;
@@ -90,13 +97,12 @@ nav a:hover {
 
 .hero-img img {
   border-radius: 10px;
-  max-width: 100%; /* Garante que a imagem ocupe 100% do contêiner sem ultrapassar */
-  max-height: 300px; /* Limita a altura máxima das imagens */
-  height: auto; /* Garante que a imagem mantenha a proporção */
-  margin-right: 60px; /* Adiciona uma margem à direita das imagens */
+  max-width: 100%;
+  max-height: 300px;
+  height: auto;
+  margin-right: 60px;
 }
 
-/* Estilo do botão principal CTA */
 .cta.big {
   font-size: 1rem;
   padding: 0.8rem 1.6rem;
@@ -317,10 +323,11 @@ footer {
 
 /* Estilo do vídeo */
 .video {
-  width: 50%; /* Diminui a largura do vídeo para 50% */
+  width: 70%; /* Diminui a largura do vídeo para 50% */
   max-width: 600px; /* Limita o tamanho máximo do vídeo */
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  height: auto; /* Garante que a altura do vídeo se ajuste à largura automaticamente */
 }
 
 /* Carrossel de vídeos */
@@ -400,5 +407,80 @@ footer {
   }
   100% {
     transform: translateX(-50%);
+  }
+}
+
+/* Responsividade - Para telas menores */
+@media (max-width: 768px) {
+  /* Header - alinhamento centralizado */
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .logo {
+    margin-bottom: 1rem;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 0.8rem;
+    justify-content: center;
+  }
+
+  nav .btn {
+    padding: 0.8rem 1.5rem;
+  }
+
+  /* Hero Section - Ajuste da imagem e texto */
+  .hero {
+    flex-direction: column;
+    padding: 3rem 1rem;
+    text-align: center;
+  }
+
+  .hero-text {
+    max-width: 100%;
+    margin-left: 0;
+    margin-top: 2rem;
+  }
+
+  .hero-img img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 2rem;
+  }
+
+  .cta.big {
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+  }
+}
+
+/* Ajustes para telas muito pequenas */
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+}
+
+/* Responsividade - Ajustes para telas menores */
+@media (max-width: 768px) {
+  .video {
+    width: 100%; /* O vídeo ocupará 100% da largura em telas menores */
+    max-width: 100%; /* Não vai ultrapassar 100% da largura da tela */
+  }
+}
+
+/* Ajustes para telas muito pequenas (ex: celulares) */
+@media (max-width: 480px) {
+  .video {
+    width: 100%; /* O vídeo ocupará 100% da largura da tela */
+    max-width: 100%; /* Garante que o vídeo ocupe toda a largura */
+    margin: 0 auto; /* Centraliza o vídeo */
   }
 }
