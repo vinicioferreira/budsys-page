@@ -15,7 +15,17 @@
     <a href="#contato" class="cta big">Comece agora</a>
   </div>
   <div class="hero-img">
-    <img src="assets/Dashbord_Budsys.png" width="500" />
+    <!-- Carrossel de imagens -->
+    <div class="carousel-container">
+      <!-- Botão para a imagem anterior -->
+      <button class="arrow left" (click)="trocarImagemAnterior()">&#10094;</button>
+
+      <!-- Imagem com controle de troca -->
+      <img [src]="currentDashboardImage" alt="Dashboard" width="500" />
+
+      <!-- Botão para a próxima imagem -->
+      <button class="arrow right" (click)="trocarImagemProxima()">&#10095;</button>
+    </div>
   </div>
 </section>
 

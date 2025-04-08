@@ -8,6 +8,18 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 export class AppComponent implements OnInit {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
 
+  // Lista de imagens do dashboard
+  dashboardImages: string[] = [
+    'assets/Dashbord_Budsys.png', // Imagens do dashboard
+    'assets/dashboard.png',
+    'assets/Logo_Nova_1.png'
+  ];
+
+  // Índice da imagem atual
+  currentImageIndex = 0;
+  // Imagem atual exibida
+  currentDashboardImage = this.dashboardImages[this.currentImageIndex];
+
   slideWidth = 33.33; // 3 cards por vez, cada um ocupa ~33.33%
   frasesGrupo1 = [
     'Cadastro rápido de clientes e fornecedores.',
@@ -40,6 +52,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.iniciarCarrossel();
+
+     // Troca a imagem automaticamente após 10 segundos
+    setInterval(() => {
+      this.trocarImagemProxima();
+    }, 10000); // Troca a imagem a cada 10 segundos
 
     // Substituir o setInterval por evento 'ended' para garantir a troca após o término
     setInterval(() => {
@@ -126,4 +143,15 @@ export class AppComponent implements OnInit {
     player.play(); // Inicia a reprodução do novo vídeo
   }
 
+  // Função para trocar para a imagem anterior
+  trocarImagemAnterior() {
+    this.currentImageIndex = (this.currentImageIndex - 1 + this.dashboardImages.length) % this.dashboardImages.length;
+    this.currentDashboardImage = this.dashboardImages[this.currentImageIndex];
+  }
+
+  // Função para trocar para a próxima imagem
+  trocarImagemProxima() {
+    this.currentImageIndex = (this.currentImageIndex + 1) % this.dashboardImages.length;
+    this.currentDashboardImage = this.dashboardImages[this.currentImageIndex];
+  }
 }
