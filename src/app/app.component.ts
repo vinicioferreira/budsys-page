@@ -8,7 +8,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 export class AppComponent implements OnInit {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
 
-  slideWidth = 33.33; // 3 cards por vez, cada um ocupa ~33.33%
+  slideWidth = 33.33; ///// 3 cards por vez, cada um ocupa ~33.33%
   frasesGrupo1 = [
     'Cadastro rápido de clientes e fornecedores.',
     'Ganhe tempo com automação de orçamentos.',
