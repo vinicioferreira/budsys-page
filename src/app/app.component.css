@@ -1,0 +1,65 @@
+.button {
+  width: auto;
+  outline: none;
+  border: 0;
+  background: #084d6e;
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 20px 30px;
+  border-radius: 3px;
+  box-shadow: 0px 0px 3px 1px #0a0a0a20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 5px 3px #0a0a0a40;
+    background-color: #FF743E;
+    transition: 0.3s;
+    color: var(--primary-color);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .button-content {
+    display: flex;
+    align-items: center;
+  }
+
+  mat-icon {
+    margin-right: 8px; /* Ajuste o valor conforme necessário */
+  }
+}
+
+/* Botões principais */
+.btn {
+  width: auto;
+  outline: none;
+  border: 0;
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 17px 25px;
+  border-radius: 3px;
+  box-shadow: 0px 0px 3px 1px #0a0a0a20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn.cta {
+  background: #d9f2ff;
+  border: none;
+  color: #FF743E;
+}
+
+.btn.cta:hover {
+  background: #FF743E;
+  color: #d9f2ff;
+}

@@ -298,11 +298,9 @@ footer {
   position: absolute;
   top: 50%;
   font-size: 30px;
-  color: white;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 15px;
-  border-radius: 50%;
-  transition: opacity 0.3s ease, background-color 0.3s ease;
+  color: black;
+  background: transparent;
+  transition: opacity 2.5s ease, background-color 0.3s ease;
   z-index: 10;
   transform: translateY(-50%);
 }
@@ -346,11 +344,9 @@ footer {
   position: absolute;
   top: 50%;
   font-size: 30px;
-  color: white;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 15px;
-  border-radius: 50%;
-  transition: opacity 0.3s ease, background-color 0.3s ease;
+  color: black;
+  background: transparent;
+  transition: opacity 2.5s ease, background-color 0.3s ease;
   z-index: 10;
   transform: translateY(-50%);
 }
@@ -474,7 +470,6 @@ footer {
     width: 100%; /* O vídeo ocupará 100% da largura em telas menores */
     max-width: 100%; /* Não vai ultrapassar 100% da largura da tela */
   }
-
 }
 
 /* Ajustes para telas muito pequenas (ex: celulares) */

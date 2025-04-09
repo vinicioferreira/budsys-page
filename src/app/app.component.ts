@@ -13,8 +13,8 @@ export class AppComponent implements OnInit {
   // Lista de imagens do dashboard
   dashboardImages: string[] = [
     'assets/Dashbord_Budsys.png', // Imagens do dashboard
-    'assets/dashboard.png',
-    'assets/Logo_Nova_1.png'
+    'assets/Budsys_Cronograma.png',
+    'assets/Budsys_Login.png'
   ];
 
   // Índice da imagem atual
