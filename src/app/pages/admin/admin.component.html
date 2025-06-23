@@ -9,7 +9,9 @@
       <!-- Id -->
       <ng-container matColumnDef="seqId">
         <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-        <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.seqId }}</td>
+        <td class="td-table" mat-cell *matCellDef="let cliente; let i = index">
+          {{ i + 1 + (paginator.pageIndex * paginator.pageSize) }}
+        </td>
       </ng-container>
 
       <!-- Nome -->
@@ -41,6 +43,14 @@
         <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Mensagem</th>
         <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.mensagem }}</td>
       </ng-container>
+
+      <ng-container matColumnDef="dataCadastro">
+        <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Data Cadastro</th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">
+          {{ cliente.dataCadastro?.toDate() | date:'dd/MM/yyyy HH:mm' }}
+        </td>
+      </ng-container>
+
 
       <!-- Ações (caso precise)
       <ng-container matColumnDef="actions">

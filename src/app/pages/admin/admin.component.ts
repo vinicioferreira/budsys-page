@@ -11,9 +11,9 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent {
-  displayedColumns: string[] = ['seqId', 'nome', 'email', 'telefone', 'empresa', 'mensagem'];
+  displayedColumns: string[] = ['seqId', 'nome', 'email', 'telefone', 'empresa', 'mensagem', 'dataCadastro'];
   dataSource = new MatTableDataSource<any>([]);
-  
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -24,8 +24,20 @@ export class AdminComponent {
     this.contatoService.listarContatos().subscribe(data => {
       this.dataSource.data = data;
       console.log('Clientes potenciais carregados:', data);
+
+      // Aplica o sort
+      this.dataSource.sort = this.sort;
+
+      // Define a ordenação inicial (dataCadastro desc)
+      this.sort.active = 'dataCadastro';
+      this.sort.direction = 'desc';
+      this.sort.sortChange.emit({
+        active: this.sort.active,
+        direction: this.sort.direction
+      });
     });
   }
+
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, getDocs } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, serverTimestamp } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 
 @Injectable({
@@ -10,7 +10,10 @@ export class ContatoService {
 
   async salvarContato(dados: any): Promise<void> {
     const contatosRef = collection(this.firestore, 'contatos');
-    const docRef = await addDoc(contatosRef, dados);
+    const docRef = await addDoc(contatosRef, {
+      ...dados,
+      dataCadastro: serverTimestamp()
+    });
     console.log('Contato salvo com ID:', docRef.id);
   }
 
