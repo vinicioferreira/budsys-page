@@ -1,0 +1,17 @@
+<button class="botao-primario" [disabled]="disabled">
+  <ng-container *ngIf="!isMobile">
+    <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
+    <span>{{ textButton }}</span>
+  </ng-container>
+
+  <ng-container *ngIf="isMobile">
+    <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
+    <span *ngIf="!icon">{{ shortText }}</span>
+  </ng-container>
+</button>
+
+
+
+
+
+

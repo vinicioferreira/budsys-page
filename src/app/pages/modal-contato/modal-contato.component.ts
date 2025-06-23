@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { ContatoService } from '../../services/contato.service';
 import emailjs from '@emailjs/browser';
 
 @Component({
@@ -13,7 +14,8 @@ export class ModalContatoComponent {
 
   constructor(
     public dialogRef: MatDialogRef<ModalContatoComponent>,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private contatoService: ContatoService
   ) {
     this.contatoForm = this.fb.group({
       nome: ['', Validators.required],
@@ -38,18 +40,29 @@ export class ModalContatoComponent {
         mensagem: this.contatoForm.value.mensagem || ''
       };
 
+      // Salva no Firestore usando o service
+      this.contatoService.salvarContato(templateParams)
+        .then(() => {
+          console.log('Contato salvo no Firestore');
+        })
+        .catch((error) => {
+          console.error('Erro ao salvar no Firestore:', error);
+          alert('Erro ao salvar no sistema. Verifique sua conexão.');
+        });
+
+/*      // Envia email
       emailjs.send(
-        'service_960gg1r',               // ID do serviço (EmailJS)
-        'template_w60nnqq',             // ID do template
+        'service_960gg1r',
+        'template_w60nnqq',
         templateParams,
-        'vowCrOusn6wX9y7rC'             // Public Key (API key)
+        'vowCrOusn6wX9y7rC'
       ).then(() => {
         alert('Email enviado com sucesso!');
         console.log('Dados enviados', templateParams);
         this.dialogRef.close();
 
         // Envia para o Make via Webhook
-        fetch('https://hook.us2.make.com/dje1pthoad8p8lajsgjls5xmvm5d4hv7', {
+        fetch('https://hook.us2.make.com/xwmqyb6mv6jqqlszix0k6ivw6yjz0w7m', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -61,6 +74,6 @@ export class ModalContatoComponent {
         console.error('Erro ao enviar:', error);
         alert('Erro ao enviar email. Tente novamente.');
       });
-    }
+*/   }
   }
 }

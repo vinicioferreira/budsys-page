@@ -1,12 +1,12 @@
 export const environment = {
   production: true,
   firebase: {
-    apiKey: "AIzaSyAvT0mxUxx7FXZ5QKmPhTPSnEY4B-O0610",
-    authDomain: "seltcom-4b965.firebaseapp.com",
-    projectId: "seltcom-4b965",
-    storageBucket: "seltcom-4b965.appspot.com",
-    messagingSenderId: "775100171428",
-    appId: "1:775100171428:web:2e3d651eee10c2d680d231",
-    measurementId: "G-5B4M5ECF1W"
+    apiKey: "AIzaSyCHCNoGJuYD4FfgrB_V-C-wPUz9muV-95M",
+    authDomain: "budsys.firebaseapp.com",
+    projectId: "budsys",
+    storageBucket: "budsys.firebasestorage.app",
+    messagingSenderId: "233549792296",
+    appId: "1:233549792296:web:95a21e7933d70ae6d6e11d",
+    measurementId: "G-5VY1SPKWPZ"
   }
 };

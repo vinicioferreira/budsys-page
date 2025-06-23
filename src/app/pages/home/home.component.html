@@ -1,0 +1,124 @@
+<header>
+  <li class="system-name" routerLink="/home">
+    <img src="assets/favicon_3.ico" width="40" style="margin-right: 10px;" />
+    Bud<span>Sys</span>
+  </li>
+  <nav>
+
+    <button class="btn cta" (click)="abrirModal()">Testar grátis</button>
+    <button class="btn cta" routerLink="/admin">Acesso Admin</button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <h1>Crie orçamentos rápidos e precisos para suas obras.</h1>
+    <p>Ganhe tempo e profissionalismo com o BudSys.</p>
+    <button class="button" (click)="abrirModal()">Comece agora</button>
+  </div>
+  <div class="hero-img">
+    <!-- Carrossel de imagens -->
+    <div class="carousel-container">
+      <!-- Botão para a imagem anterior -->
+      <button class="arrow left" (click)="trocarImagemAnterior()">&#10094;</button>
+
+      <!-- Imagem com controle de troca -->
+      <img [src]="currentDashboardImage" alt="Dashboard" width="500" />
+
+      <!-- Botão para a próxima imagem -->
+      <button class="arrow right" (click)="trocarImagemProxima()">&#10095;</button>
+    </div>
+  </div>
+</section>
+
+<section class="video-section">
+  <h2>Veja como o sistema pode otimizar seu trabalho</h2> <!-- Título que você solicitou -->
+  <div class="video-container">
+
+    <!-- Botão de navegação anterior -->
+    <button class="arrow left" (click)="videoAnterior()">&#10094;</button>
+
+    <!-- Vídeo com controle de troca após o término -->
+    <video #videoPlayer
+           [src]="currentVideoUrl"
+           controls
+           (ended)="trocarVideo()"
+           class="video">
+    </video>
+
+    <!-- Botão de navegação próximo -->
+    <button class="arrow right" (click)="proximoVideo()">&#10095;</button>
+  </div>
+</section>
+
+<section id="funcionalidades">
+  <h2>Funcionalidades principais</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="icon">⚙️</div>
+      <h3>Automação de orçamentos</h3>
+      <p>Preenchimento automático de serviços baseado em uma lista de materiais cadastrados, otimizando o tempo de criação de orçamentos e eliminando erros manuais.</p>
+    </div>
+    <div class="card">
+      <div class="icon">📈</div>
+      <h3>Dashboard em tempo real</h3>
+      <p>Acompanhe a percentagem de orçamentos aprovados, reprovados e em análise. Visualize também as 10 principais empresas com mais orçamentos aprovados, classificados por valor total aprovado.</p>
+    </div>
+    <div class="card">
+      <div class="icon">⏳</div>
+      <h3>Cronograma automatizado</h3>
+      <p>O sistema calcula automaticamente os tempos das tarefas e gera um cronograma preliminar da obra, deixando apenas o ajuste do início de cada tarefa a ser defindio pelo orçamentista.</p>
+    </div>
+  </div>
+</section>
+
+<section id="diferenciais">
+  <h2>Por que usar o BudSys?</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="icon">⏰</div>
+      <h3>Economia de Tempo</h3>
+      <p>Com o BudSys, o seu tempo é priorizado. Automatize processos, minimize tarefas repetitivas e evite erros humanos. A plataforma facilita a criação de orçamentos e cronogramas, para que você gaste menos tempo em detalhes e mais tempo gerenciando seu projeto de forma estratégica.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔢</div>
+      <h3>Cálculos Automatizados e Precisos</h3>
+      <p>Todos os cálculos são realizados automaticamente, padronizando os processos e garantindo maior precisão no valor final da sua obra. O sistema elimina erros e otimiza a precisão, proporcionando um orçamento confiável e seguro.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🖥️</div>
+      <h3>Sistema Intuitivo e de Fácil Uso</h3>
+      <p>Não precisa de treinamentos longos. O sistema é totalmente intuitivo, permitindo que qualquer pessoa com conhecimento básico da sua empresa consiga utilizá-lo com facilidade, sem complicações.</p>
+    </div>
+  </div>
+</section>
+
+<section id="destaques" class="slider-section">
+  <div class="slider-container">
+    <div
+      class="slider"
+      [style.transform]="'translateX(-' + currentSlide * slideWidth + '%)'"
+      [style.transition]="transitionStyle"
+    >
+      <div class="card-slide" *ngFor="let frase of frasesComDuplicado">
+        <div class="card destaque">
+          <p>{{ frase }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contato">
+  <h2>Comece agora mesmo</h2>
+  <p>Fale com a gente no WhatsApp e receba um teste gratuito.</p>
+  <a href="https://wa.me/5535991569148?text=Oi%21%20Quero%20conhecer%20melhor%20o%20BudSys.%20Pode%20me%20ajudar%20com%20uma%20demonstra%C3%A7%C3%A3o%20ou%20mais%20informa%C3%A7%C3%B5es%3F
+" class="btn-whatsapp" target="_blank">
+    💬 Falar no WhatsApp
+  </a>
+</section>
+
+<footer>
+  <p>&copy; 2025 BudSys – Sistema de Gestão</p>
+</footer>
+

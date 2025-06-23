@@ -1,0 +1,69 @@
+<app-menu></app-menu>
+
+<div class="pt-3 main-content">
+  <h2>Clientes Potenciais</h2>
+
+  <div class="table-container mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <!-- Id -->
+      <ng-container matColumnDef="seqId">
+        <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.seqId }}</td>
+      </ng-container>
+
+      <!-- Nome -->
+      <ng-container matColumnDef="nome">
+        <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.nome }}</td>
+      </ng-container>
+
+      <!-- Email -->
+      <ng-container matColumnDef="email">
+        <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.email }}</td>
+      </ng-container>
+
+      <!-- Telefone -->
+      <ng-container matColumnDef="telefone">
+        <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Telefone</th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.telefone }}</td>
+      </ng-container>
+
+      <!-- Empresa -->
+      <ng-container matColumnDef="empresa">
+        <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.empresa }}</td>
+      </ng-container>
+
+      <!-- Mensagem -->
+      <ng-container matColumnDef="mensagem">
+        <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Mensagem</th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.mensagem }}</td>
+      </ng-container>
+
+      <!-- Ações (caso precise)
+      <ng-container matColumnDef="actions">
+        <th class="th-table" mat-header-cell *matHeaderCellDef></th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">
+          <mat-icon class="icone-tabela" (click)="visualizarCliente(cliente)">visibility</mat-icon>
+          <mat-icon class="icone-tabela" (click)="editarCliente(cliente)">edit</mat-icon>
+          <mat-icon class="icone-tabela-delete" (dblclick)="deletarCliente(cliente.id)">delete</mat-icon>
+        </td>
+      </ng-container> -->
+
+      <!-- Cabeçalho e linhas -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Linha quando não há dados -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="6">Nenhum cliente encontrado</td>
+      </tr>
+
+    </table>
+
+    <mat-paginator class="shadow-sm" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons aria-label="Selecione clientes por página"></mat-paginator>
+  </div>
+
+</div>

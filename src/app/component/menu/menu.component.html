@@ -1,0 +1,60 @@
+<!-- Botão de menu para dispositivos menores -->
+<button class="menu-toggle" (click)="toggleMenu()">
+  <mat-icon>{{ menuVisible ? 'close' : 'menu' }}</mat-icon>
+</button>
+
+<!-- O menu lateral -->
+<nav class="sidemenu" [ngClass]="{'visible': menuVisible}">
+  <ul>
+    <li class="system-name" routerLink="/home">
+      <img src="../../../assets/Logo_Nova_1.png" height="70px" class="logo">
+      Bud<span>Sys</span>
+    </li>
+
+    <p class="nome-empresa"> {{ nomeEmpresa }}</p>
+   <!-- <p class="nome-usuario"> Usuário: {{ nomeUsuario }}</p> -->
+
+    <li routerLink="/home" (click)="selectMenu()"><mat-icon>dashboard</mat-icon><span>Dashboard</span></li>
+    <li routerLink="/crud" (click)="selectMenu()"><mat-icon>person</mat-icon><span>Usuários</span></li>
+    <li routerLink="/fornecedores" (click)="selectMenu()"><mat-icon>handshake</mat-icon><span>Fornecedores</span></li>
+    <li routerLink="/clientes" (click)="selectMenu()"><mat-icon>group</mat-icon><span>Clientes</span></li>
+
+    <!-- Cargos e Salários com Submenu Expansível -->
+    <li (click)="toggleCargos()">
+      <mat-icon>control_camera</mat-icon><span>Cargos e Salários</span>
+      <mat-icon *ngIf="!isCargosExpanded">expand_more</mat-icon>
+      <mat-icon *ngIf="isCargosExpanded">expand_less</mat-icon>
+    </li>
+    <ul *ngIf="isCargosExpanded" class="submenu-no-indent">
+      <li routerLink="/cargos" (click)="selectMenu()">
+        <mat-icon>control_camera</mat-icon><span>Cargos e Salários</span>
+      </li>
+      <li routerLink="/encargos-trabalhistas" (click)="selectMenu()">
+        <mat-icon>percent</mat-icon><span>Encargos trabalhistas</span>
+      </li>
+    </ul>
+
+    <li routerLink="/servicos" (click)="selectMenu()"><mat-icon>design_services</mat-icon><span>Serviços</span></li>
+    <li routerLink="/produtos" (click)="selectMenu()"><mat-icon>production_quantity_limits</mat-icon><span>Produtos</span></li>
+
+    <li routerLink="/orcamentos" (click)="selectMenu()"><mat-icon>request_quote</mat-icon><span>Orçamentos</span></li>
+
+    <!-- Orçamentos com Submenu Expansível
+    <li (click)="toggleOrcamentos()">
+      <mat-icon>request_quote</mat-icon><span>Orçamentos</span>
+      <mat-icon *ngIf="!isOrcamentosExpanded">expand_more</mat-icon>
+      <mat-icon *ngIf="isOrcamentosExpanded">expand_less</mat-icon>
+    </li>
+    <ul *ngIf="isOrcamentosExpanded" class="submenu-no-indent">
+      <li routerLink="/orcamentos" (click)="selectMenu()">
+        <mat-icon>request_quote</mat-icon><span>Orçamentos</span>
+      </li>
+      <li routerLink="/novoOrcamento" (click)="selectMenu()">
+        <mat-icon>note_add</mat-icon><span>Novo Orçamento</span>
+      </li>
+    </ul> -->
+
+    <li routerLink="/configuracoes" (click)="selectMenu()"><mat-icon>settings</mat-icon><span>Configurações</span></li>
+    <li routerLink="/login" class="logout" (click)="logout()"><mat-icon>logout</mat-icon><span>Sair</span></li>
+  </ul>
+</nav>
