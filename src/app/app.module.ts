@@ -26,6 +26,7 @@ import { CadenciaComponent } from './pages/cadencias/cadencia.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { ModalCadastroCadenciaComponent } from './pages/cadencias/modal-cadastro-cadencia/modal-cadastro-cadencia.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     HomeComponent,
     AgendaComponent,
     CadenciaComponent,
+    ModalCadastroCadenciaComponent,
     // se tiver outros, adicione também
   ],
   imports: [

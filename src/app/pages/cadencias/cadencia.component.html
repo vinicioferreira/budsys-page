@@ -3,59 +3,20 @@
 <div class="container-fluid">
   <h2><mat-icon>calendar_today</mat-icon> Cadências de Vendas</h2>
 
-  <section class="nova-cadencia">
-    <h3>Nova Cadência</h3>
-
-    <div class="form-header">
-      <mat-form-field>
-        <input matInput placeholder="Nome da Cadência" [(ngModel)]="cadencia.nome">
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput placeholder="Descrição" [(ngModel)]="cadencia.descricao">
-      </mat-form-field>
-    </div>
-
-    <div class="etapas">
-      <div *ngFor="let etapa of cadencia.etapas; let i = index" class="etapa-card">
-        <mat-card>
-          <mat-card-title>Etapa {{ i + 1 }}</mat-card-title>
-          <mat-card-content>
-            <mat-form-field>
-              <input matInput type="number" placeholder="Dia" [(ngModel)]="etapa.dia">
-            </mat-form-field>
-
-            <mat-form-field>
-              <input matInput placeholder="Canal" [(ngModel)]="etapa.canal">
-            </mat-form-field>
-
-            <mat-form-field>
-              <input matInput placeholder="Mensagem" [(ngModel)]="etapa.mensagem">
-            </mat-form-field>
-
-            <button mat-icon-button color="warn" (click)="removerEtapa(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-
-    <div class="botoes">
-      <button mat-stroked-button color="primary" (click)="adicionarEtapa()">Adicionar Etapa</button>
-      <button mat-raised-button color="accent" (click)="salvar()">Salvar Cadência</button>
-    </div>
-  </section>
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="abrirModalCadastro()">Nova Cadência</button>
+  </div>
 
   <section class="cadencias-salvas">
-    <h3>Cadências Salvas</h3>
-
     <mat-accordion>
       <mat-expansion-panel *ngFor="let c of cadenciasSalvas">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{ c.nome }} - {{ c.descricao }}
+            {{ c.nome }}
           </mat-panel-title>
+          <mat-panel-description>
+            {{ c.descricao }}
+          </mat-panel-description>
         </mat-expansion-panel-header>
 
         <ul>

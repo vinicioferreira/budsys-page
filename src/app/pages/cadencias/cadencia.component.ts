@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Cadencia, Etapa } from '../../interfaces/cadencia';
-import { CadenciaService } from '../../services/cadencias.service';
+import { Cadencia } from '../../interfaces/cadencia';
+import { CadenciaService } from '../../services/cadencia.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalCadastroCadenciaComponent } from '../cadencias/modal-cadastro-cadencia/modal-cadastro-cadencia.component';
 
 @Component({
   selector: 'app-cadencias',
@@ -8,48 +10,32 @@ import { CadenciaService } from '../../services/cadencias.service';
   styleUrls: ['./cadencia.component.scss']
 })
 export class CadenciaComponent implements OnInit {
-  cadencia: Cadencia = {
-    nome: '',
-    descricao: '',
-    etapas: []
-  };
-
   cadenciasSalvas: Cadencia[] = [];
 
-  constructor(private cadenciaService: CadenciaService) {}
+  constructor(
+    private cadenciaService: CadenciaService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.carregarCadencias();
   }
 
-  adicionarEtapa() {
-    const novaEtapa: Etapa = {
-      dia: 1,
-      canal: '',
-      mensagem: ''
-    };
-    this.cadencia.etapas.push(novaEtapa);
-  }
-
-  removerEtapa(index: number) {
-    this.cadencia.etapas.splice(index, 1);
-  }
-
-  async salvar() {
-    try {
-      await this.cadenciaService.salvarCadencia(this.cadencia);
-      alert('Cadência salva com sucesso!');
-      this.cadencia = { nome: '', descricao: '', etapas: [] };
-      this.carregarCadencias();  // Atualiza lista após salvar
-    } catch (error) {
-      console.error('Erro ao salvar cadência:', error);
-      alert('Erro ao salvar cadência');
-    }
-  }
-
   carregarCadencias() {
     this.cadenciaService.listarCadencias().subscribe(cadencias => {
       this.cadenciasSalvas = cadencias;
+    });
+  }
+
+  abrirModalCadastro() {
+    const dialogRef = this.dialog.open(ModalCadastroCadenciaComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(resultado => {
+      if (resultado) {
+        this.carregarCadencias(); // Recarrega lista se salvou
+      }
     });
   }
 }
