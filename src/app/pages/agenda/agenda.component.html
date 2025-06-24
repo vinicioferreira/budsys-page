@@ -1,0 +1,34 @@
+<app-menu></app-menu>
+
+<div class="agenda-header">
+  <h2><mat-icon>calendar_today</mat-icon> Agenda de Clientes</h2>
+  <div class="view-buttons">
+    <button mat-button (click)="view = 'month'">Mês</button>
+    <button mat-button (click)="view = 'week'">Semana</button>
+    <button mat-button (click)="view = 'day'">Dia</button>
+  </div>
+</div>
+
+<mwl-calendar-month-view
+  *ngIf="view === 'month'"
+  [viewDate]="viewDate"
+  [events]="events"
+  (eventClicked)="handleEvent($event.event)">
+</mwl-calendar-month-view>
+
+<mwl-calendar-week-view
+  *ngIf="view === 'week'"
+  [viewDate]="viewDate"
+  [events]="events"
+  (eventClicked)="handleEvent($event.event)">
+</mwl-calendar-week-view>
+
+<mwl-calendar-day-view
+  *ngIf="view === 'day'"
+  [viewDate]="viewDate"
+  [events]="events"
+  (eventClicked)="handleEvent($event.event)">
+</mwl-calendar-day-view>
+
+
+

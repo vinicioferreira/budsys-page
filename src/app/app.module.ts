@@ -20,6 +20,9 @@ import { ModalContatoComponent } from './pages/modal-contato/modal-contato.compo
 import { AdminComponent } from './pages/admin/admin.component';
 import { MenuComponent } from './component/menu/menu.component';
 import { HomeComponent } from './pages/home/home.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { AgendaComponent } from './pages/agenda/agenda.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,8 @@ import { HomeComponent } from './pages/home/home.component';
     ModalContatoComponent,
     AdminComponent,
     MenuComponent,
-    HomeComponent
+    HomeComponent,
+    AgendaComponent
     // se tiver outros, adicione também
   ],
   imports: [
@@ -44,10 +48,13 @@ import { HomeComponent } from './pages/home/home.component';
     MatFormFieldModule,
     MatInputModule,
     MatDialogModule,
-    MatButtonModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
