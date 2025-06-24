@@ -13,6 +13,7 @@
   <div class="add-activity-form">
     <input type="text" placeholder="Título da atividade" [(ngModel)]="newTitle">
     <input type="date" [(ngModel)]="newDateStr">
+    <input type="time" [(ngModel)]="newTimeStr">
     <button mat-raised-button color="primary" (click)="onAddActivity()">Adicionar</button>
   </div>
 
