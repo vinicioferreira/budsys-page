@@ -1,36 +1,69 @@
 <app-menu></app-menu>
+
 <div class="container-fluid">
   <h2><mat-icon>calendar_today</mat-icon> Cadências de Vendas</h2>
-  <h3>Nova Cadência</h3>
 
-  <mat-form-field class="full-width">
-    <input matInput placeholder="Nome da Cadência" [(ngModel)]="cadencia.nome">
-  </mat-form-field>
+  <section class="nova-cadencia">
+    <h3>Nova Cadência</h3>
 
-  <mat-form-field class="full-width">
-    <input matInput placeholder="Descrição" [(ngModel)]="cadencia.descricao">
-  </mat-form-field>
+    <div class="form-header">
+      <mat-form-field>
+        <input matInput placeholder="Nome da Cadência" [(ngModel)]="cadencia.nome">
+      </mat-form-field>
 
-  <div *ngFor="let etapa of cadencia.etapas; let i = index">
-    <mat-card class="mb-2">
-      <mat-card-content>
-        <mat-form-field>
-          <input matInput type="number" placeholder="Dia" [(ngModel)]="etapa.dia">
-        </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Descrição" [(ngModel)]="cadencia.descricao">
+      </mat-form-field>
+    </div>
 
-        <mat-form-field>
-          <input matInput placeholder="Canal" [(ngModel)]="etapa.canal">
-        </mat-form-field>
+    <div class="etapas">
+      <div *ngFor="let etapa of cadencia.etapas; let i = index" class="etapa-card">
+        <mat-card>
+          <mat-card-title>Etapa {{ i + 1 }}</mat-card-title>
+          <mat-card-content>
+            <mat-form-field>
+              <input matInput type="number" placeholder="Dia" [(ngModel)]="etapa.dia">
+            </mat-form-field>
 
-        <mat-form-field>
-          <input matInput placeholder="Mensagem" [(ngModel)]="etapa.mensagem">
-        </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Canal" [(ngModel)]="etapa.canal">
+            </mat-form-field>
 
-        <button mat-button color="warn" (click)="removerEtapa(i)">Remover</button>
-      </mat-card-content>
-    </mat-card>
-  </div>
+            <mat-form-field>
+              <input matInput placeholder="Mensagem" [(ngModel)]="etapa.mensagem">
+            </mat-form-field>
 
-    <button mat-stroked-button color="accent" (click)="adicionarEtapa()">Adicionar Etapa</button>
-    <button mat-raised-button color="primary" (click)="salvar()">Salvar Cadência</button>
+            <button mat-icon-button color="warn" (click)="removerEtapa(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="botoes">
+      <button mat-stroked-button color="primary" (click)="adicionarEtapa()">Adicionar Etapa</button>
+      <button mat-raised-button color="accent" (click)="salvar()">Salvar Cadência</button>
+    </div>
+  </section>
+
+  <section class="cadencias-salvas">
+    <h3>Cadências Salvas</h3>
+
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let c of cadenciasSalvas">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ c.nome }} - {{ c.descricao }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <ul>
+          <li *ngFor="let e of c.etapas">
+            <strong>Dia {{ e.dia }}</strong> | Canal: {{ e.canal }} | Mensagem: {{ e.mensagem }}
+          </li>
+        </ul>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </section>
 </div>

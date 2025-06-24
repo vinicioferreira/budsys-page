@@ -25,6 +25,7 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
 import { CadenciaComponent } from './pages/cadencias/cadencia.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { MatCardModule } from '@angular/material/card';
     MatPaginatorModule,
     MatSortModule,
     MatCardModule,
+    MatExpansionModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory

@@ -4,4 +4,40 @@
   transition: margin-left 0.3s ease; /* opcional para suavizar animação se o menu recolher/expandir */
 }
 
+.container {
+  padding: 16px;
+}
 
+.nova-cadencia, .cadencias-salvas {
+  margin-bottom: 24px;
+}
+
+.form-header {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.etapas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.etapa-card mat-card {
+  padding: 12px;
+}
+
+.botoes {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+}
+
+mat-form-field {
+  width: 200px;
+}
+
+mat-expansion-panel {
+  margin-bottom: 8px;
+}
