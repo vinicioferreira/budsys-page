@@ -9,26 +9,32 @@
   </div>
 </div>
 
-<mwl-calendar-month-view
-  *ngIf="view === 'month'"
-  [viewDate]="viewDate"
-  [events]="events"
-  (eventClicked)="handleEvent($event.event)">
-</mwl-calendar-month-view>
+<div class="calendar-container">
+  <div class="add-activity-form">
+    <input type="text" placeholder="Título da atividade" [(ngModel)]="newTitle">
+    <input type="date" [(ngModel)]="newDateStr">
+    <button mat-raised-button color="primary" (click)="onAddActivity()">Adicionar</button>
+  </div>
 
-<mwl-calendar-week-view
-  *ngIf="view === 'week'"
-  [viewDate]="viewDate"
-  [events]="events"
-  (eventClicked)="handleEvent($event.event)">
-</mwl-calendar-week-view>
+  <mwl-calendar-month-view
+    *ngIf="view === 'month'"
+    [viewDate]="viewDate"
+    [events]="events"
+    (eventClicked)="handleEvent($event.event)"
+    (dayClicked)="onDayClicked($event.day)">
+  </mwl-calendar-month-view>
 
-<mwl-calendar-day-view
-  *ngIf="view === 'day'"
-  [viewDate]="viewDate"
-  [events]="events"
-  (eventClicked)="handleEvent($event.event)">
-</mwl-calendar-day-view>
+  <mwl-calendar-week-view
+    *ngIf="view === 'week'"
+    [viewDate]="viewDate"
+    [events]="events"
+    (eventClicked)="handleEvent($event.event)">
+  </mwl-calendar-week-view>
 
-
-
+  <mwl-calendar-day-view
+    *ngIf="view === 'day'"
+    [viewDate]="viewDate"
+    [events]="events"
+    (eventClicked)="handleEvent($event.event)">
+  </mwl-calendar-day-view>
+</div>
