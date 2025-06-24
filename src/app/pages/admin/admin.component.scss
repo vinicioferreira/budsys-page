@@ -1,3 +1,9 @@
+.main-content {
+  margin-left: 260px;
+  padding: 20px; /* Opcional: para dar respiro interno */
+  transition: margin-left 0.3s ease; /* Opcional: suave se o menu mudar */
+}
+
 .float-end {
   margin-right: 8px;
 }

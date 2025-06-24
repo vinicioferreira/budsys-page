@@ -11,7 +11,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { AppRoutingModule } from './app-routing.module';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
@@ -23,6 +22,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { AgendaComponent } from './pages/agenda/agenda.component';
+import { CadenciaComponent } from './pages/cadencias/cadencia.component';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
     AdminComponent,
     MenuComponent,
     HomeComponent,
-    AgendaComponent
+    AgendaComponent,
+    CadenciaComponent,
     // se tiver outros, adicione também
   ],
   imports: [
@@ -51,6 +54,7 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatCardModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory

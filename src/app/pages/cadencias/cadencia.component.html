@@ -1,0 +1,36 @@
+<app-menu></app-menu>
+<div class="container-fluid">
+  <h2><mat-icon>calendar_today</mat-icon> Cadências de Vendas</h2>
+  <h3>Nova Cadência</h3>
+
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Nome da Cadência" [(ngModel)]="cadencia.nome">
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Descrição" [(ngModel)]="cadencia.descricao">
+  </mat-form-field>
+
+  <div *ngFor="let etapa of cadencia.etapas; let i = index">
+    <mat-card class="mb-2">
+      <mat-card-content>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Dia" [(ngModel)]="etapa.dia">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Canal" [(ngModel)]="etapa.canal">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Mensagem" [(ngModel)]="etapa.mensagem">
+        </mat-form-field>
+
+        <button mat-button color="warn" (click)="removerEtapa(i)">Remover</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+    <button mat-stroked-button color="accent" (click)="adicionarEtapa()">Adicionar Etapa</button>
+    <button mat-raised-button color="primary" (click)="salvar()">Salvar Cadência</button>
+</div>

@@ -1,3 +1,374 @@
+/* Estilo do cabeçalho da home */
+header {
+  background: #084d6e;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #FF743E;
+}
+
+nav .btn {
+  margin-top: 10px;
+  padding: 0.6rem 1.2rem;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.btn.cta {
+  background: #d9f2ff;
+  border: none;
+  color: #FF743E;
+}
+
+.btn.cta:hover {
+  background: #FF743E;
+  color: #d9f2ff;
+}
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 2rem;
+  background: #f4f7f9;
+}
+
+.hero-text {
+  max-width: 500px;
+  margin-left: 250px;
+}
+
+.hero h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.hero-img img {
+  border-radius: 10px;
+  max-width: 100%;
+  max-height: 300px;
+  height: auto;
+  margin-right: 60px;
+}
+
+.cta.big {
+  font-size: 1rem;
+  padding: 0.8rem 1.6rem;
+  background: #003850;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.carousel-container {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+
+.arrow {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  font-size: 30px;
+  color: black;
+  background: transparent;
+  transition: opacity 2.5s ease, background-color 0.3s ease;
+  z-index: 10;
+  transform: translateY(-50%);
+}
+
+.carousel-container:hover .arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hero-img .arrow.left {
+  left: -50px;
+}
+
+.hero-img .arrow.right {
+  right: 10px;
+}
+
+.video-section {
+  padding: 4rem 2rem;
+  background: #fff;
+}
+
+.video-section h2 {
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  color: #003850;
+  text-align: center;
+}
+
+.video-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 900px;
+  margin: 40px auto;
+}
+
+.video {
+  width: 70%;
+  max-width: 600px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  height: auto;
+}
+
+.video-section .arrow.left {
+  left: 80px;
+}
+
+.video-section .arrow.right {
+  right: 80px;
+}
+
+#funcionalidades,
+#diferenciais {
+  background-color: #f4f7fa;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+#funcionalidades h2,
+#diferenciais h2 {
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  color: #003850;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 280px;
+  min-width: 230px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  color: #003850;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.slider-section {
+  background: #f4f7fa;
+  padding: 4rem 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.slider-container {
+  width: 100%;
+  max-width: 1100px;
+  overflow: hidden;
+}
+
+.slider {
+  display: flex;
+  animation: scrollCards 20s linear infinite;
+}
+
+.card-slide {
+  flex: 0 0 auto;
+  min-width: 260px;
+  margin: 0 80px;
+}
+
+@keyframes scrollCards {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+#contato {
+  background-color: #ffffff;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+#contato h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #003850;
+}
+
+#contato p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+.btn-whatsapp {
+  background-color: #25D366;
+  color: white;
+  padding: 0.8rem 1.6rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.3s;
+}
+
+.btn-whatsapp:hover {
+  background-color: #1ebe5d;
+}
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  background: #eaeaea;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .logo {
+    margin-bottom: 1rem;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 0.8rem;
+    justify-content: center;
+  }
+
+  .hero {
+    flex-direction: column;
+    padding: 3rem 1rem;
+    text-align: center;
+  }
+
+  .hero-text {
+    max-width: 100%;
+    margin-left: 0;
+    margin-top: 2rem;
+  }
+
+  .hero-img img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 2rem;
+  }
+
+  .video {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .video-section .arrow.left {
+    left: 10px;
+  }
+
+  .video-section .arrow.right {
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.8rem 1.4rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .cta.big {
+    width: 100%;
+    font-size: 1rem;
+    padding: 1rem 0;
+  }
+}
+
 .button {
   width: auto;
   outline: none;
