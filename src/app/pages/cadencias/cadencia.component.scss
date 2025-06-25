@@ -38,6 +38,42 @@ mat-form-field {
   width: 200px;
 }
 
+.actions {
+  margin-bottom: 15px;
+}
+
+.texto-etapa {
+  flex: 1;
+  padding-right: 10px;
+}
+
 mat-expansion-panel {
+  width: 83%; /* Garante que o painel não passe da largura do container pai */
+  box-sizing: border-box; /* Inclui padding/border no cálculo do width */
   margin-bottom: 8px;
 }
+
+.painel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.header-conteudo {
+  display: flex;
+  align-items: center;
+}
+
+.acoes {
+  display: flex;
+  align-items: center;
+}
+
+.linha-etapa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+

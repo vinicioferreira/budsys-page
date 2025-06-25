@@ -10,7 +10,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class ModalCadastroCadenciaComponent {
   cadenciaId: string | null = null;
+
   cadencia: Cadencia = {
+    id: '',
     nome: '',
     descricao: '',
     etapas: []
@@ -29,29 +31,34 @@ export class ModalCadastroCadenciaComponent {
 
   async adicionarEtapa() {
     try {
-      // Se ainda não criou a cadência, cria no Firebase e pega o ID
+      // Cria a cadência no Firestore se ainda não foi criada
       if (!this.cadenciaId) {
         this.cadenciaId = await this.cadenciaService.criarCadencia({
+          id: this.cadencia.id,
           nome: this.cadencia.nome,
           descricao: this.cadencia.descricao,
           etapas: []
         });
       }
 
-      // Adiciona etapa no documento já criado
+      // Adiciona a etapa no documento
       await this.cadenciaService.adicionarEtapa(this.cadenciaId, this.novaEtapa);
-      alert('Etapa salva com sucesso!');
 
-      // Limpa form etapa
+      // Atualiza visualmente as etapas no modal se quiser exibir
+      this.cadencia.etapas.push({ ...this.novaEtapa });
+
+      // Limpa o formulário da nova etapa
       this.novaEtapa = { dia: 1, canal: '', mensagem: '' };
 
+      alert('✅ Etapa salva com sucesso!');
+
     } catch (error) {
-      console.error('Erro ao adicionar etapa:', error);
+      console.error('❌ Erro ao adicionar etapa:', error);
       alert('Erro ao adicionar etapa');
     }
   }
 
   fechar() {
-    this.dialogRef.close();
+    this.dialogRef.close(this.cadenciaId ? true : false);
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, getDocs, CollectionReference, DocumentData, doc, updateDoc, arrayUnion } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, CollectionReference, DocumentData, arrayUnion, setDoc, arrayRemove, getDoc} from '@angular/fire/firestore';
 import { from, Observable } from 'rxjs';
 import { Cadencia, Etapa } from '../interfaces/cadencia';
 
@@ -8,38 +8,88 @@ import { Cadencia, Etapa } from '../interfaces/cadencia';
 })
 export class CadenciaService {
 
+  constructor(private firestore: Firestore) {}
+
   private get cadenciasCollection(): CollectionReference<DocumentData> {
     return collection(this.firestore, 'cadencias');
   }
 
-  constructor(private firestore: Firestore) {}
-
+  /**
+   * Cria uma nova cadência e retorna o ID gerado
+   */
   async criarCadencia(cadencia: Cadencia): Promise<string> {
     const docRef = await addDoc(this.cadenciasCollection, cadencia);
-    console.log('Cadência criada com ID:', docRef.id);
+    console.log('✅ Cadência criada com ID:', docRef.id);
     return docRef.id;
   }
 
-  async adicionarEtapa(cadenciaId: string, etapa: Etapa): Promise<void> {
-    const cadenciaDocRef = doc(this.firestore, 'cadencias', cadenciaId);
-    await updateDoc(cadenciaDocRef, {
-      etapas: arrayUnion(etapa)
-    });
-    console.log('Etapa adicionada com sucesso');
-  }
-
+  /**
+   * Lista todas as cadências com ID
+   */
   listarCadencias(): Observable<(Cadencia & { id: string })[]> {
     return from(
       getDocs(this.cadenciasCollection).then(snapshot =>
         snapshot.docs.map(docSnap => {
           const data = docSnap.data() as Cadencia;
-          return {
-            id: docSnap.id,
-            ...data
-          };
+          return { ...data, id: docSnap.id };
         })
       )
     );
+  }
+
+  /**
+   * Adiciona uma nova etapa a uma cadência específica
+   */
+  async adicionarEtapa(cadenciaId: string, etapa: Etapa): Promise<void> {
+    const cadenciaDocRef = doc(this.firestore, 'cadencias', cadenciaId);
+    await updateDoc(cadenciaDocRef, {
+      etapas: arrayUnion(etapa)
+    });
+    console.log('✅ Etapa adicionada com sucesso');
+  }
+
+  /**
+   * Atualiza os dados da cadência inteira (nome, descrição, etapas etc)
+   */
+  async editarCadencia(id: string, dados: Partial<Cadencia>): Promise<void> {
+    const cadenciaDocRef = doc(this.firestore, 'cadencias', id);
+    await updateDoc(cadenciaDocRef, dados);
+    console.log('✅ Cadência atualizada com sucesso');
+  }
+
+  /**
+   * Substitui completamente o documento da cadência
+   */
+  async substituirCadencia(id: string, cadencia: Cadencia): Promise<void> {
+    const cadenciaDocRef = doc(this.firestore, 'cadencias', id);
+    await setDoc(cadenciaDocRef, cadencia);
+    console.log('✅ Cadência substituída com sucesso');
+  }
+
+  /**
+   * Exclui uma cadência
+   */
+  async excluirCadencia(id: string): Promise<void> {
+    const cadenciaDocRef = doc(this.firestore, 'cadencias', id);
+    await deleteDoc(cadenciaDocRef);
+    console.log('🗑️ Cadência excluída com sucesso');
+  }
+
+  async excluirEtapa(cadenciaId: string, etapa: Etapa): Promise<void> {
+    const cadenciaDocRef = doc(this.firestore, 'cadencias', cadenciaId);
+    await updateDoc(cadenciaDocRef, {
+      etapas: arrayRemove(etapa)
+    });
+  }
+
+  async editarEtapa(cadenciaId: string, index: number, novaEtapa: Etapa): Promise<void> {
+    // Carrega o documento, altera o array e salva de volta
+    const cadenciaDocRef = doc(this.firestore, 'cadencias', cadenciaId);
+    const snap = await getDoc(cadenciaDocRef);
+    const data = snap.data() as Cadencia;
+    data.etapas[index] = novaEtapa;
+
+    await updateDoc(cadenciaDocRef, { etapas: data.etapas });
   }
 
 }

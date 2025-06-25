@@ -1,4 +1,5 @@
 export interface Cadencia {
+  id: string;
   nome: string;
   descricao: string;
   etapas: Etapa[];
