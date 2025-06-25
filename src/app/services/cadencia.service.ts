@@ -92,4 +92,9 @@ export class CadenciaService {
     await updateDoc(cadenciaDocRef, { etapas: data.etapas });
   }
 
+  getCadenciaById(id: string) {
+    const cadenciaDocRef = doc(this.firestore, 'cadencias', id);
+    return getDoc(cadenciaDocRef).then(snapshot => snapshot.data() as Cadencia);
+  }
+
 }

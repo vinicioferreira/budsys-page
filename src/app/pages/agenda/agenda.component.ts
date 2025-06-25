@@ -72,17 +72,9 @@ export class AgendaComponent implements OnInit {
 
   onDayClicked(day: any): void {
     const clickedDate = day.date;
-    const year = clickedDate.getFullYear();
-    const month = (clickedDate.getMonth() + 1).toString().padStart(2, '0');
-    const date = clickedDate.getDate().toString().padStart(2, '0');
-    this.newDateStr = `${year}-${month}-${date}`;
-    this.viewDate = date;
-    this.view = 'day';  // alterna automaticamente para a visão do dia clicado
-  }
-
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
-    this.viewDate = date;
-    this.view = 'day';  // alterna automaticamente para a visão do dia clicado
+    this.newDateStr = clickedDate.toISOString().substring(0, 10);
+    this.viewDate = clickedDate;
+    this.view = 'day';
   }
 
 }

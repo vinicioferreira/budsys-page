@@ -30,6 +30,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { AgendaComponent } from './pages/agenda/agenda.component';
 import { CadenciaComponent } from './pages/cadencias/cadencia.component';
 import { ModalCadastroCadenciaComponent } from './pages/cadencias/modal-cadastro-cadencia/modal-cadastro-cadencia.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+
 
 @NgModule({
   declarations: [
@@ -58,6 +61,8 @@ import { ModalCadastroCadenciaComponent } from './pages/cadencias/modal-cadastro
     MatSortModule,
     MatCardModule,
     MatExpansionModule,
+    MatSelectModule,
+    MatOptionModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
