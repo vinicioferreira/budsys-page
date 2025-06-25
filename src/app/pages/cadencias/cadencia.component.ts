@@ -37,7 +37,14 @@ export class CadenciaComponent implements OnInit {
   editar(id: string) {
     const cadenciaParaEditar = this.cadenciasSalvas.find(c => c.id === id);
     if (cadenciaParaEditar) {
-      this.abrirModalCadastro(cadenciaParaEditar);
+      this.dialog.open(ModalCadastroCadenciaComponent, {
+        width: '600px',
+        data: { cadencia: cadenciaParaEditar }
+      }).afterClosed().subscribe(resultado => {
+        if (resultado) {
+          this.carregarCadencias();  // Sempre recarrega
+        }
+      });
     }
   }
 
@@ -81,7 +88,6 @@ export class CadenciaComponent implements OnInit {
       });
     }
   }
-
 
   excluirEtapa(cadenciaId: string, etapa: Etapa) {
     if (confirm('Excluir esta etapa?')) {

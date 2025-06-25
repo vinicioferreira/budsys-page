@@ -51,49 +51,40 @@ export class ModalCadastroCadenciaComponent implements OnInit {
           nome: this.cadencia.nome,
           descricao: this.cadencia.descricao
         });
+
+        const etapaPreenchida = this.novaEtapa.canal.trim() !== '' || this.novaEtapa.mensagem.trim() !== '';
+
+        if (etapaPreenchida) {
+          if (this.etapaIndex !== null) {
+            // Edição da etapa
+            await this.cadenciaService.editarEtapa(this.cadenciaId, this.etapaIndex, this.novaEtapa);
+            alert('✅ Cadência e etapa editadas com sucesso!');
+          } else {
+            // Nova etapa
+            await this.cadenciaService.adicionarEtapa(this.cadenciaId, this.novaEtapa);
+            alert('✅ Cadência editada e nova etapa adicionada com sucesso!');
+          }
+        } else {
+          alert('✅ Cadência editada com sucesso!');
+        }
+
       } else {
+        // Nova cadência
         this.cadenciaId = await this.cadenciaService.criarCadencia({
           id: this.cadencia.id,
           nome: this.cadencia.nome,
           descricao: this.cadencia.descricao,
           etapas: []
         });
-      }
 
-      alert('✅ Cadência salva com sucesso!');
-      this.dialogRef.close(true);
-    } catch (error) {
-      console.error('❌ Erro ao salvar cadência:', error);
-      alert('Erro ao salvar cadência');
-    }
-  }
-
-  async adicionarOuEditarEtapa() {
-    try {
-      if (!this.cadenciaId) {
-        this.cadenciaId = await this.cadenciaService.criarCadencia({
-          id: this.cadencia.id,
-          nome: this.cadencia.nome,
-          descricao: this.cadencia.descricao,
-          etapas: []
-        });
-      }
-
-      if (this.etapaIndex !== null) {
-        // Editar etapa existente
-        await this.cadenciaService.editarEtapa(this.cadenciaId, this.etapaIndex, this.novaEtapa);
-        alert('✅ Etapa editada com sucesso!');
-      } else {
-        // Adicionar nova etapa
-        await this.cadenciaService.adicionarEtapa(this.cadenciaId, this.novaEtapa);
-        alert('✅ Etapa adicionada com sucesso!');
+        alert('✅ Cadência criada com sucesso!');
       }
 
       this.dialogRef.close(true);
 
     } catch (error) {
-      console.error('❌ Erro ao salvar etapa:', error);
-      alert('Erro ao salvar etapa');
+      console.error('❌ Erro ao salvar:', error);
+      alert('Erro ao salvar cadência/etapa');
     }
   }
 

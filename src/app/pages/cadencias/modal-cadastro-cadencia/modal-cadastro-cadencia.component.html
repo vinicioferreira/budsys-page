@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Nova Cadência</h2>
+<h2 mat-dialog-title>{{ cadenciaId ? 'Editar Cadência' : 'Nova Cadência' }}</h2>
 
 <mat-dialog-content>
   <mat-form-field appearance="fill" class="full-width">
@@ -11,7 +11,7 @@
     <input matInput [(ngModel)]="cadencia.descricao" placeholder="Descrição da cadência">
   </mat-form-field>
 
-  <h3>Nova Etapa</h3>
+  <h3>{{ etapaIndex !== null ? 'Editar Etapa' : 'Nova Etapa' }}</h3>
 
   <div class="etapa-fields">
     <mat-form-field appearance="fill">
@@ -29,10 +29,11 @@
       <input matInput [(ngModel)]="novaEtapa.mensagem">
     </mat-form-field>
   </div>
-
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-stroked-button (click)="adicionarOuEditarEtapa()">{{ etapaIndex !== null ? 'Salvar Edição' : 'Adicionar Etapa' }}</button>
+  <button mat-stroked-button (click)="salvarCadencia()">
+    {{ cadenciaId ? 'Salvar Edição' : 'Criar Cadência' }}
+  </button>
   <button mat-button (click)="fechar()">Fechar</button>
 </mat-dialog-actions>
