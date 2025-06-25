@@ -34,19 +34,27 @@ export class CadenciaComponent implements OnInit {
     }
   }
 
-  async editar(id: string) {
-    // Aqui você pode abrir um modal de edição ou usar um formulário na tela
-    const novoNome = prompt('Novo nome da cadência:');
-    const novaDescricao = prompt('Nova descrição da cadência:');
-
-    if (novoNome !== null && novaDescricao !== null) {
-      await this.cadenciaService.editarCadencia(id, { nome: novoNome, descricao: novaDescricao });
-      this.carregarCadencias();
+  editar(id: string) {
+    const cadenciaParaEditar = this.cadenciasSalvas.find(c => c.id === id);
+    if (cadenciaParaEditar) {
+      this.abrirModalCadastro(cadenciaParaEditar);
     }
   }
 
+  abrirModalCadastro(cadencia?: Cadencia) {
+    const dialogRef = this.dialog.open(ModalCadastroCadenciaComponent, {
+      width: '600px',
+      data: cadencia // Passa os dados da cadência se for edição
+    });
+
+    dialogRef.afterClosed().subscribe(resultado => {
+      if (resultado) {
+        this.carregarCadencias(); // Recarrega lista se salvou/atualizou
+      }
+    });
+  }
+
   abrirModalNovaEtapa(cadenciaId: string) {
-    // Pode abrir um modal ou usar prompt simples (exemplo simplificado):
     const dia = Number(prompt('Dia:'));
     const canal = prompt('Canal:');
     const mensagem = prompt('Mensagem:');
@@ -61,18 +69,19 @@ export class CadenciaComponent implements OnInit {
   }
 
   editarEtapa(cadenciaId: string, etapa: Etapa, index: number) {
-    // Simples exemplo com prompt, pode ser modal também
-    const canal = prompt('Novo canal:', etapa.canal);
-    const mensagem = prompt('Nova mensagem:', etapa.mensagem);
-    const dia = Number(prompt('Novo dia:', etapa.dia.toString()));
-
-    if (canal && mensagem) {
-      this.cadenciaService.editarEtapa(cadenciaId, index, { dia, canal, mensagem }).then(() => {
-        alert('Etapa atualizada!');
-        this.carregarCadencias();
+    const cadenciaParaEditar = this.cadenciasSalvas.find(c => c.id === cadenciaId);
+    if (cadenciaParaEditar) {
+      this.dialog.open(ModalCadastroCadenciaComponent, {
+        width: '600px',
+        data: { cadencia: cadenciaParaEditar, etapa, etapaIndex: index }
+      }).afterClosed().subscribe(resultado => {
+        if (resultado) {
+          this.carregarCadencias();
+        }
       });
     }
   }
+
 
   excluirEtapa(cadenciaId: string, etapa: Etapa) {
     if (confirm('Excluir esta etapa?')) {
@@ -81,17 +90,5 @@ export class CadenciaComponent implements OnInit {
         this.carregarCadencias();
       });
     }
-  }
-
-  abrirModalCadastro() {
-    const dialogRef = this.dialog.open(ModalCadastroCadenciaComponent, {
-      width: '600px'
-    });
-
-    dialogRef.afterClosed().subscribe(resultado => {
-      if (resultado) {
-        this.carregarCadencias(); // Recarrega lista se salvou
-      }
-    });
   }
 }

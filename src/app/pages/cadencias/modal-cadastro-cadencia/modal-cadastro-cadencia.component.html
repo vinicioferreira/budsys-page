@@ -33,6 +33,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-stroked-button (click)="adicionarEtapa()">Adicionar Etapa</button>
+  <button mat-stroked-button (click)="adicionarOuEditarEtapa()">{{ etapaIndex !== null ? 'Salvar Edição' : 'Adicionar Etapa' }}</button>
   <button mat-button (click)="fechar()">Fechar</button>
 </mat-dialog-actions>

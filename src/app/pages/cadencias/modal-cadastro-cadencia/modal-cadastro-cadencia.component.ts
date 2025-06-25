@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Cadencia, Etapa } from '../../../interfaces/cadencia';
 import { CadenciaService } from '../../../services/cadencia.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-modal-cadastro-cadencia',
   templateUrl: './modal-cadastro-cadencia.component.html',
   styleUrls: ['./modal-cadastro-cadencia.component.scss']
 })
-export class ModalCadastroCadenciaComponent {
+export class ModalCadastroCadenciaComponent implements OnInit {
   cadenciaId: string | null = null;
 
   cadencia: Cadencia = {
@@ -24,14 +24,52 @@ export class ModalCadastroCadenciaComponent {
     mensagem: ''
   };
 
+  etapaIndex: number | null = null;
+
   constructor(
     private cadenciaService: CadenciaService,
-    private dialogRef: MatDialogRef<ModalCadastroCadenciaComponent>
+    private dialogRef: MatDialogRef<ModalCadastroCadenciaComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { cadencia?: Cadencia, etapa?: Etapa, etapaIndex?: number }
   ) {}
 
-  async adicionarEtapa() {
+  ngOnInit(): void {
+    if (this.data?.cadencia) {
+      this.cadencia = { ...this.data.cadencia };
+      this.cadenciaId = this.cadencia.id;
+    }
+
+    if (this.data?.etapa) {
+      this.novaEtapa = { ...this.data.etapa };
+      this.etapaIndex = this.data.etapaIndex ?? null;
+    }
+  }
+
+  async salvarCadencia() {
     try {
-      // Cria a cadência no Firestore se ainda não foi criada
+      if (this.cadenciaId) {
+        await this.cadenciaService.editarCadencia(this.cadenciaId, {
+          nome: this.cadencia.nome,
+          descricao: this.cadencia.descricao
+        });
+      } else {
+        this.cadenciaId = await this.cadenciaService.criarCadencia({
+          id: this.cadencia.id,
+          nome: this.cadencia.nome,
+          descricao: this.cadencia.descricao,
+          etapas: []
+        });
+      }
+
+      alert('✅ Cadência salva com sucesso!');
+      this.dialogRef.close(true);
+    } catch (error) {
+      console.error('❌ Erro ao salvar cadência:', error);
+      alert('Erro ao salvar cadência');
+    }
+  }
+
+  async adicionarOuEditarEtapa() {
+    try {
       if (!this.cadenciaId) {
         this.cadenciaId = await this.cadenciaService.criarCadencia({
           id: this.cadencia.id,
@@ -41,20 +79,21 @@ export class ModalCadastroCadenciaComponent {
         });
       }
 
-      // Adiciona a etapa no documento
-      await this.cadenciaService.adicionarEtapa(this.cadenciaId, this.novaEtapa);
+      if (this.etapaIndex !== null) {
+        // Editar etapa existente
+        await this.cadenciaService.editarEtapa(this.cadenciaId, this.etapaIndex, this.novaEtapa);
+        alert('✅ Etapa editada com sucesso!');
+      } else {
+        // Adicionar nova etapa
+        await this.cadenciaService.adicionarEtapa(this.cadenciaId, this.novaEtapa);
+        alert('✅ Etapa adicionada com sucesso!');
+      }
 
-      // Atualiza visualmente as etapas no modal se quiser exibir
-      this.cadencia.etapas.push({ ...this.novaEtapa });
-
-      // Limpa o formulário da nova etapa
-      this.novaEtapa = { dia: 1, canal: '', mensagem: '' };
-
-      alert('✅ Etapa salva com sucesso!');
+      this.dialogRef.close(true);
 
     } catch (error) {
-      console.error('❌ Erro ao adicionar etapa:', error);
-      alert('Erro ao adicionar etapa');
+      console.error('❌ Erro ao salvar etapa:', error);
+      alert('Erro ao salvar etapa');
     }
   }
 

@@ -3,29 +3,32 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
+
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { AppRoutingModule } from './app-routing.module';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { firebaseConfig } from '../environments/environment';
+
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+
 import { ModalContatoComponent } from './pages/modal-contato/modal-contato.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { MenuComponent } from './component/menu/menu.component';
 import { HomeComponent } from './pages/home/home.component';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { AgendaComponent } from './pages/agenda/agenda.component';
 import { CadenciaComponent } from './pages/cadencias/cadencia.component';
-import { MatSortModule } from '@angular/material/sort';
-import { MatCardModule } from '@angular/material/card';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { ModalCadastroCadenciaComponent } from './pages/cadencias/modal-cadastro-cadencia/modal-cadastro-cadencia.component';
 
 @NgModule({
@@ -37,23 +40,19 @@ import { ModalCadastroCadenciaComponent } from './pages/cadencias/modal-cadastro
     HomeComponent,
     AgendaComponent,
     CadenciaComponent,
-    ModalCadastroCadenciaComponent,
-    // se tiver outros, adicione também
+    ModalCadastroCadenciaComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    AppRoutingModule,
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    AppRoutingModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
@@ -62,7 +61,7 @@ import { ModalCadastroCadenciaComponent } from './pages/cadencias/modal-cadastro
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
-    }),
+    })
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
