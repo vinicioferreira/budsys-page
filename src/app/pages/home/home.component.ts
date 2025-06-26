@@ -165,5 +165,6 @@ export class HomeComponent {
         disableClose: false
       });
     }
+    
 }
 

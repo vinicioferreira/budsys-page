@@ -12,26 +12,36 @@ export class AgendaService {
    * Gera atividades no Firestore com base em uma cadência real (puxando etapas do banco)
    */
   async gerarAtividadesDeCadencia(cadencia: any, contatoId: string, nome: string, dataBase: Date): Promise<void> {
+    console.log('⚡ gerarAtividadesDeCadencia chamado:', cadencia, contatoId, nome, dataBase);
+
+    if (!cadencia.etapas || !Array.isArray(cadencia.etapas) || cadencia.etapas.length === 0) {
+      console.warn('❌ Esta cadência não tem etapas válidas. Nada será gerado.');
+      return;
+    }
+
     const atividadesRef = collection(this.firestore, 'atividades');
 
-    const atividades = cadencia.etapas.map((etapa: any) => {
+    for (const etapa of cadencia.etapas) {
       const data = new Date(dataBase);
-      data.setDate(data.getDate() + etapa.dia);
+      data.setDate(data.getDate() + (etapa.dia ?? 0));
 
-      return {
+      const atividade = {
         contatoId,
         contatoNome: nome,
-        canal: etapa.canal,
-        mensagem: etapa.mensagem,
+        canal: etapa.canal || 'Sem canal',
+        mensagem: etapa.mensagem || 'Sem mensagem',
         dataPrevista: data.toISOString(),
         status: 'pendente'
       };
-    });
 
-    for (const atividade of atividades) {
-      await addDoc(atividadesRef, atividade);
+      console.log('🚀 Tentando salvar atividade:', atividade);
+
+      try {
+        const docRef = await addDoc(atividadesRef, atividade);
+        console.log(`✅ Atividade salva no Firestore com ID: ${docRef.id}`, atividade);
+      } catch (err) {
+        console.error('❌ ERRO ao salvar atividade no Firestore:', err);
+      }
     }
-
-    console.log('✅ Atividades criadas no Firestore com base na cadência real!');
   }
 }

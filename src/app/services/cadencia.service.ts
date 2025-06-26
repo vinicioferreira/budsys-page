@@ -83,10 +83,21 @@ export class CadenciaService {
   }
 
   async editarEtapa(cadenciaId: string, index: number, novaEtapa: Etapa): Promise<void> {
-    // Carrega o documento, altera o array e salva de volta
     const cadenciaDocRef = doc(this.firestore, 'cadencias', cadenciaId);
     const snap = await getDoc(cadenciaDocRef);
+
+    if (!snap.exists()) {
+      console.warn(`⚠ Cadência com ID ${cadenciaId} não existe.`);
+      throw new Error('Cadência não encontrada');
+    }
+
     const data = snap.data() as Cadencia;
+
+    if (!data.etapas || !Array.isArray(data.etapas)) {
+      console.warn(`⚠ Cadência com ID ${cadenciaId} está sem etapas válidas.`);
+      throw new Error('Cadência inválida (sem etapas)');
+    }
+
     data.etapas[index] = novaEtapa;
 
     await updateDoc(cadenciaDocRef, { etapas: data.etapas });
@@ -94,7 +105,15 @@ export class CadenciaService {
 
   getCadenciaById(id: string) {
     const cadenciaDocRef = doc(this.firestore, 'cadencias', id);
-    return getDoc(cadenciaDocRef).then(snapshot => snapshot.data() as Cadencia);
-  }
+    return getDoc(cadenciaDocRef).then(snapshot => {
+      if (!snapshot.exists()) {
+        console.warn(`⚠ Cadência com ID ${id} não encontrada no Firestore.`);
+        return null;
+      }
 
+      const data = snapshot.data() as Cadencia;
+      console.log('📌 Cadência carregada do Firestore:', data);
+      return data;
+    });
+  }
 }

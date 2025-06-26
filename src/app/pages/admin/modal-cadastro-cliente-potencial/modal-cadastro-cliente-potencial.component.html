@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Novo Cliente</h2>
+
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Nome</mat-label>
+    <input matInput [(ngModel)]="cliente.nome">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Email</mat-label>
+    <input matInput [(ngModel)]="cliente.email">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Telefone</mat-label>
+    <input matInput [(ngModel)]="cliente.telefone">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Empresa</mat-label>
+    <input matInput [(ngModel)]="cliente.empresa">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width" *ngIf="listaCanais.length > 0">
+    <mat-label>Canal</mat-label>
+    <mat-select [(ngModel)]="cliente.canal">
+      <mat-option *ngFor="let c of listaCanais" [value]="c.nome || ''">
+        {{ c.nome || '(Sem nome)' }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Mensagem</mat-label>
+    <input matInput [(ngModel)]="cliente.mensagem">
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="salvar()">Salvar</button>
+  <button mat-button (click)="fechar()">Cancelar</button>
+</mat-dialog-actions>

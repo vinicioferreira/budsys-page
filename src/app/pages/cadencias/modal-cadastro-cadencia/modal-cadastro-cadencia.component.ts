@@ -77,7 +77,14 @@ export class ModalCadastroCadenciaComponent implements OnInit {
           etapas: []
         });
 
-        alert('✅ Cadência criada com sucesso!');
+        const etapaPreenchida = this.novaEtapa.canal.trim() !== '' || this.novaEtapa.mensagem.trim() !== '';
+
+        if (etapaPreenchida) {
+          await this.cadenciaService.adicionarEtapa(this.cadenciaId, this.novaEtapa);
+          alert('✅ Cadência criada e etapa adicionada com sucesso!');
+        } else {
+          alert('✅ Cadência criada com sucesso!');
+        }
       }
 
       this.dialogRef.close(true);

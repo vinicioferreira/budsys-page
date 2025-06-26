@@ -3,7 +3,11 @@
 <div class="pt-3 main-content">
   <h2>Clientes Potenciais</h2>
 
-  <div class="table-container mat-elevation-z8">
+  <div class="btn-addCliente">
+    <button mat-raised-button color="primary" (click)="abrirModalNovoCliente()">Novo Cliente</button>
+  </div>
+
+  <div class="table-container mat-elevation-z8" style="margin-top: 20px;">
     <table mat-table [dataSource]="dataSource" matSort>
 
       <!-- Id -->
@@ -46,6 +50,12 @@
 
       <!-- Canal -->
       <ng-container matColumnDef="canal">
+        <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Canal</th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.canal }}</td>
+      </ng-container>
+
+      <!--
+      <ng-container matColumnDef="canal">
         <th mat-header-cell *matHeaderCellDef> Canal </th>
         <td mat-cell *matCellDef="let cliente">
           <mat-select [(ngModel)]="cliente.canal" (selectionChange)="vincularCanal(cliente)">
@@ -53,7 +63,8 @@
           </mat-select>
         </td>
       </ng-container>
-
+      -->
+      
       <ng-container matColumnDef="dataCadastro">
         <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Data Cadastro</th>
         <td class="td-table" mat-cell *matCellDef="let cliente">
@@ -61,16 +72,14 @@
         </td>
       </ng-container>
 
-
-      <!-- Ações (caso precise)
+      <!-- Ações (caso precise) -->
       <ng-container matColumnDef="actions">
         <th class="th-table" mat-header-cell *matHeaderCellDef></th>
         <td class="td-table" mat-cell *matCellDef="let cliente">
-          <mat-icon class="icone-tabela" (click)="visualizarCliente(cliente)">visibility</mat-icon>
-          <mat-icon class="icone-tabela" (click)="editarCliente(cliente)">edit</mat-icon>
-          <mat-icon class="icone-tabela-delete" (dblclick)="deletarCliente(cliente.id)">delete</mat-icon>
+          <mat-icon class="icone-tabela" >edit</mat-icon>
+          <mat-icon class="icone-tabela-delete">delete</mat-icon>
         </td>
-      </ng-container> -->
+      </ng-container>
 
       <!-- Cabeçalho e linhas -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

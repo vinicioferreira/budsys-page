@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ContatoService } from '../../services/contato.service';
 import emailjs from '@emailjs/browser';
+import { AgendaService } from '../../services/agenda.service';
+import { CadenciaService } from '../../services/cadencia.service';
 
 @Component({
   selector: 'app-modal-contato',
@@ -11,11 +13,23 @@ import emailjs from '@emailjs/browser';
 })
 export class ModalContatoComponent {
   contatoForm: FormGroup;
+    cliente: any = {
+    nome: '',
+    email: '',
+    telefone: '',
+    empresa: '',
+    mensagem: '',
+    canal: 'Landing Page'
+  };
+
+  listaCanais: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<ModalContatoComponent>,
     private fb: FormBuilder,
-    private contatoService: ContatoService
+    private contatoService: ContatoService,
+    private agendaService: AgendaService,
+    private cadenciaService: CadenciaService
   ) {
     this.contatoForm = this.fb.group({
       nome: ['', Validators.required],
@@ -30,25 +44,96 @@ export class ModalContatoComponent {
     this.dialogRef.close();
   }
 
-  enviar(): void {
-    if (this.contatoForm.valid) {
-      const templateParams = {
-        nome: this.contatoForm.value.nome || '',
-        email: this.contatoForm.value.email || '',
-        telefone: this.contatoForm.value.telefone || '',
-        empresa: this.contatoForm.value.empresa || '',
-        mensagem: this.contatoForm.value.mensagem || ''
-      };
+  vincularCanal(cliente: any) {
+    console.log('🔍 Vinculando canal para cliente:', cliente);
 
-      // Salva no Firestore usando o service
-      this.contatoService.salvarContato(templateParams)
-        .then(() => {
-          console.log('Contato salvo no Firestore');
-        })
-        .catch((error) => {
-          console.error('Erro ao salvar no Firestore:', error);
-          alert('Erro ao salvar no sistema. Verifique sua conexão.');
+    if (!cliente.canal || typeof cliente.canal !== 'string') {
+      console.warn('⚠ Cliente sem canal válido, não dá pra vincular.');
+      alert('⚠ Cliente sem canal válido!');
+      return;
+    }
+
+    // Faz o match mais flexível no nome
+    const canalSelecionado = this.listaCanais.find(c =>
+      c.nome &&
+      typeof c.nome === 'string' &&
+      c.nome.toLowerCase().includes(cliente.canal.toLowerCase())
+    );
+
+    console.log('🔍 Canal selecionado na lista de cadências:', canalSelecionado);
+
+    if (canalSelecionado) {
+      this.cadenciaService.getCadenciaById(canalSelecionado.id).then(cadencia => {
+        console.log('📌 Cadência carregada:', cadencia);
+
+        if (!cadencia || !cadencia.etapas || !Array.isArray(cadencia.etapas) || cadencia.etapas.length === 0) {
+          console.warn('⚠ Cadência inválida ou sem etapas!');
+          alert('⚠ Cadência sem etapas!');
+          return;
+        }
+
+        this.agendaService.gerarAtividadesDeCadencia(cadencia, cliente.id, cliente.nome, new Date());
+        alert(`✅ Cadência vinculada e atividades criadas na agenda para o canal "${cliente.canal}"`);
+      }).catch(err => {
+        console.error('❌ Erro ao carregar a cadência:', err);
+        alert('Erro ao carregar a cadência do Firestore.');
+      });
+    } else {
+      console.warn(`⚠ Nenhuma cadência vinculada ao canal: "${cliente.canal}"`);
+      alert(`⚠ Nenhuma cadência vinculada ao canal: "${cliente.canal}"`);
+    }
+  }
+
+  enviar(): void {
+  if (this.contatoForm.valid) {
+    const templateParams = {
+      nome: this.contatoForm.value.nome || '',
+      email: this.contatoForm.value.email || '',
+      telefone: this.contatoForm.value.telefone || '',
+      empresa: this.contatoForm.value.empresa || '',
+      mensagem: this.contatoForm.value.mensagem || ''
+    };
+
+    // Salva o contato e já agenda
+    this.contatoService.salvarContato(templateParams, 'Landing Page')
+      .then((docId) => {
+        console.log('✅ Contato salvo no Firestore, ID:', docId);
+
+        const cliente = {
+          id: docId,
+          ...templateParams,
+          canal: 'Landing Page'
+        };
+
+        // Carrega a cadência fixa da Landing Page
+        this.cadenciaService.getCadenciaById('ucRcAjk2ESrQIRYED8l7').then(cadencia => {
+          console.log('📌 Cadência carregada:', cadencia);
+
+          if (!cadencia || !cadencia.etapas || !Array.isArray(cadencia.etapas) || cadencia.etapas.length === 0) {
+            console.warn('⚠ Cadência inválida ou sem etapas!');
+            alert('⚠ Cadência da Landing Page sem etapas!');
+            return;
+          }
+
+          // Gera atividades na agenda
+          this.agendaService.gerarAtividadesDeCadencia(cadencia, cliente.id, cliente.nome, new Date());
+          alert('✅ Contato salvo e atividades da Landing Page vinculadas!');
+          this.dialogRef.close();
+        }).catch(err => {
+          console.error('Erro ao buscar cadência:', err);
+          alert('❌ Erro ao buscar a cadência da Landing Page!');
         });
+
+      })
+      .catch((error) => {
+        console.error('❌ Erro ao salvar no Firestore:', error);
+        alert('❌ Erro ao salvar no sistema. Verifique sua conexão.');
+      });
+  } else {
+    alert('⚠ Preencha os campos obrigatórios.');
+  }
+}
+
 
 /*      // Envia email
       emailjs.send(
@@ -75,5 +160,4 @@ export class ModalContatoComponent {
         alert('Erro ao enviar email. Tente novamente.');
       });
 */   }
-  }
-}
+
