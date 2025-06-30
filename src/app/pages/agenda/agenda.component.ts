@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { Firestore, collection, getDocs } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDoc, getDocs } from '@angular/fire/firestore';
 import { addDays, subDays, addWeeks, subWeeks, addMonths, subMonths } from 'date-fns';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalMessageComponent } from './modal-message/modal-message.component';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-agenda',
@@ -16,7 +20,11 @@ export class AgendaComponent implements OnInit {
   newDateStr: string = '';
   newTimeStr: string = '';
 
-  constructor(private firestore: Firestore) {}
+  constructor(
+    private firestore: Firestore,
+    public dialog: MatDialog,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.carregarAtividades();
@@ -26,26 +34,60 @@ export class AgendaComponent implements OnInit {
     const atividadesRef = collection(this.firestore, 'atividades');
     const snapshot = await getDocs(atividadesRef);
 
-    this.events = snapshot.docs.map(doc => {
+    const statusCor: { [key: string]: { primary: string; secondary: string } } = {
+      pendente:   { primary: '#e53935', secondary: '#ffcdd2' },
+      andamento:  { primary: '#fb8c00', secondary: '#ffe0b2' },
+      feito:      { primary: '#43a047', secondary: '#c8e6c9' }
+    };
+
+    const eventos = await Promise.all(snapshot.docs.map(async doc => {
       const data = doc.data();
+
+      const contatoTelefone = await this.buscarTelefonePorContatoId(data['contatoId']);
+      const contatoEmail = await this.buscarEmailContatoId(data['contatoId']);
+
+      const cor = statusCor[data['status']] || { primary: '#2196f3', secondary: '#bbdefb' };
+
       return {
         start: new Date(data['dataPrevista']),
         title: `${data['contatoNome']} - ${data['canal']}`,
-        meta: data
+        color: cor,
+        meta: {
+          id: doc.id,
+          contatoNome: data['contatoNome'],
+          contatoTelefone,
+          contatoEmail,
+          canal: data['canal'],
+          mensagem: data['mensagem'],
+          status: data['status']
+        }
       };
-    });
+    }));
 
-    console.log('Atividades carregadas na agenda:', this.events);
+    this.events = [...eventos]; // cria nova referência para forçar update
   }
 
   handleEvent(event: CalendarEvent): void {
     const meta = event.meta;
-    alert(
-      `Cliente: ${meta.contatoNome}\n` +
-      `Canal: ${meta.canal}\n` +
-      `Mensagem: ${meta.mensagem}\n` +
-      `Status: ${meta.status}`
-    );
+
+    const dialogRef = this.dialog.open(ModalMessageComponent, {
+      data: {
+        id: meta.id,
+        contatoNome: meta.contatoNome,
+        contatoTelefone: meta.contatoTelefone,
+        contatoEmail: meta.contatoEmail,
+        canal: meta.canal,
+        mensagem: meta.mensagem,
+        status: meta.status
+      },
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe((reload: boolean) => {
+      if (reload) {
+        this.carregarAtividades(); // recarrega as atividades após atualização
+      }
+    });
   }
 
   addActivity(date: Date, title: string): void {
@@ -98,5 +140,27 @@ export class AgendaComponent implements OnInit {
     }
   }
 
+  async buscarTelefonePorContatoId(contatoId: string): Promise<string> {
+    const contatoRef = doc(this.firestore, 'contatos', contatoId);
+    const contatoSnap = await getDoc(contatoRef);
 
+    if (contatoSnap.exists()) {
+      const contato = contatoSnap.data();
+      return contato['telefone'] || '';
+    }
+
+    return '';
+  }
+
+  async buscarEmailContatoId(contatoId: string): Promise<string> {
+    const contatoRef = doc(this.firestore, 'contatos', contatoId);
+    const contatoSnap = await getDoc(contatoRef);
+
+    if (contatoSnap.exists()) {
+      const contato = contatoSnap.data();
+      return contato['email'] || '';
+    }
+
+    return '';
+  }
 }

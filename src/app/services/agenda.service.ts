@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, doc, updateDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +30,7 @@ export class AgendaService {
         contatoNome: nome,
         canal: etapa.canal || 'Sem canal',
         mensagem: etapa.mensagem || 'Sem mensagem',
+        telefone: etapa.telefone || 'Sem telefone',
         dataPrevista: data.toISOString(),
         status: 'pendente'
       };
@@ -43,5 +44,10 @@ export class AgendaService {
         console.error('❌ ERRO ao salvar atividade no Firestore:', err);
       }
     }
+  }
+
+  async atualizarStatusAtividade(id: string, status: string): Promise<void> {
+    const ref = doc(this.firestore, 'atividades', id);
+    await updateDoc(ref, { status });
   }
 }

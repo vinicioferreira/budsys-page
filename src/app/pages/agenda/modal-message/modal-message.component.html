@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Mensagem para Cliente</h2>
+<mat-dialog-content>
+  <p><strong>Cliente:</strong> {{ data.contatoNome }}</p>
+  <p><strong>Canal:</strong> {{ data.canal }}</p>
+  <p><strong>Telefone:</strong> {{ data.contatoTelefone }}</p>
+  <p><strong>E-mail:</strong> {{ data.contatoEmail }}</p>
+  <div class="status-selector">
+    <button
+      *ngFor="let status of statusList"
+      class="status-button"
+      [ngClass]="{ active: data.status === status.value }"
+      [style.--status-color]="status.color"
+      (click)="atualizarStatus(status.value)">
+      <span class="dot"></span> {{ status.label }}
+    </button>
+  </div>
+
+  <p><strong>Mensagem:</strong></p>
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <textarea matInput readonly [value]="getMensagemPersonalizada()"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="copiarMensagem()">Copiar</button>
+
+  <button *ngIf="canalEh('whatsapp')" mat-button color="primary" (click)="abrirWhatsapp()">
+    WhatsApp
+  </button>
+
+  <button *ngIf="canalEh('email')" mat-button color="accent" (click)="abrirEmail()">
+    E-mail
+  </button>
+
+  <button *ngIf="canalEh('zoho')" mat-button color="warn" (click)="abrirZoho()">
+    Zoho Mail
+  </button>
+
+  <button mat-button mat-dialog-close>Fechar</button>
+</mat-dialog-actions>
+

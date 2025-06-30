@@ -34,6 +34,7 @@ import { ModalCadastroCadenciaComponent } from './pages/cadencias/modal-cadastro
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { ModalCadastroClientePotencialComponent } from './pages/admin/modal-cadastro-cliente-potencial/modal-cadastro-cliente-potencial.component';
+import { ModalMessageComponent } from './pages/agenda/modal-message/modal-message.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { ModalCadastroClientePotencialComponent } from './pages/admin/modal-cada
     AgendaComponent,
     CadenciaComponent,
     ModalCadastroCadenciaComponent,
-    ModalCadastroClientePotencialComponent
+    ModalCadastroClientePotencialComponent,
+    ModalMessageComponent
   ],
   imports: [
     BrowserModule,
