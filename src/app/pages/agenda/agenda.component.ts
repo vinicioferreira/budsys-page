@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
 import { Firestore, collection, getDocs } from '@angular/fire/firestore';
+import { addDays, subDays, addWeeks, subWeeks, addMonths, subMonths } from 'date-fns';
 
 @Component({
   selector: 'app-agenda',
@@ -76,5 +77,26 @@ export class AgendaComponent implements OnInit {
     this.viewDate = clickedDate;
     this.view = 'day';
   }
+
+  next(): void {
+    if (this.view === 'month') {
+      this.viewDate = addMonths(this.viewDate, 1);
+    } else if (this.view === 'week') {
+      this.viewDate = addWeeks(this.viewDate, 1);
+    } else if (this.view === 'day') {
+      this.viewDate = addDays(this.viewDate, 1);
+    }
+  }
+
+  previous(): void {
+    if (this.view === 'month') {
+      this.viewDate = subMonths(this.viewDate, 1);
+    } else if (this.view === 'week') {
+      this.viewDate = subWeeks(this.viewDate, 1);
+    } else if (this.view === 'day') {
+      this.viewDate = subDays(this.viewDate, 1);
+    }
+  }
+
 
 }

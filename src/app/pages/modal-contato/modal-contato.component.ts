@@ -5,6 +5,8 @@ import { ContatoService } from '../../services/contato.service';
 import emailjs from '@emailjs/browser';
 import { AgendaService } from '../../services/agenda.service';
 import { CadenciaService } from '../../services/cadencia.service';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-modal-contato',
@@ -29,7 +31,8 @@ export class ModalContatoComponent {
     private fb: FormBuilder,
     private contatoService: ContatoService,
     private agendaService: AgendaService,
-    private cadenciaService: CadenciaService
+    private cadenciaService: CadenciaService,
+    private http: HttpClient
   ) {
     this.contatoForm = this.fb.group({
       nome: ['', Validators.required],
@@ -98,6 +101,24 @@ export class ModalContatoComponent {
     this.contatoService.salvarContato(templateParams, 'Landing Page')
       .then((docId) => {
         console.log('✅ Contato salvo no Firestore, ID:', docId);
+       const mensagem =
+      `📩 Novo lead recebido - Site!
+
+      👤 Nome: ${templateParams.nome}
+      📧 Email: ${templateParams.email}
+      📞 Telefone: ${templateParams.telefone}
+      🏢 Empresa: ${templateParams.empresa || '---'}
+      💬 Mensagem: ${templateParams.mensagem || '---'}`;
+
+
+        // Envia mensagem de WhatsApp para o ADM
+        this.http.post('https://us-central1-budsys.cloudfunctions.net/api/messaging/whatsapp', {
+          to: '+553591569148', // Ex: 'whatsapp:+553591234567'
+          message: mensagem
+          }).subscribe({
+            next: () => console.log('📲 Mensagem WhatsApp enviada com sucesso'),
+            error: err => console.error('❌ Erro ao enviar WhatsApp:', err)
+        });
 
         const cliente = {
           id: docId,
@@ -117,7 +138,7 @@ export class ModalContatoComponent {
 
           // Gera atividades na agenda
           this.agendaService.gerarAtividadesDeCadencia(cadencia, cliente.id, cliente.nome, new Date());
-          alert('✅ Contato salvo e atividades da Landing Page vinculadas!');
+          alert('✅ Dados enviados com sucesso!');
           this.dialogRef.close();
         }).catch(err => {
           console.error('Erro ao buscar cadência:', err);
@@ -159,5 +180,6 @@ export class ModalContatoComponent {
         console.error('Erro ao enviar:', error);
         alert('Erro ao enviar email. Tente novamente.');
       });
-*/   }
+*/
+}
 

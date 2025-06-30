@@ -7,7 +7,19 @@
     <button mat-button (click)="view = 'week'">Semana</button>
     <button mat-button (click)="view = 'day'">Dia</button>
   </div>
+  <div class="navigation-buttons">
+  <button mat-icon-button (click)="previous()">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  <span class="view-title">{{ viewDate | date: 'MMMM yyyy' }}</span>
+  <button mat-icon-button (click)="next()">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
 </div>
+
+</div>
+
+
 
 <div class="calendar-container">
   <div class="add-activity-form">
