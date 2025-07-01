@@ -46,8 +46,15 @@ export class AgendaService {
     }
   }
 
-  async atualizarStatusAtividade(id: string, status: string): Promise<void> {
-    const ref = doc(this.firestore, 'atividades', id);
-    await updateDoc(ref, { status });
+  async atualizarStatusAtividade(id: string, status: string, anotacao?: string): Promise<void> {
+    const atividadeRef = doc(this.firestore, 'atividades', id);
+
+    const updateData: any = { status };
+    if (anotacao) {
+      updateData.anotacao = anotacao;
+    }
+
+    await updateDoc(atividadeRef, updateData);
   }
+
 }

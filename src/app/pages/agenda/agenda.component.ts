@@ -80,7 +80,8 @@ export class AgendaComponent implements OnInit {
         mensagem: meta.mensagem,
         status: meta.status
       },
-      width: '400px'
+      width: '500px',
+      height: '600px'
     });
 
     dialogRef.afterClosed().subscribe((reload: boolean) => {

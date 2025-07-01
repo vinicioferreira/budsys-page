@@ -15,10 +15,19 @@
     </button>
   </div>
 
-  <p><strong>Mensagem:</strong></p>
   <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>Mensagem</mat-label>
     <textarea matInput readonly [value]="getMensagemPersonalizada()"></textarea>
+    <button mat-icon-button matSuffix (click)="copiarMensagem()" aria-label="Copiar mensagem">
+      <mat-icon>content_copy</mat-icon>
+    </button>
   </mat-form-field>
+
+  <mat-form-field appearance="outline" style="width: 100%; margin-top: 20px;">
+    <mat-label>Anotações / Histórico</mat-label>
+    <textarea matInput [(ngModel)]="anotacao" placeholder="Adicione aqui uma observação..." rows="3"></textarea>
+  </mat-form-field>
+
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
@@ -38,4 +47,8 @@
 
   <button mat-button mat-dialog-close>Fechar</button>
 </mat-dialog-actions>
+
+
+
+
 

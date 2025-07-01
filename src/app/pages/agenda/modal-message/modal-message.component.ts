@@ -9,6 +9,8 @@ import { doc, updateDoc } from 'firebase/firestore';
   styleUrls: ['./modal-message.component.scss']
 })
 export class ModalMessageComponent {
+  anotacao: string = '';
+
   constructor(
     private agendaService: AgendaService,
     public dialogRef: MatDialogRef<ModalMessageComponent>,
@@ -71,10 +73,10 @@ export class ModalMessageComponent {
 
     this.data.status = novoStatus;
 
-    this.agendaService.atualizarStatusAtividade(this.data.id, novoStatus)
+    this.agendaService.atualizarStatusAtividade(this.data.id, novoStatus, this.anotacao)
       .then(() => {
         console.log('✅ Status atualizado para', novoStatus);
-        this.dialogRef.close(true); // <- Fecha e informa que houve alteração
+        this.dialogRef.close(true); // força recarregamento
       })
       .catch((error) => {
         console.error('Erro ao atualizar status:', error);
