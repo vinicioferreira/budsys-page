@@ -135,39 +135,57 @@ header {
    HERO
 ========================= */
 .hero {
-  background: #f4f7f9;
-  padding: 64px 20px;
-
-  /* grid 2 colunas */
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
+  padding: 4rem 2rem;
+  background: #f4f7f9;
 
   .hero-text {
-    max-width: 560px;
-    margin-left: 0;
+    max-width: 500px;
 
     /* “pílula” opcional acima do título */
     .chip {
-      display: inline-block;
-      padding: 6px 14px;
-      background: $chip;
-      border: 1px solid #cfe0ea;
-      border-radius: 999px;
-      color: #0f6a8c;
-      font-weight: 700;
-      margin-bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+
+      padding: 8px 18px;
+      background: #e8f4fa;     // azul bem clarinho (pode ser $chip se já usa variável)
+      border: 1px solid #c9e2f0;
+      border-radius: 5px;
+
+      font-size: 16px;
+      font-weight: 400;
+      color: #084d6e;          // cor do texto (azul escuro do tema)
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        background: #084d6e;   // mesma cor do texto
+        border-radius: 50%;
+      }
     }
 
     h1 {
       font-size: clamp(32px, 4vw, 48px);
+      margin: 0 0 24px;
       line-height: 1.1;
-      margin: 0 0 12px;
       color: $ink;
+      font-weight: 700;
+      margin-top: 10px;  
+      .destaque {
+        color: $bg; // azul
+      }
     }
 
-    p { font-size: 18px; color: $muted; margin: 0 0 24px; }
+    p {
+      margin: 0 0 28px;      // espaço abaixo do parágrafo
+      font-size: 18px;
+      color: #5b6974;
+    }
   }
 
   .hero-img {
