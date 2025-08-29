@@ -1,13 +1,28 @@
-<header>
-  <div class="system-name" routerLink="/home">
-    <img src="assets/favicon_3.ico" width="40" style="margin-right: 10px;" />
-    Bud<span>Sys</span>
-  </div>
-  <nav>
+<header class="topbar">
+  <div class="nav-wrap">
+    <!-- LOGO + NOME -->
+    <a class="brand" routerLink="/home">
+      <img src="assets/favicon_3.ico" alt="BudSys" class="logo" />
+      <span class="brand-name">
+        <span class="bud">Bud</span><span class="sys">Sys</span>
+      </span>
+    </a>
 
-    <button class="btn cta" (click)="abrirModal()">Testar grátis</button>
-    <!-- <button class="btn cta" routerLink="/admin">Acesso Admin</button> -->
-  </nav>
+    <!-- MENU + DIVISOR + CTA -->
+    <div class="nav-right">
+      <span class="divider" aria-hidden="true"></span>
+       <!-- wrapper que cresce até o CTA -->
+      <div class="menu-rail">
+        <nav class="menu">
+          <a href="#home">Home</a>
+          <a href="#servicos">Serviços</a>
+          <a href="#sobre">Sobre nós</a>
+        </nav>
+      </div>
+
+      <button class="cta-nav">Solicite Um Orçamento</button>
+    </div>
+  </div>
 </header>
 
 <section class="hero">
