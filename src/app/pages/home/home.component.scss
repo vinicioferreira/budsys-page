@@ -175,7 +175,7 @@ header {
       line-height: 1.1;
       color: $ink;
       font-weight: 700;
-      margin-top: 10px;  
+      margin-top: 10px;
       .destaque {
         color: $bg; // azul
       }
@@ -281,11 +281,27 @@ header {
    SLIDER DE DESTAQUES
 ========================= */
 .slider-section {
-  background: #f4f7fa; padding: 64px 0; display: flex; justify-content: center; overflow: hidden;
-
-  .slider-container { width: 100%; max-width: 1100px; overflow: hidden; }
-  .slider { display: flex; animation: scrollCards 20s linear infinite; }
-  .card-slide { flex: 0 0 auto; min-width: 260px; margin: 0 80px; }
+  background: #f4f7fa;
+  padding: 64px 0;
+  color: #555;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  overflow: hidden;
+  .slider-container {
+    width: 100%;
+    max-width: 1100px;
+    overflow: hidden;
+  }
+  .slider {
+    display: flex;
+    animation: scrollCards 20s linear infinite;
+  }
+  .card-slide {
+    flex: 0 0 auto;
+    width: 200px;
+    margin: 0 80px;
+  }
 }
 @keyframes scrollCards { 0% {transform: translateX(0);} 100% {transform: translateX(-50%);} }
 
