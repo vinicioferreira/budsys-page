@@ -97,6 +97,31 @@ export class ModalContatoComponent {
       mensagem: this.contatoForm.value.mensagem || ''
     };
 
+    // Envia email
+    emailjs.send(
+      'service_960gg1r',
+      'template_w60nnqq',
+      templateParams,
+      'vowCrOusn6wX9y7rC'
+    ).then(() => {
+      alert('Email enviado com sucesso!');
+      console.log('Dados enviados', templateParams);
+      this.dialogRef.close();
+
+      // Envia para o Make via Webhook
+      fetch('https://hook.us2.make.com/xwmqyb6mv6jqqlszix0k6ivw6yjz0w7m', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(templateParams)
+      });
+
+    }, (error) => {
+      console.error('Erro ao enviar:', error);
+      alert('Erro ao enviar email. Tente novamente.');
+    });
+
     // Salva o contato e já agenda
     this.contatoService.salvarContato(templateParams, 'Landing Page')
       .then((docId) => {
@@ -156,7 +181,7 @@ export class ModalContatoComponent {
 }
 
 
-/*      // Envia email
+/*    // Envia email
       emailjs.send(
         'service_960gg1r',
         'template_w60nnqq',
