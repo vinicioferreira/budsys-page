@@ -232,22 +232,81 @@ header {
 /* =========================
    VÍDEO
 ========================= */
-.video-section {
-  padding: 64px 20px; background: #fff;
+/* ---- seção ---- */
+.video-section{
+  padding: 72px 150px;
+  margin-bottom: 220px; /* Aumenta o espaço entre as seções */
 
-  h2 { font-size: clamp(26px,3vw,32px); margin: 0 0 24px; color: $cta; text-align: center; }
+  h2{
+    text-align:center;
+    font-size: clamp(28px, 4vw, 40px);
+    color:#0a2a36; margin:0 0 10px;
+  }
+  .sub{
+    text-align:center; color:#6a7a83; margin:0 0 28px;
+  }
 
-  .video-container {
-    position: relative; max-width: 900px; margin: 40px auto;
-    display: flex; align-items: center; justify-content: center;
+  /* 2 colunas: vídeo + texto */
+  .content{
+    max-width: 1160px; margin: 0 auto;
+    display: grid; grid-template-columns: 1.1fr 1fr;
+    gap: 150px; align-items: center;
+  }
 
-    .video {
-      width: 70%; max-width: 600px; height: auto;
-      border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,.1);
-    }
+  /* vídeo */
+  .video-container{ position: relative; }
+  .video{
+    width: 100%; height: auto; display:block;
+    border-radius: 14px;
+    box-shadow: 0 14px 32px rgba(7,30,46,.12);
+    margin-top: 50px; /* Aumenta espaço entre o vídeo e o título de baixo */
 
-    .arrow.left  { left: 80px; }
-    .arrow.right { right: 80px; }
+  }
+
+  /* se quiser ocultar as setas aqui */
+  .arrow{ display:none; }
+
+  /* texto */
+  .texto-box{
+    max-width: 520px;
+    margin-top: 70px; /* Aumenta espaço entre o vídeo e o título de baixo */
+
+    h3{ font-size: clamp(22px,3vw,32px); margin:0 0 10px; color:#0b3e4e; }
+    .intro{ color:#61727b; line-height:1.6; margin:0 0 16px; }
+  }
+
+  .bullets {
+    list-style: none;
+    padding: 20px;
+    margin-right: 12px;
+  }
+
+  .bullets li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: #29414C;
+    display: flex;
+    align-items: center;
+    gap: 30px; /* Garante espaçamento consistente */
+    margin-bottom: 15px; /* Mais espaço entre os itens da lista */
+  }
+
+  .btn-contato{
+    display:inline-block; background:#0d6e91; color:#fff; text-decoration:none;
+    font-weight:700; padding:12px 22px; border-radius:8px; cursor:pointer;
+    box-shadow:0 6px 16px rgba(13,110,145,.25);
+    transition: background .15s, box-shadow .15s, transform .15s;
+    &:hover{ background:#0b5b77; box-shadow:0 10px 22px rgba(13,110,145,.32); transform: translateY(-1px); }
+  }
+
+  /* responsivo */
+  @media (max-width: 980px){
+    .content{ grid-template-columns: 1fr; gap:28px; }
+    .texto-box{ max-width:680px; margin:0 auto; text-align:center; }
+    .bullets li{ text-align:left; } /* mantém alinhamento dos itens */
   }
 }
 
@@ -255,12 +314,24 @@ header {
    CARDS (funcionalidades/diferenciais)
 ========================= */
 #funcionalidades, #diferenciais {
-  background: #f4f7fa; padding: 64px 20px; text-align: center;
+  background: #f4f7fa; padding: 150px 20px; text-align: center;
 
-  h2 { font-size: clamp(26px,3vw,32px); margin-bottom: 32px; color: $cta; }
+  h2 {
+      font-size: clamp(42px, 4vw, 48px);
+      margin: 0 0 24px;
+      line-height: 1.1;
+      color: $ink;
+      font-weight: 700;
+      margin-top: 10px;
+      .destaque {
+        color: $bg; // azul
+      }
+    }
+
+  p { margin: 0 0 28px; font-size: 18px; color: #5b6974 }     // espaço abaixo do parágrafo
 
   .cards {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 120px; padding-top: 80px;
 
     .card {
       background: #fff; padding: 24px; border-radius: 12px;
@@ -370,3 +441,24 @@ footer {
 @media (max-width: 480px) {
   .button, .btn { width: 100%; }
 }
+
+.cards .card .icon {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 14px;         /* centraliza e dá respiro */
+  border-radius: 16px;
+  background: #f4f4f4;         /* mesmo fundo dos prints */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 16px rgba(0,0,0,.06);
+}
+
+.cards .card .icon .material-icons,
+.cards .card .icon .material-icons-outlined {
+  font-size: 48px;             /* tamanho do ícone */
+  color: #2d5c72;              /* azul do seu tema */
+  line-height: 1;
+}
+
+

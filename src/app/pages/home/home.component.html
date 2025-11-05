@@ -30,7 +30,6 @@
     <span class="chip">• Orçamentos rápidos e sem complicação.</span>
     <h1>Simplifique <span class="destaque">sua<br>operação</span></h1>
     <p>Otimizar processos, calcular com precisão e acelerar orçamentos — tudo em um só lugar</p>
-
     <button class="button" (click)="abrirModal()">Conversar Com Especialista</button>
   </div>
 
@@ -49,28 +48,9 @@
   </div>
 </section>
 
-<section class="video-section">
-  <h2>Veja como o sistema pode otimizar seu trabalho</h2> <!-- Título que você solicitou -->
-  <div class="video-container">
-
-    <!-- Botão de navegação anterior -->
-    <button class="arrow left" (click)="videoAnterior()">&#10094;</button>
-
-    <!-- Vídeo com controle de troca após o término -->
-    <video #videoPlayer
-           [src]="currentVideoUrl"
-           controls
-           (ended)="trocarVideo()"
-           class="video">
-    </video>
-
-    <!-- Botão de navegação próximo -->
-    <button class="arrow right" (click)="proximoVideo()">&#10095;</button>
-  </div>
-</section>
-
 <section id="funcionalidades">
-  <h2>Funcionalidades principais</h2>
+  <h2>Funcionalidades Principais</h2>
+  <p>Tudo Que Você Precisa Para Elaborar Orçamentos Ágeis e Precisos</p>
   <div class="cards">
     <div class="card">
       <div class="icon">⚙️</div>
@@ -86,6 +66,51 @@
       <div class="icon">⏳</div>
       <h3>Cronograma automatizado</h3>
       <p>O sistema calcula automaticamente os tempos das tarefas e gera um cronograma preliminar da obra, deixando apenas o ajuste do início de cada tarefa a ser defindio pelo orçamentista.</p>
+    </div>
+  </div>
+</section>
+
+<section class="video-section" id="tecnologia">
+  <h2>Tecnologia que gera resultado</h2>
+  <p class="sub">A BudSys torna seus orçamentos mais precisos — e mostra o resultado em números</p>
+
+  <div class="content">
+    <!-- ESQUERDA: vídeo -->
+    <div class="video-container">
+      <button class="arrow left" (click)="videoAnterior()">&#10094;</button>
+
+      <video #videoPlayer
+             [src]="currentVideoUrl"
+             controls
+             (ended)="trocarVideo()"
+             class="video">
+      </video>
+
+      <button class="arrow right" (click)="proximoVideo()">&#10095;</button>
+    </div>
+
+    <!-- DIREITA: texto -->
+    <div class="texto-box">
+      <h3>Por que usar o BudSys?</h3>
+      <p class="intro">
+        Chega de perder tempo com planilhas e orçamentos manuais.<br>
+        Com a BudSys, você organiza sua operação, acelera entregas e toma decisões mais rápidas.
+      </p>
+
+      <ul class="bullets">
+        <li><svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L9 9L1 17" stroke="#05C4CF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Economia de Tempo</li>
+        <li><svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L9 9L1 17" stroke="#05C4CF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg> Cálculos Automatizados e Precisos</li>
+        <li><svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L9 9L1 17" stroke="#05C4CF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg> Sistema Intuitivo e de Fácil Uso</li>
+      </ul>
+
+      <button class="button" (click)="abrirModal()">Conversar Com Especialista</button>
     </div>
   </div>
 </section>
