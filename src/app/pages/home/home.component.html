@@ -115,39 +115,73 @@
   </div>
 </section>
 
-<section id="diferenciais">
-  <h2>Por que usar o BudSys?</h2>
-  <div class="cards">
-    <div class="card">
-      <div class="icon">⏰</div>
-      <h3>Economia de Tempo</h3>
-      <p>Com o BudSys, o seu tempo é priorizado. Automatize processos, minimize tarefas repetitivas e evite erros humanos. A plataforma facilita a criação de orçamentos e cronogramas, para que você gaste menos tempo em detalhes e mais tempo gerenciando seu projeto de forma estratégica.</p>
+<section class="process-section">
+  <div class="process-content">
+
+    <!-- Texto à esquerda -->
+    <div class="process-text">
+      <h2>Como entregamos mais agilidade para o seu dia a dia</h2>
+      <p>
+        Nosso processo garante que a Budsys se adapte à sua rotina, sem complicações
+      </p>
     </div>
-    <div class="card">
-      <div class="icon">🔢</div>
-      <h3>Cálculos Automatizados e Precisos</h3>
-      <p>Todos os cálculos são realizados automaticamente, padronizando os processos e garantindo maior precisão no valor final da sua obra. O sistema elimina erros e otimiza a precisão, proporcionando um orçamento confiável e seguro.</p>
+
+    <!-- Cards à direita -->
+    <div class="process-cards">
+      <div class="card">
+        <span class="icon">📊</span>
+        <h3>Entendimento do seu fluxo</h3>
+        <p>Antes de qualquer implementação, escutamos você. Mapeamos como sua equipe trabalha, identificamos onde há gargalos e entendemos exatamente o que é necessário para que a Budsys se encaixe com fluidez na sua rotina.</p>
+      </div>
+
+      <div class="card">
+        <span class="icon">⚙️</span>
+        <h3>Configuração personalizada</h3>
+        <p>Adaptamos tudo conforme sua realidade: regras de cálculo, formulários, orçamentos e relatórios sob medida — sem precisar de um exército de TI.</p>
+      </div>
+
+      <div class="card">
+        <span class="icon">🎯</span>
+        <h3>Treinamento prático</h3>
+        <p>Mostramos o que você precisa para usar a Budsys com confiança, em poucos cliques, sem burocracia.</p>
+      </div>
+
+      <div class="card">
+        <span class="icon">🤝</span>
+        <h3>Suporte e entrega</h3>
+        <p>Após a implantação, seguimos ao seu lado! Estamos aqui para ajudar sua operação a crescer com segurança.</p>
+      </div>
     </div>
-    <div class="card">
-      <div class="icon">🖥️</div>
-      <h3>Sistema Intuitivo e de Fácil Uso</h3>
-      <p>Não precisa de treinamentos longos. O sistema é totalmente intuitivo, permitindo que qualquer pessoa com conhecimento básico da sua empresa consiga utilizá-lo com facilidade, sem complicações.</p>
-    </div>
+
   </div>
 </section>
 
-<section id="destaques" class="slider-section">
-  <div class="slider-container">
-    <div
-      class="slider"
-      [style.transform]="'translateX(-' + currentSlide * slideWidth + '%)'"
-      [style.transition]="transitionStyle"
-    >
-      <div class="card-slide" *ngFor="let frase of frasesComDuplicado">
-        <div class="card destaque">
-          <p>{{ frase }}</p>
-        </div>
-      </div>
+<section class="testimonials-section">
+  <h2>Depoimentos</h2>
+  <p class="subtitle">O que nossos clientes estão dizendo</p>
+
+  <div class="testimonial-box">
+    <p class="testimonial-text">"{{ depoimentos[idx].texto }}"</p>
+
+    <div class="author-block">
+      <p class="author">{{ depoimentos[idx].autor }}</p>
+      <p class="role">{{ depoimentos[idx].empresa }}</p>
+    </div>
+
+    <!-- Botões empilhados à direita -->
+    <div class="nav-stack">
+      <button class="nav-btn" (click)="prevDepo()" aria-label="Anterior">
+        <!-- seta para cima -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M6 15l6-6 6 6" stroke="#2D3E46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="nav-btn" (click)="nextDepo()" aria-label="Próximo">
+        <!-- seta para baixo -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M18 9l-6 6-6-6" stroke="#2D3E46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
   </div>
 </section>

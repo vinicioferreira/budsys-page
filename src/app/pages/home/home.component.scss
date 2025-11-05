@@ -250,7 +250,7 @@ header {
   .content{
     max-width: 1160px; margin: 0 auto;
     display: grid; grid-template-columns: 1.1fr 1fr;
-    gap: 150px; align-items: center;
+    gap: 100px; align-items: center;
   }
 
   /* vídeo */
@@ -349,49 +349,134 @@ header {
 }
 
 /* =========================
-   SLIDER DE DESTAQUES
+   CARDS PROCESS
 ========================= */
-/* Card do slider */
-.slider-section {
-  background: #f4f7fa;
-  padding: 64px 10px;
-  color: #555;
+
+.process-section {
+  background: #043d57;
+  color: #ffffff;
+  padding: 80px 10%;
+}
+
+.process-content {
   display: flex;
-  justify-content: center;
-  overflow: hidden;
+  gap: 60px;
+  align-items: center
+}
 
-  .slider-container {
-    width: 100%;
-    max-width: 1100px;
-    overflow: hidden;
-  }
+.process-text {
+  flex: 1;
+  max-width: 360px;
+}
 
-  .slider {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 100px;
-    animation: scrollCards 20s linear infinite;
-  }
+.process-text h2 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
 
-  .card-slide {
-    flex: 0 0 auto;
-  }
+.process-text p {
+  font-size: 16px;
+  opacity: 0.8;
+}
 
-  // 🎯 Estilo do card EXATO como o primeiro modelo
-  .card.destaque {
-    background: #fff;
-    width: 220px;
-    height: 140px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-shadow: 0 6px 18px rgba(0,0,0,.08);
-    font-size: 16px;
-    line-height: 1.4;
-    color: #555;
+.process-cards {
+  flex: 1.5;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.card {
+  background: #ffffff;
+  color: #002331;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.card p {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.icon {
+  font-size: 32px;
+  color: #005F73;
+}
+
+/* =========================
+   CONTATO / FOOTER
+========================= */
+.testimonials-section {
+  padding: 72px 20px;
+  text-align: center;
+
+  h2 { font-size: clamp(26px, 3.6vw, 36px); color:#073b4c; margin:0 0 8px; }
+  .subtitle { color:#6b7a86; margin:0 0 32px; }
+}
+
+.testimonial-box {
+  position: relative;
+  max-width: 980px;
+  margin: 0 auto;
+  text-align: left;
+  background: #f2f3f4;
+  border-radius: 14px;
+  padding: clamp(20px, 3.5vw, 36px);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.04);
+}
+
+.testimonial-text {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #475861;
+  margin: 0 0 28px;
+}
+
+.author-block { margin-top: 10px; }
+.author { font-weight: 800; color:#073b4c; font-size: 20px; margin:0 0 4px; }
+.role { color:#7b8b95; margin:0; }
+
+/* pilha de botões à direita */
+.nav-stack {
+  position: absolute;
+  right: clamp(10px, 2vw, 20px);
+  bottom: clamp(10px, 3vw, 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nav-btn {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  background: #fff;
+  border: 1px solid #DFE5E8;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  cursor: pointer;
+  transition: background .15s, transform .08s, box-shadow .15s;
+
+  &:hover {
+    background: #F6FAFB;
+    box-shadow: 0 4px 14px rgba(7,30,46,.12);
   }
+  &:active { transform: translateY(1px); }
+}
+
+/* responsivo: botões um pouco menores no mobile */
+@media (max-width: 520px) {
+  .nav-btn { width: 36px; height: 36px; }
 }
 
 @keyframes scrollCards { 0% {transform: translateX(0);} 100% {transform: translateX(-50%);} }

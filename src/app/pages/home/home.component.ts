@@ -48,6 +48,49 @@ export class HomeComponent {
       'assets/Dashboard.mp4'
     ];
 
+    idx = 0;
+    intervaloTroca: any;
+
+    depoimentos = [
+      {
+        texto: `Testei o BudSys e, pra ser sincero, me surpreendeu positivamente. Aqui vão alguns pontos que me interessaram:
+          Métricas de fechamento na mão
+          É muito bom poder ver, de forma clara, quantos orçamentos estão em andamento, quantos já foram fechados e acompanhar o desempenho geral. Isso ajuda bastante na hora de entender o que está funcionando e onde podemos melhorar.
+          Gerenciar serviços e equipe ficou fácil
+          Adicionar os trabalhos dentro do orçamento é super simples, e o controle das atividades da equipe fica bem mais organizado. Isso faz diferença no dia a dia.
+          Mais praticidade pro orçamentista
+          Ter todos os orçamentos centralizados, com acesso fácil e tudo bem organizado, facilita demais. Dá pra puxar históricos, revisar orçamentos antigos e manter tudo padronizado, o que economiza tempo e evita retrabalho.`,
+        autor: 'Adão C. Junior',
+        empresa: 'FC Engenharia'
+      },
+      {
+        texto: `A Budsys tem sido uma parceira essencial no nosso dia a dia, trazendo agilidade, eficiência e organização para nossos processos internos. Com seu sistema inteligente de gestão orçamentária e precificação de materiais e serviços, conseguimos reduzir significativamente o tempo de resposta aos nossos clientes ,um diferencial importante em um mercado cada vez mais dinâmico e competitivo.
+        Através da Budsys, conseguimos ter mais controle, clareza e padronização em nossos orçamentos, otimizando o tempo da equipe e garantindo mais assertividade nas entregas. O resultado é uma operação mais organizada, com processos mais fluídos e clientes mais satisfeitos.
+        Budsys não é apenas uma ferramenta. É um avanço na forma como gerenciamos nosso negócio.`,
+        autor: 'Rafael P. do Lago',
+        empresa: 'Lago Materiais e Serviços'
+      },
+    ];
+
+    stopAutoTroca(): void {
+      clearInterval(this.intervaloTroca);
+    }
+
+    prevDepo(reset = true): void {
+      this.idx = (this.idx - 1 + this.depoimentos.length) % this.depoimentos.length;
+      if (reset) this.resetInterval();
+    }
+
+    nextDepo(reset = true): void {
+      this.idx = (this.idx + 1) % this.depoimentos.length;
+      if (reset) this.resetInterval();
+    }
+
+    resetInterval(): void {
+      this.stopAutoTroca();
+      this.iniciarAutoTroca();
+    }
+
     videoAtual = 0;
     currentVideoUrl = this.videos[this.videoAtual];
     isManualChange = false; // Flag para verificar se a troca é manual
@@ -56,6 +99,7 @@ export class HomeComponent {
 
     ngOnInit() {
       this.iniciarCarrossel();
+      this.iniciarAutoTroca();
 
        // Troca a imagem automaticamente após 10 segundos
       setInterval(() => {
@@ -84,6 +128,12 @@ export class HomeComponent {
       setInterval(() => {
         this.nextSlide();
       }, 3000); // tempo de rotação das frases
+    }
+
+    iniciarAutoTroca(): void {
+      this.intervaloTroca = setInterval(() => {
+        this.nextDepo(false);
+      }, 6000); // ⏱ Troca a cada 6 segundos
     }
 
     nextSlide() {
@@ -165,6 +215,6 @@ export class HomeComponent {
         disableClose: false
       });
     }
-    
+
 }
 
