@@ -151,15 +151,15 @@ header {
       align-items: center;
       gap: 8px;
       margin-bottom: 24px;
-
       padding: 8px 18px;
       background: #e8f4fa;     // azul bem clarinho (pode ser $chip se já usa variável)
-      border: 1px solid #c9e2f0;
+      border: 10px solid #c9e2f0;
       border-radius: 5px;
-
+      border: 1px solid #cde6ee;
       font-size: 16px;
       font-weight: 400;
       color: #084d6e;          // cor do texto (azul escuro do tema)
+
 
       .dot {
         width: 8px;
@@ -168,6 +168,15 @@ header {
         border-radius: 50%;
       }
     }
+
+    .chip::before {
+        content: "•" !important;
+        display: inline-block;
+        font-size: 35px;     /* aumenta o tamanho da bolinha */
+        color: #007899;
+        line-height: 1;
+        transform: translateY(1px); /* ajusta o alinhamento vertical */
+      }
 
     h1 {
       font-size: clamp(32px, 4vw, 48px);
