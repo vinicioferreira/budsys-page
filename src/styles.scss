@@ -1,6 +1,11 @@
 /* Importação do Bootstrap */
 @import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
+/* Coloque junto ao fix acima */
+html, body { overflow-y: scroll; }              /* Evita desaparecer a barra */
+html { scrollbar-gutter: stable; }              /* Chrome/Edge/Firefox modernos */
+
+
 /* Variáveis de cores globais */
 :root {
   --primary-color: #084d6e;

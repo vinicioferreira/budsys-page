@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalContatoComponent } from '../modal-contato/modal-contato.component';
+import { Overlay } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-home',
@@ -95,7 +96,7 @@ export class HomeComponent {
     currentVideoUrl = this.videos[this.videoAtual];
     isManualChange = false; // Flag para verificar se a troca é manual
 
-    constructor(private dialog: MatDialog) {}
+    constructor(private dialog: MatDialog, private overlay: Overlay) {}
 
     ngOnInit() {
       this.iniciarCarrossel();
@@ -212,7 +213,11 @@ export class HomeComponent {
     abrirModal() {
       this.dialog.open(ModalContatoComponent, {
         width: '400px',
-        disableClose: false
+        disableClose: false,
+        hasBackdrop: true,
+        autoFocus: false,
+        restoreFocus: true,
+        scrollStrategy: this.overlay.scrollStrategies.noop()
       });
     }
 
