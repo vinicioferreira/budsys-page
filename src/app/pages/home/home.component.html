@@ -36,14 +36,15 @@
   <div class="hero-img">
     <!-- Carrossel de imagens -->
     <div class="carousel-container">
-      <!-- Botão para a imagem anterior -->
+      <!-- Botão para a imagem anterior
       <button class="arrow left" (click)="trocarImagemAnterior()">&#10094;</button>
-
+      -->
       <!-- Imagem com controle de troca -->
       <img [src]="currentDashboardImage" alt="Dashboard" width="500" />
 
-      <!-- Botão para a próxima imagem -->
+      <!-- Botão para a próxima imagem
       <button class="arrow right" (click)="trocarImagemProxima()">&#10095;</button>
+      -->
     </div>
   </div>
 </section>
@@ -182,6 +183,46 @@
           <path d="M18 9l-6 6-6-6" stroke="#2D3E46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
+    </div>
+  </div>
+</section>
+
+<section class="sobre-nos">
+  <h2>Sobre nós</h2>
+  <p class="subtitulo">
+    somos parceiros na sua rotina — ajudando você a focar no que realmente importa: crescer com controle
+  </p>
+
+  <div class="sobre-container">
+    <div class="texto">
+      <h3>A BudSys nasceu para simplificar sua rotina</h3>
+      <p>
+        A BudSys é uma empresa jovem, mas nascida da prática. Após anos atuando diretamente com obras,
+        serviços e orçamentos técnicos, decidimos transformar essa vivência em uma solução digital.
+        Criamos uma plataforma simples, moderna e eficiente para automatizar orçamentos de obras elétricas e
+        serviços, com o objetivo de economizar tempo, reduzir retrabalho e dar mais controle para quem está
+        na linha de frente. Mais do que tecnologia, entregamos visão prática de quem já sentiu na pele a
+        dificuldade de orçar com precisão — e agora quer resolver isso para o mercado.
+      </p>
+      <a class="btn-contato" href="#contato">Conversar Com Especialista</a>
+    </div>
+
+    <div class="imagem">
+      <img src="assets/Budsys_Notebook.png" alt="BudSys">
+    </div>
+  </div>
+</section>
+
+<section class="faq-section">
+  <h2 class="faq-title">Perguntas frequentes</h2>
+
+  <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.active]="i === ativo">
+    <button class="faq-question" (click)="toggleFAQ(i)">
+      {{ faq.pergunta }}
+      <span class="icon">{{ i === ativo ? '−' : '+' }}</span>
+    </button>
+    <div class="faq-answer" *ngIf="i === ativo">
+      {{ faq.resposta }}
     </div>
   </div>
 </section>

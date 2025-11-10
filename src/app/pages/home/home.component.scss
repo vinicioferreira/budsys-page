@@ -421,7 +421,12 @@ header {
   padding: 72px 20px;
   text-align: center;
 
-  h2 { font-size: clamp(26px, 3.6vw, 36px); color:#073b4c; margin:0 0 8px; }
+  h2 {
+    font-size: clamp(26px, 3.6vw, 36px);
+    color:#073b4c;
+    margin:0 0 8px;
+    font-weight: 500;
+  }
   .subtitle { color:#6b7a86; margin:0 0 32px; }
 }
 
@@ -480,6 +485,185 @@ header {
 }
 
 @keyframes scrollCards { 0% {transform: translateX(0);} 100% {transform: translateX(-50%);} }
+
+.sobre-nos {
+  padding: 80px 10%;
+  text-align: center;
+  background: #fff;
+}
+
+.sobre-nos h2 {
+  font-size: clamp(26px, 3.6vw, 36px);
+  color:#073b4c;
+  margin:0 0 8px;
+  font-weight: 500;
+}
+
+.sobre-nos .subtitulo {
+  color: #6b6b6b;
+  font-size: 1rem;
+  margin-bottom: 60px;
+}
+
+.sobre-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+
+.texto {
+  flex: 1;
+  text-align: left;
+  max-width: 550px;
+}
+
+.texto h3 {
+  font-size: 1.8rem;
+  color: #012b36;
+  margin-bottom: 20px;
+}
+
+.texto p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.btn-contato {
+  display: inline-block;
+  background-color: #024c63;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.btn-contato:hover {
+  background-color: #036b8a;
+}
+
+.imagem {
+  flex: 1;
+  text-align: center;
+}
+
+.imagem img {
+  max-width: 480px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .sobre-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .texto {
+    text-align: center;
+  }
+
+  .imagem img {
+    max-width: 380px;
+  }
+}
+
+/* =========================
+   PERGUNTAS FREQUENTES
+========================= */
+.faq-section {
+  text-align: center;
+  padding: 80px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 50px;
+  color: #002f3c;
+}
+
+.faq-item {
+  margin-bottom: 15px;
+  border-radius: 12px;
+  overflow: hidden;                /* CLIPA os filhos e elimina os “dentes” */
+  background: #fff;                /* padrão fechado */
+  transition: background .25s ease;
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+}
+
+/* Quando aberto, o fundo azul fica no contêiner */
+.faq-item.active {
+  background: #014c63;
+}
+
+.faq-question {
+  width: 100%;
+  padding: 20px;
+  border: 0;
+  background: transparent;         /* importante */
+  color: #002f3c;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 0;                 /* importante */
+}
+
+.faq-item.active .faq-question {
+  color: #fff;
+}
+
+.icon {
+  font-size: 1.5rem;
+  background: #e0eef3;
+  color: #014c63;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+.faq-item.active .icon {
+  background-color: #fff;
+  color: #014c63;
+}
+
+.faq-answer {
+  padding: 14px 20px 22px;
+  background: transparent;         /* importante */
+  border-radius: 0;                 /* importante */
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.55;
+  animation: fadeIn .25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 /* =========================
    CONTATO / FOOTER

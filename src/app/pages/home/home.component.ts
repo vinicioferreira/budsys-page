@@ -12,9 +12,9 @@ export class HomeComponent {
 
     // Lista de imagens do dashboard
     dashboardImages: string[] = [
-      'assets/Dashbord_Budsys.png', // Imagens do dashboard
-      'assets/Budsys_Cronograma.png',
-      'assets/Budsys_Login.png'
+      //'assets/page2.jpg', // Imagens do dashboard
+      'assets/Budsys_page2.png',
+      //'assets/Budsys_Login.png'
     ];
 
     // Índice da imagem atual
@@ -216,5 +216,29 @@ export class HomeComponent {
       });
     }
 
+    faqs = [
+    {
+      pergunta: 'Consigo gerar orçamentos automáticos?',
+      resposta: 'Com certeza. A BudSys permite que você crie orçamentos em poucos cliques, com valores calculados automaticamente.'
+    },
+    {
+      pergunta: 'Preciso de suporte para começar?',
+      resposta: 'Nosso time de especialistas oferece suporte completo durante a implantação e o uso da plataforma.'
+    },
+    {
+      pergunta: 'A BudSys é difícil de usar?',
+      resposta: 'Não! O sistema é intuitivo e foi criado para ser usado de forma prática e rápida, mesmo sem experiência prévia.'
+    },
+    {
+      pergunta: 'Posso personalizar os campos do meu orçamento?',
+      resposta: 'Sim. Você pode adaptar os campos e relatórios conforme a necessidade do seu negócio.'
+    }
+  ];
+
+  ativo: number | null = 0; // deixa o primeiro aberto por padrão
+
+  toggleFAQ(index: number) {
+    this.ativo = this.ativo === index ? null : index;
+  }
 }
 
