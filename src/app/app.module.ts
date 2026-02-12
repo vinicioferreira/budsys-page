@@ -35,6 +35,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { ModalCadastroClientePotencialComponent } from './pages/admin/modal-cadastro-cliente-potencial/modal-cadastro-cliente-potencial.component';
 import { ModalMessageComponent } from './pages/agenda/modal-message/modal-message.component';
+import { BlogListComponent } from './pages/blog/blog-list/blog-list.component';
+import { BlogPostComponent } from './pages/blog/blog-post/blog-post.component';
+import { BlogAdminComponent } from './pages/blog/blog-admin/blog-admin.component';
 
 
 @NgModule({
@@ -48,7 +51,10 @@ import { ModalMessageComponent } from './pages/agenda/modal-message/modal-messag
     CadenciaComponent,
     ModalCadastroCadenciaComponent,
     ModalCadastroClientePotencialComponent,
-    ModalMessageComponent
+    ModalMessageComponent,
+    BlogListComponent,
+    BlogPostComponent,
+    BlogAdminComponent
   ],
   imports: [
     BrowserModule,

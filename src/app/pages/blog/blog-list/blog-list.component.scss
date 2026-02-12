@@ -1,0 +1,75 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.blog-hero {
+  padding: 34px 0 18px;
+  background: linear-gradient(135deg, #084d6e 0%, #0b5f86 55%, #0a5578 100%);
+  color: #fff;
+
+  .container {
+    display: grid;
+    gap: 10px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 40px;
+    font-weight: 900;
+    letter-spacing: -0.8px;
+    line-height: 1.05;
+  }
+
+  p {
+    margin: 0;
+    opacity: .92;
+    max-width: 760px;
+    font-size: 15px;
+  }
+}
+
+
+.blog-grid {
+  padding: 22px 0 64px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: -18px; /* puxa os cards pra cima */
+}
+
+.page-content {
+  background: #f6f8fb;
+  padding-bottom: 20px;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .08);
+
+  h3 {
+    margin: 0 0 8px;
+    font-weight: 900;
+    color: var(--primary-color);
+  }
+
+  p {
+    margin: 0 0 14px;
+    color: #4a5863;
+  }
+
+  .empty-cta {
+    display: inline-block;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    background: var(--accent-color);
+    color: #fff;
+  }
+}
+
