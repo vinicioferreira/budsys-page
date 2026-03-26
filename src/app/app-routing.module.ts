@@ -13,8 +13,8 @@ const routes: Routes = [
   { path: 'admin', component: AdminComponent },
   { path: 'agenda', component: AgendaComponent },
   { path: 'cadencia', component: CadenciaComponent },
-
   { path: 'blog', component: BlogListComponent },
+  { path: 'admin/blog', component: BlogAdminComponent },
   { path: 'blog-admin', component: BlogAdminComponent },
   { path: 'blog/:slug', component: BlogPostComponent },
 
@@ -32,4 +32,4 @@ const routerOptions: ExtraOptions = {
   imports: [RouterModule.forRoot(routes, routerOptions)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
