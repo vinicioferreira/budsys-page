@@ -5,7 +5,11 @@
   </div>
 </section>
 
-<section class="container blog-grid" *ngIf="(posts$ | async) as posts">
+<section
+  class="container blog-grid"
+  *ngIf="(posts$ | async) as posts"
+  [class.single]="posts.length === 1"
+>
   <ng-container *ngIf="posts.length > 0; else empty">
     <article class="blog-card" *ngFor="let p of posts">
       <div class="thumb" *ngIf="p.coverUrl; else noImg">
@@ -39,7 +43,7 @@
     <div class="empty">
       <h3>Nenhum artigo publicado ainda</h3>
       <p>Em breve vamos postar conteúdos sobre orçamento, cronograma, Gantt e Curva S.</p>
-      <a class="empty-cta" routerLink="/" fragment="contato">Falar com especialista</a>
+      <a class="empty-cta" href="/#contato">Falar com especialista</a>
     </div>
   </ng-template>
 </section>

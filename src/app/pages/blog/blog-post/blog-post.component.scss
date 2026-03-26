@@ -1,0 +1,164 @@
+:host {
+  display: block;
+  background: #f5f7fa;
+  min-height: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.post-page {
+  padding: 40px 0 80px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #0b5f86;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.post-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.post-card.not-found {
+  text-align: center;
+}
+
+.meta {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 42px;
+  line-height: 1.1;
+  font-weight: 900;
+  color: #16212b;
+}
+
+.excerpt {
+  margin: 0 0 24px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #53616d;
+}
+
+.cover {
+  width: 100%;
+  border-radius: 16px;
+  margin: 0 0 28px;
+  display: block;
+  object-fit: cover;
+  max-height: 440px;
+}
+
+.content {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #33414d;
+}
+
+.content p {
+  margin: 0 0 18px;
+}
+
+.content h2 {
+  margin: 34px 0 14px;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 900;
+  color: #0b5f86;
+}
+
+.content h3 {
+  margin: 28px 0 12px;
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 800;
+  color: #1b2b36;
+}
+
+.content ul,
+.content ol {
+  margin: 0 0 20px 24px;
+}
+
+.content li {
+  margin-bottom: 10px;
+}
+
+.content a {
+  color: #0b5f86;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.content a:hover {
+  text-decoration: underline;
+}
+
+.content blockquote {
+  margin: 28px 0;
+  padding: 18px 20px;
+  border-left: 4px solid #0b5f86;
+  background: #f4f9fc;
+  border-radius: 10px;
+  color: #24404f;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 24px auto;
+  border-radius: 14px;
+}
+
+@media (max-width: 768px) {
+  .post-page {
+    padding: 24px 0 56px;
+  }
+
+  .post-card {
+    padding: 22px;
+    border-radius: 16px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .excerpt {
+    font-size: 16px;
+  }
+
+  .content {
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .content h2 {
+    font-size: 24px;
+  }
+
+  .content h3 {
+    font-size: 20px;
+  }
+}

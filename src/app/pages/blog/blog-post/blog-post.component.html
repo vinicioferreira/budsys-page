@@ -1,15 +1,30 @@
-<section class="container post" *ngIf="post$ | async as p; else notFound">
-  <h1>{{ p.title }}</h1>
-  <p class="meta" *ngIf="p.publishedAt">{{ p.publishedAt.toDate() | date:'dd/MM/yyyy' }}</p>
+<section class="post-page" *ngIf="post$ | async as p; else notFound">
+  <div class="container">
+    <a class="back-link" routerLink="/blog">← Voltar para o blog</a>
 
-  <img *ngIf="p.coverUrl" [src]="p.coverUrl" [alt]="p.title" class="cover" />
+    <article class="post-card">
+      <p class="meta" *ngIf="p.publishedAt">
+        {{ p.publishedAt.toDate() | date:'dd/MM/yyyy' }}
+      </p>
 
-  <!-- Renders your HTML -->
-  <div class="content" [innerHTML]="p.contentHtml"></div>
+      <h1>{{ p.title }}</h1>
+
+      <p class="excerpt" *ngIf="p.excerpt">{{ p.excerpt }}</p>
+
+      <img *ngIf="p.coverUrl" [src]="p.coverUrl" [alt]="p.title" class="cover" />
+
+      <div class="content" [innerHTML]="p.contentHtml"></div>
+    </article>
+  </div>
 </section>
 
 <ng-template #notFound>
-  <section class="container">
-    <h2>Post não encontrado.</h2>
+  <section class="post-page">
+    <div class="container">
+      <div class="post-card not-found">
+        <h2>Post não encontrado.</h2>
+        <a class="back-link" routerLink="/blog">← Voltar para o blog</a>
+      </div>
+    </div>
   </section>
 </ng-template>

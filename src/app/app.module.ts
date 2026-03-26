@@ -38,6 +38,9 @@ import { ModalMessageComponent } from './pages/agenda/modal-message/modal-messag
 import { BlogListComponent } from './pages/blog/blog-list/blog-list.component';
 import { BlogPostComponent } from './pages/blog/blog-post/blog-post.component';
 import { BlogAdminComponent } from './pages/blog/blog-admin/blog-admin.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+
 
 
 @NgModule({
@@ -76,6 +79,8 @@ import { BlogAdminComponent } from './pages/blog/blog-admin/blog-admin.component
     MatSelectModule,
     MatOptionModule,
     HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
@@ -87,4 +92,4 @@ import { BlogAdminComponent } from './pages/blog/blog-admin/blog-admin.component
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
