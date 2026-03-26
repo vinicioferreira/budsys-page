@@ -1,1 +1,86 @@
-<p>blog-admin works!</p>
+<section class="admin">
+  <div class="container">
+    <h1>Novo artigo</h1>
+
+    <form (ngSubmit)="salvar()" #blogForm="ngForm">
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input
+          id="title"
+          type="text"
+          [(ngModel)]="post.title"
+          name="title"
+          (input)="gerarSlug()"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="slug">Slug</label>
+        <input
+          id="slug"
+          type="text"
+          [(ngModel)]="post.slug"
+          name="slug"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="excerpt">Resumo</label>
+        <textarea
+          id="excerpt"
+          [(ngModel)]="post.excerpt"
+          name="excerpt"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="coverUrl">Imagem de capa (URL)</label>
+        <input
+          id="coverUrl"
+          type="text"
+          [(ngModel)]="post.coverUrl"
+          name="coverUrl"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="contentHtml">Conteúdo (HTML)</label>
+        <textarea
+          id="contentHtml"
+          [(ngModel)]="post.contentHtml"
+          name="contentHtml"
+          rows="12"
+          required
+        ></textarea>
+      </div>
+
+      <div class="actions">
+        <button type="submit" [disabled]="loading || !blogForm.form.valid">
+          {{ loading ? 'Salvando...' : 'Publicar' }}
+        </button>
+      </div>
+    </form>
+
+    <section class="preview-section" *ngIf="post.title || post.contentHtml || post.coverUrl">
+      <h2>Preview</h2>
+
+      <article class="preview-card">
+        <p class="preview-date">{{ hoje | date:'dd/MM/yyyy' }}</p>
+        <h3>{{ post.title || 'Título do artigo' }}</h3>
+        <p class="preview-excerpt" *ngIf="post.excerpt">{{ post.excerpt }}</p>
+
+        <img
+          *ngIf="post.coverUrl"
+          [src]="post.coverUrl"
+          [alt]="post.title || 'Imagem de capa'"
+          class="preview-cover"
+        />
+
+        <div class="preview-content" [innerHTML]="post.contentHtml"></div>
+      </article>
+    </section>
+  </div>
+</section>

@@ -5,7 +5,7 @@ import { BlogPost } from '../interfaces/blog';
 
 @Injectable({ providedIn: 'root' })
 export class BlogService {
-  constructor(private afs: AngularFirestore) { }
+  constructor(private afs: AngularFirestore) {}
 
   getPublishedPosts(): Observable<BlogPost[]> {
     return this.afs
@@ -37,5 +37,9 @@ export class BlogService {
           return { id: doc.id, ...(doc.data() as BlogPost) };
         })
       );
+  }
+
+  async createPost(post: any) {
+    return this.afs.collection('posts').add(post);
   }
 }
