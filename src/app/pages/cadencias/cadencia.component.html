@@ -1,0 +1,49 @@
+<app-menu></app-menu>
+
+<div class="container-fluid">
+  <h2><mat-icon>calendar_today</mat-icon> Cadências de Vendas</h2>
+
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="abrirModalCadastro()">Nova Cadência</button>
+  </div>
+
+  <section class="cadencias-salvas">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let c of cadenciasSalvas">
+        <mat-expansion-panel-header class="painel-header">
+          <div class="header-conteudo">
+            <mat-panel-title>
+              {{ c.nome }} - {{ c.descricao }}
+            </mat-panel-title>
+          </div>
+          <div class="acoes">
+            <button mat-icon-button (click)="editar(c.id)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="excluir(c.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </mat-expansion-panel-header>
+
+        <ul>
+          <li *ngFor="let e of c.etapas; let i = index">
+            <div class="linha-etapa">
+              <div>
+                <strong>Dia {{ e.dia }}</strong> | Canal: {{ e.canal }} | Mensagem: {{ e.mensagem }}
+              </div>
+              <div class="acoes">
+                <button mat-icon-button (click)="editarEtapa(c.id, e, i)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="excluirEtapa(c.id, e)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </section>
+</div>

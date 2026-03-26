@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>Mensagem para Cliente</h2>
+<mat-dialog-content>
+  <p><strong>Cliente:</strong> {{ data.contatoNome }}</p>
+  <p><strong>Canal:</strong> {{ data.canal }}</p>
+  <p><strong>Telefone:</strong> {{ data.contatoTelefone }}</p>
+  <p><strong>E-mail:</strong> {{ data.contatoEmail }}</p>
+  <div class="status-selector">
+    <button
+      *ngFor="let status of statusList"
+      class="status-button"
+      [ngClass]="{ active: data.status === status.value }"
+      [style.--status-color]="status.color"
+      (click)="atualizarStatus(status.value)">
+      <span class="dot"></span> {{ status.label }}
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>Mensagem</mat-label>
+    <textarea matInput readonly [value]="getMensagemPersonalizada()"></textarea>
+    <button mat-icon-button matSuffix (click)="copiarMensagem()" aria-label="Copiar mensagem">
+      <mat-icon>content_copy</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="width: 100%; margin-top: 20px;">
+    <mat-label>Anotações / Histórico</mat-label>
+    <textarea matInput [(ngModel)]="anotacao" placeholder="Adicione aqui uma observação..." rows="3"></textarea>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="copiarMensagem()">Copiar</button>
+
+  <button *ngIf="canalEh('whatsapp')" mat-button color="primary" (click)="abrirWhatsapp()">
+    WhatsApp
+  </button>
+
+  <button *ngIf="canalEh('email')" mat-button color="accent" (click)="abrirEmail()">
+    E-mail
+  </button>
+
+  <button *ngIf="canalEh('zoho')" mat-button color="warn" (click)="abrirZoho()">
+    Zoho Mail
+  </button>
+
+  <button mat-button mat-dialog-close>Fechar</button>
+</mat-dialog-actions>
+
+
+
+
+

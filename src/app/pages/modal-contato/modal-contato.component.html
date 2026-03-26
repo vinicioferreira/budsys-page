@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Entre em contato</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="contatoForm">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>E-mail</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Telefone</mat-label>
+      <input matInput formControlName="telefone">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Empresa (Opcional)</mat-label>
+      <input matInput formControlName="empresa">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Mensagem</mat-label>
+      <textarea matInput formControlName="mensagem"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="fechar()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="enviar()" [disabled]="!contatoForm.valid">Enviar</button>
+</mat-dialog-actions>

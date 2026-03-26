@@ -1,0 +1,143 @@
+.main-content {
+  margin-left: 260px;
+  padding: 20px; /* Opcional: para dar respiro interno */
+  transition: margin-left 0.3s ease; /* Opcional: suave se o menu mudar */
+}
+
+.float-end {
+  margin-right: 8px;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed; /* Mantém a largura das colunas consistente */
+  border-collapse: collapse;
+}
+
+/* Container da tabela com rolagem */
+.table-container {
+  max-height: 500px; /* Ajuste a altura conforme necessário */
+  overflow-y: auto; /* Adiciona rolagem vertical */
+  overflow-x: auto; /* Permite rolagem horizontal */
+}
+
+.no-data {
+  padding: 8px 14px;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--primary-color);
+}
+
+tr {
+  height: 35px;
+}
+
+.th-table {
+  font-size: 14px;
+  font-weight: 500;
+  color: #5a5a5a;
+  white-space: nowrap; /* Evita quebra de linha nas células */
+}
+
+.td-table {
+  font-size: 13px;
+  font-weight: 400;
+  color: #767676;
+}
+
+.mat-column-actions {
+  white-space: nowrap;
+  width: 150px; /* Define a largura fixa para a coluna de ações */
+  text-align: center; /* Centraliza os ícones */
+}
+
+/* Ícones da tabela */
+.icone-tabela{
+  color: #767676;
+  margin-right: 1px;
+  transform: rotate(0deg);
+  transition: 0.3s linear all;
+  margin: 0 5px; /* Adiciona uma pequena margem entre os ícones */
+  &:hover {
+    cursor: pointer;
+    color: var(--primary-color);
+    transform: rotate(359deg);
+  }
+}
+
+.icone-tabela-delete{
+  color: #767676;
+  margin-right: 1px;
+  transform: rotate(0deg);
+  transition: 0.3s linear all;
+  &:hover {
+    cursor: pointer;
+    color: var(--error-color);
+    transform: rotate(359deg);
+  }
+}
+
+.mat-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Definindo a largura das colunas */
+.mat-column-seqId,
+.seqId-column {
+  width: 50px; /* Defina a largura desejada para a coluna 'id' */
+}
+
+.mat-column-cargo,
+.id-column {
+  width: 280px; /* Defina a largura desejada para a coluna 'id' */
+}
+
+/* Media query para telas menores que 768px */
+@media (max-width: 768px) {
+  /* Oculta o menu lateral e ajusta a largura do conteúdo */
+  .container-fluid {
+    margin-left: 0;
+    width: 100%;
+    padding: 8px;
+  }
+
+  /* Oculta o subtítulo em telas menores */
+  .subtitulo {
+    display: none;
+  }
+
+  /* Ajustes para título em telas pequenas */
+  .titulo {
+    font-size: 22px;
+  }
+
+  /* Campo de busca ocupa toda a largura */
+  .mat-form-field {
+    width: 100%;
+  }
+
+  /* Ajusta a tabela para telas pequenas */
+  .table-container {
+    overflow-x: auto; /* Permite rolagem horizontal */
+    width: 100%;
+  }
+
+  table {
+    display: block;
+    min-width: 600px; /* Define uma largura mínima para garantir que a tabela role */
+  }
+
+  th, td {
+    white-space: nowrap; /* Evita quebra de linha nas células */
+    font-size: 12px; /* Reduz o tamanho da fonte em telas menores */
+  }
+
+  /* Reduz a largura da coluna de ações */
+  .mat-column-actions {
+    width: 100px;
+  }
+}
+
+

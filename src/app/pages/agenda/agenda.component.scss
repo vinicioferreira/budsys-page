@@ -1,0 +1,33 @@
+.main-content {
+  margin-left: 260px !important;
+  padding: 16px;
+}
+
+.agenda-header, mwl-calendar-month-view, mwl-calendar-week-view, mwl-calendar-day-view {
+  margin-left: 270px; /* igual ao seu menu lateral */
+  padding: 10px;
+}
+
+.calendar-container {
+  margin-left: 270px !important; /* ou o valor do menu lateral */
+}
+
+.add-activity-form {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+  align-items: center;
+}
+
+.add-activity-form input {
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+.calendar-container {
+  margin-top: 10px;
+}
+
+
+
+

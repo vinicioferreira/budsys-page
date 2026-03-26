@@ -1,0 +1,45 @@
+<section class="blog-hero">
+  <div class="container">
+    <h1>Blog BudSys</h1>
+    <p>Conteúdos práticos sobre orçamento, cronograma, Gantt, Curva S e gestão de obras.</p>
+  </div>
+</section>
+
+<section class="container blog-grid" *ngIf="(posts$ | async) as posts">
+  <ng-container *ngIf="posts.length > 0; else empty">
+    <article class="blog-card" *ngFor="let p of posts">
+      <div class="thumb" *ngIf="p.coverUrl; else noImg">
+        <img [src]="p.coverUrl" [alt]="p.title" />
+      </div>
+
+      <ng-template #noImg>
+        <div class="thumb placeholder"><span>B</span></div>
+      </ng-template>
+
+      <div class="content">
+        <div class="meta">
+          <span class="pill">BudSys</span>
+          <span class="date" *ngIf="p.publishedAt">
+            {{ p.publishedAt.toDate() | date:'dd/MM/yyyy' }}
+          </span>
+        </div>
+
+        <h2 class="title">
+          <a [routerLink]="['/blog', p.slug]">{{ p.title }}</a>
+        </h2>
+
+        <p class="excerpt">{{ p.excerpt }}</p>
+
+        <a class="read" [routerLink]="['/blog', p.slug]">Ler artigo →</a>
+      </div>
+    </article>
+  </ng-container>
+
+  <ng-template #empty>
+    <div class="empty">
+      <h3>Nenhum artigo publicado ainda</h3>
+      <p>Em breve vamos postar conteúdos sobre orçamento, cronograma, Gantt e Curva S.</p>
+      <a class="empty-cta" routerLink="/" fragment="contato">Falar com especialista</a>
+    </div>
+  </ng-template>
+</section>

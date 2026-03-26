@@ -1,0 +1,80 @@
+.container-fluid {
+  margin-left: 260px;
+  padding: 20px; /* opcional para dar espaçamento interno */
+  transition: margin-left 0.3s ease; /* opcional para suavizar animação se o menu recolher/expandir */
+}
+
+.container {
+  padding: 16px;
+}
+
+.nova-cadencia, .cadencias-salvas {
+  margin-bottom: 24px;
+}
+
+.form-header {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.etapas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.etapa-card mat-card {
+  padding: 12px;
+}
+
+.botoes {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+}
+
+mat-form-field {
+  width: 200px;
+}
+
+.actions {
+  margin-bottom: 15px;
+}
+
+.texto-etapa {
+  flex: 1;
+  padding-right: 10px;
+}
+
+mat-expansion-panel {
+  width: 83%; /* Garante que o painel não passe da largura do container pai */
+  box-sizing: border-box; /* Inclui padding/border no cálculo do width */
+  margin-bottom: 8px;
+}
+
+.painel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.header-conteudo {
+  display: flex;
+  align-items: center;
+}
+
+.acoes {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.linha-etapa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+

@@ -1,0 +1,42 @@
+/* Importação do Bootstrap */
+@import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+
+/* Coloque junto ao fix acima */
+html, body { overflow-y: scroll; }              /* Evita desaparecer a barra */
+html { scrollbar-gutter: stable; }              /* Chrome/Edge/Firefox modernos */
+
+
+/* Variáveis de cores globais */
+:root {
+  --primary-color: #084d6e;
+  --error-color: #ff0000;
+  --gray-color: #747474;
+  --accent-color: #FF743E; /* Destaque laranja */
+  --success-color: #28A745; /* Verde */
+  --warning-color: #FFC107; /* Amarelo */
+  --secondary-bg-color: #F4F4F9; /* Cinza claro */
+  --text-color-dark: #333333; /* Texto escuro */
+  --text-color-light: #FFFFFF; /* Texto claro */
+}
+
+/* Estilos globais */
+html, body {
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; /* Evita rolagem horizontal */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+}
+
+/* Reset geral e utilidades globais que não são específicas de uma página */
+* {
+  box-sizing: border-box;
+}
