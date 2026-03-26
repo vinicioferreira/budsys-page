@@ -1,87 +1,119 @@
 <app-menu></app-menu>
+
 <section class="admin">
-  <div class="container">
-    <h1>Novo artigo</h1>
+    <div class="container">
+        <h1>Blog</h1>
 
-    <form (ngSubmit)="salvar()" #blogForm="ngForm">
-      <div class="form-group">
-        <label for="title">Título</label>
-        <input
-          id="title"
-          type="text"
-          [(ngModel)]="post.title"
-          name="title"
-          (input)="gerarSlug()"
-          required
-        />
-      </div>
+        <section class="list-section">
+            <div class="section-header">
+                <h2>Artigos cadastrados</h2>
+            </div>
 
-      <div class="form-group"> 
-        <label for="slug">Slug</label>
-        <input
-          id="slug"
-          type="text"
-          [(ngModel)]="post.slug"
-          name="slug"
-          required
-        />
-      </div>
+            <div class="table-wrapper" *ngIf="posts.length > 0; else semPosts">
+                <table class="posts-table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Slug</th>
+                            <th>Status</th>
+                            <th>Publicação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
 
-      <div class="form-group">
-        <label for="excerpt">Resumo</label>
-        <textarea
-          id="excerpt"
-          [(ngModel)]="post.excerpt"
-          name="excerpt"
-          rows="4"
-        ></textarea>
-      </div>
+                    <tbody>
+                        <tr *ngFor="let item of posts">
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.slug }}</td>
+                            <td>{{ item.status }}</td>
+                            <td>
+                                {{ formatarData(item.publishedAt)
+                                ? (formatarData(item.publishedAt) | date:'dd/MM/yyyy HH:mm') : '-'
+                                }}
+                            </td>
+                            <td class="actions-cell">
+                                <button type="button" class="btn-secondary" (click)="editar(item)">
+                                    Editar
+                                </button>
 
-      <div class="form-group">
-        <label for="coverUrl">Imagem de capa (URL)</label>
-        <input
-          id="coverUrl"
-          type="text"
-          [(ngModel)]="post.coverUrl"
-          name="coverUrl"
-        />
-      </div>
+                                <button type="button" class="btn-danger" (click)="excluir(item)">
+                                    Excluir
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-      <div class="form-group">
-        <label for="contentHtml">Conteúdo (HTML)</label>
-        <textarea
-          id="contentHtml"
-          [(ngModel)]="post.contentHtml"
-          name="contentHtml"
-          rows="12"
-          required
-        ></textarea>
-      </div>
+            <ng-template #semPosts>
+                <div class="empty-box">
+                    <p>Nenhum artigo cadastrado ainda.</p>
+                </div>
+            </ng-template>
+        </section>
 
-      <div class="actions">
-        <button type="submit" [disabled]="loading || !blogForm.form.valid">
-          {{ loading ? 'Salvando...' : 'Publicar' }}
-        </button>
-      </div>
-    </form>
+        <section class="form-section">
+            <div class="section-header">
+                <h2>{{ editingId ? 'Editar artigo' : 'Novo artigo' }}</h2>
+            </div>
 
-    <section class="preview-section" *ngIf="post.title || post.contentHtml || post.coverUrl">
-      <h2>Preview</h2>
+            <form (ngSubmit)="salvar()" #blogForm="ngForm">
+                <div class="form-group">
+                    <label for="title">Título</label>
+                    <input id="title" type="text" [(ngModel)]="post.title" name="title" (input)="gerarSlug()"
+                        required />
+                </div>
 
-      <article class="preview-card">
-        <p class="preview-date">{{ hoje | date:'dd/MM/yyyy' }}</p>
-        <h3>{{ post.title || 'Título do artigo' }}</h3>
-        <p class="preview-excerpt" *ngIf="post.excerpt">{{ post.excerpt }}</p>
+                <div class="form-group">
+                    <label for="slug">Slug</label>
+                    <input id="slug" type="text" [(ngModel)]="post.slug" name="slug" required />
+                </div>
 
-        <img
-          *ngIf="post.coverUrl"
-          [src]="post.coverUrl"
-          [alt]="post.title || 'Imagem de capa'"
-          class="preview-cover"
-        />
+                <div class="form-group">
+                    <label for="excerpt">Resumo</label>
+                    <textarea id="excerpt" [(ngModel)]="post.excerpt" name="excerpt" rows="4"></textarea>
+                </div>
 
-        <div class="preview-content" [innerHTML]="post.contentHtml"></div>
-      </article>
-    </section>
-  </div>
+                <div class="form-group">
+                    <label for="coverUrl">Imagem de capa (URL)</label>
+                    <input id="coverUrl" type="text" [(ngModel)]="post.coverUrl" name="coverUrl" />
+                </div>
+
+                <div class="form-group">
+                    <label for="contentHtml">Conteúdo (HTML)</label>
+                    <textarea id="contentHtml" [(ngModel)]="post.contentHtml" name="contentHtml" rows="12"
+                        required></textarea>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" [disabled]="loading || !blogForm.form.valid">
+                        {{
+                        loading
+                        ? 'Salvando...'
+                        : (editingId ? 'Atualizar artigo' : 'Publicar')
+                        }}
+                    </button>
+
+                    <button *ngIf="editingId" type="button" class="btn-secondary" (click)="limparFormulario()">
+                        Cancelar edição
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="preview-section" *ngIf="post.title || post.contentHtml || post.coverUrl">
+            <h2>Preview</h2>
+
+            <article class="preview-card">
+                <p class="preview-date">{{ hoje | date:'dd/MM/yyyy' }}</p>
+                <h3>{{ post.title || 'Título do artigo' }}</h3>
+                <p class="preview-excerpt" *ngIf="post.excerpt">{{ post.excerpt }}</p>
+
+                <img *ngIf="post.coverUrl" [src]="post.coverUrl" [alt]="post.title || 'Imagem de capa'"
+                    class="preview-cover" />
+
+                <div class="preview-content" [innerHTML]="post.contentHtml"></div>
+            </article>
+        </section>
+    </div>
 </section>

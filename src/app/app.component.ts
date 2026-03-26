@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalContatoComponent } from './pages/modal-contato/modal-contato.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +9,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  ngOnInit(): void {}
+
+  constructor(
+    private dialog: MatDialog,
+    private overlay: Overlay
+  ) { }
+  ngOnInit(): void { }
+
+  abrirModal() {
+    this.dialog.open(ModalContatoComponent, {
+      width: '400px',
+      disableClose: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      restoreFocus: true,
+      scrollStrategy: this.overlay.scrollStrategies.noop()
+    });
+  }
 }
