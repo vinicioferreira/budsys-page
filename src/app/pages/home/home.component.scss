@@ -795,3 +795,411 @@ html {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================
+   MOBILE FIXES — sem alterar desktop
+========================================= */
+@media (max-width: 768px) {
+  /* base */
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* containers gerais */
+  .hero,
+  .video-section,
+  .process-section,
+  .sobre-nos,
+  .faq-section,
+  .cta-section,
+  #solucoes,
+  #diferenciais,
+  .testimonials-section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* =========================
+     HERO
+  ========================= */
+  .hero {
+    padding: 32px 16px !important;
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+  }
+
+  .hero .hero-text {
+    max-width: 100%;
+  }
+
+  .hero .hero-text h1 {
+    font-size: 34px;
+    line-height: 1.15;
+  }
+
+  .hero .hero-text p {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .hero .hero-text .chip {
+    font-size: 14px;
+    padding: 8px 14px;
+  }
+
+  .hero .hero-img {
+    width: 100%;
+  }
+
+  .hero .hero-img img {
+    width: 100%;
+    max-height: none;
+  }
+
+  .hero .hero-img .badge {
+    display: none !important;
+  }
+
+  /* =========================
+     VÍDEO
+  ========================= */
+  .video-section {
+    padding: 48px 16px !important;
+    margin-bottom: 80px !important;
+  }
+
+  .video-section h2 {
+    font-size: 30px;
+    line-height: 1.2;
+  }
+
+  .video-section .sub {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+
+  .video-section .content {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .video-section .video-container {
+    width: 100%;
+  }
+
+  .video-section .video {
+    width: 100%;
+    margin-top: 0 !important;
+    border-radius: 12px;
+  }
+
+  .video-section .texto-box {
+    max-width: 100%;
+    margin-top: 0 !important;
+    text-align: left;
+  }
+
+  .video-section .texto-box h3 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .video-section .texto-box .intro {
+    font-size: 15px;
+  }
+
+  .video-section .bullets {
+    padding: 0;
+    margin: 0;
+  }
+
+  .video-section .bullets li {
+    gap: 12px;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+
+  .video-section .bullets li svg {
+    flex: 0 0 auto;
+    margin-top: 4px;
+  }
+
+  /* =========================
+     SOLUÇÕES / DIFERENCIAIS
+  ========================= */
+  #solucoes,
+  #diferenciais {
+    padding-top: 72px !important;
+    padding-bottom: 72px !important;
+  }
+
+  #solucoes h2,
+  #diferenciais h2 {
+    font-size: 32px;
+    line-height: 1.2;
+  }
+
+  #solucoes p,
+  #diferenciais p {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  #solucoes .cards,
+  #diferenciais .cards {
+    gap: 20px !important;
+    padding-top: 32px !important;
+  }
+
+  #solucoes .cards .card,
+  #diferenciais .cards .card {
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* =========================
+     PROCESS SECTION
+  ========================= */
+  .process-section {
+    padding: 56px 16px !important;
+  }
+
+  .process-content {
+    flex-direction: column;
+    gap: 28px;
+    align-items: stretch;
+  }
+
+  .process-text {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .process-text h2 {
+    font-size: 30px;
+    line-height: 1.25;
+  }
+
+  .process-cards {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  /* =========================
+     SOBRE NÓS
+  ========================= */
+  .sobre-nos {
+    padding: 56px 16px !important;
+  }
+
+  .sobre-container {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .texto,
+  .imagem {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .texto h3 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .texto p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .imagem img {
+    max-width: 100%;
+  }
+
+  /* =========================
+     DEPOIMENTOS
+  ========================= */
+  .testimonials-section {
+    padding: 56px 16px !important;
+  }
+
+  .testimonial-box {
+    padding: 20px 18px 76px;
+  }
+
+  .testimonial-text {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .author {
+    font-size: 18px;
+  }
+
+  .nav-stack {
+    right: 16px;
+    bottom: 16px;
+    flex-direction: row;
+  }
+
+  /* =========================
+     FAQ
+  ========================= */
+  .faq-section {
+    padding: 56px 16px !important;
+    max-width: 100%;
+  }
+
+  .faq-title {
+    font-size: 30px;
+    line-height: 1.2;
+    margin-bottom: 28px;
+  }
+
+  .faq-question {
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 18px 16px;
+  }
+
+  .faq-answer {
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 0 16px 18px;
+  }
+
+  /* =========================
+     CTA FINAL
+  ========================= */
+  .cta-section {
+    padding: 56px 16px 80px !important;
+  }
+
+  .cta-container {
+    padding: 28px 20px !important;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .cta-text h2 {
+    font-size: 30px;
+    line-height: 1.25;
+  }
+
+  .cta-buttons {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-outline,
+  .btn-solid {
+    width: 100%;
+  }
+
+  /* =========================
+     FOOTER
+  ========================= */
+  .footer-content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 28px;
+    align-items: flex-start;
+  }
+
+  .footer-left,
+  .footer-menu,
+  .footer-social {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .footer-menu ul,
+  .footer-social ul {
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .footer-menu li,
+  .footer-social li {
+    margin-bottom: 10px;
+  }
+
+  .footer-menu a,
+  .footer-social a {
+    display: inline-block;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* =========================
+     BOTÕES GERAIS
+  ========================= */
+  .button,
+  .btn,
+  .btn-contato {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* =========================================
+   MOBILE PEQUENO
+========================================= */
+@media (max-width: 480px) {
+  .hero .hero-text h1 {
+    font-size: 30px;
+  }
+
+  .video-section h2,
+  .process-text h2,
+  .texto h3,
+  .faq-title,
+  .cta-text h2,
+  #solucoes h2,
+  #diferenciais h2 {
+    font-size: 26px;
+  }
+
+  .button,
+  .btn,
+  .btn-contato,
+  .cta-nav {
+    width: 100%;
+  }
+}
