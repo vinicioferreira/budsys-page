@@ -54,7 +54,8 @@ import { BlogAdminComponent } from './pages/blog/blog-admin/blog-admin.component
     ModalMessageComponent,
     BlogListComponent,
     BlogPostComponent,
-    BlogAdminComponent
+    BlogAdminComponent,
+    ModalMessageComponent
   ],
   imports: [
     BrowserModule,

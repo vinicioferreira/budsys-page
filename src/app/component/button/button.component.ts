@@ -1,9 +1,11 @@
 import { Component, Input, HostListener, OnInit } from '@angular/core';
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',
-  styleUrls: ['./button.component.scss']
+  styleUrls: ['./button.component.scss'],
+  imports: [MatIcon]
 })
 export class ButtonComponent implements OnInit {
   @Input() textButton: string = '';

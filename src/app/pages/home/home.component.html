@@ -1,4 +1,4 @@
-<section class="hero">
+<section class="hero" id="home">
   <div class="hero-text">
     <span class="chip">Orçamentos rápidos e sem complicação.</span>
     <h1>Simplifique <span class="destaque">sua<br>operação</span></h1>
@@ -7,33 +7,68 @@
   </div>
 
   <div class="hero-img">
+    <!-- Carrossel de imagens -->
     <div class="carousel-container">
+      <!-- Botão para a imagem anterior
+      <button class="arrow left" (click)="trocarImagemAnterior()">&#10094;</button>
+      -->
+      <!-- Imagem com controle de troca -->
       <img [src]="currentDashboardImage" alt="Dashboard" width="500" />
+
+      <!-- Botão para a próxima imagem
+      <button class="arrow right" (click)="trocarImagemProxima()">&#10095;</button>
+      -->
     </div>
   </div>
 </section>
 
-<section id="funcionalidades">
-  <h2>Funcionalidades Principais</h2>
-  <p>Tudo Que Você Precisa Para Elaborar Orçamentos Ágeis e Precisos</p>
-  <div class="cards">
-    <div class="card">
-      <div class="icon">⚙️</div>
-      <h3>Automação de orçamentos</h3>
-      <p>Preenchimento automático de serviços baseado em uma lista de materiais cadastrados, otimizando o tempo de criação de orçamentos e eliminando erros manuais.</p>
+<section id="solucoes" class="features-section">
+  <div class="container">
+
+    <h2 class="title">Principais Soluções</h2>
+
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h3>Orçamentação de Precisão</h3>
+        <p>Calcule custos de materiais, insumos e margem de lucro sem erros. Esqueça as fórmulas quebradas do Excel.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">👷</div>
+        <h3>Dimensionamento de Mão de Obra</h3>
+        <p>Saiba exatamente quantos profissionais sua obra exige e evite ociosidade ou falta de equipe.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">📅</div>
+        <h3>Gráfico de Gantt Automático</h3>
+        <p>Transforme tarefas em cronograma visual e mostre ao cliente quando cada etapa será entregue.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">📈</div>
+        <h3>Curva S (Realizado x Planejado)</h3>
+        <p>Compare previsto vs realizado e identifique atrasos antes que virem prejuízo.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h3>Histograma de Equipe</h3>
+        <p>Visualize a carga de trabalho e antecipe picos de demanda da equipe.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">💰</div>
+        <h3>Fluxo de Caixa e Projeções</h3>
+        <p>Tenha controle total das entradas e saídas e nunca seja pego de surpresa.</p>
+      </div>
+
     </div>
 
-    <div class="card">
-      <div class="icon">📈</div>
-      <h3>Dashboard em tempo real</h3>
-      <p>Acompanhe a percentagem de orçamentos aprovados, reprovados e em análise. Visualize também as 10 principais empresas com mais orçamentos aprovados, classificados por valor total aprovado.</p>
-    </div>
+    <button class="button" (click)="abrirModal()">Quero Orçar e Gerenciar com Profissionalismo</button>
 
-    <div class="card">
-      <div class="icon">⏳</div>
-      <h3>Cronograma automatizado</h3>
-      <p>O sistema calcula automaticamente os tempos das tarefas e gera um cronograma preliminar da obra, deixando apenas o ajuste do início de cada tarefa a ser defindio pelo orçamentista.</p>
-    </div>
   </div>
 </section>
 
@@ -42,19 +77,17 @@
   <p class="sub">A BudSys torna seus orçamentos mais precisos — e mostra o resultado em números</p>
 
   <div class="content">
+    <!-- ESQUERDA: vídeo -->
     <div class="video-container">
       <button class="arrow left" (click)="videoAnterior()">&#10094;</button>
 
-      <video #videoPlayer
-             [src]="currentVideoUrl"
-             controls
-             (ended)="trocarVideo()"
-             class="video">
+      <video #videoPlayer [src]="currentVideoUrl" controls (ended)="trocarVideo()" class="video">
       </video>
 
       <button class="arrow right" (click)="proximoVideo()">&#10095;</button>
     </div>
 
+    <!-- DIREITA: texto -->
     <div class="texto-box">
       <h3>Por que usar o BudSys?</h3>
       <p class="intro">
@@ -63,26 +96,16 @@
       </p>
 
       <ul class="bullets">
-        <li>
-          <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
-            <path d="M1 1L9 9L1 17" stroke="#05C4CF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <li><svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L9 9L1 17" stroke="#05C4CF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          Economia de Tempo
-        </li>
-
-        <li>
-          <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
-            <path d="M1 1L9 9L1 17" stroke="#05C4CF" stroke-width="2"/>
-          </svg>
-          Cálculos Automatizados e Precisos
-        </li>
-
-        <li>
-          <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
-            <path d="M1 1L9 9L1 17" stroke="#05C4CF" stroke-width="2"/>
-          </svg>
-          Sistema Intuitivo e de Fácil Uso
-        </li>
+          Economia de Tempo</li>
+        <li><svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L9 9L1 17" stroke="#05C4CF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg> Cálculos Automatizados e Precisos</li>
+        <li><svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L9 9L1 17" stroke="#05C4CF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg> Sistema Intuitivo e de Fácil Uso</li>
       </ul>
 
       <button class="button" (click)="abrirModal()">Conversar Com Especialista</button>
@@ -90,24 +113,32 @@
   </div>
 </section>
 
-<section class="process-section">
+<section class="process-section" id="como-funciona">
   <div class="process-content">
+
+    <!-- Texto à esquerda -->
     <div class="process-text">
       <h2>Como entregamos mais agilidade para o seu dia a dia</h2>
-      <p>Nosso processo garante que a Budsys se adapte à sua rotina, sem complicações</p>
+      <p>
+        Nosso processo garante que a Budsys se adapte à sua rotina, sem complicações
+      </p>
     </div>
 
+    <!-- Cards à direita -->
     <div class="process-cards">
       <div class="card">
         <span class="icon">📊</span>
         <h3>Entendimento do seu fluxo</h3>
-        <p>Antes de qualquer implementação, escutamos você. Mapeamos como sua equipe trabalha, identificamos onde há gargalos e entendemos exatamente o que é necessário para que a Budsys se encaixe com fluidez na sua rotina.</p>
+        <p>Antes de qualquer implementação, escutamos você. Mapeamos como sua equipe trabalha, identificamos onde há
+          gargalos e entendemos exatamente o que é necessário para que a Budsys se encaixe com fluidez na sua rotina.
+        </p>
       </div>
 
       <div class="card">
         <span class="icon">⚙️</span>
         <h3>Configuração personalizada</h3>
-        <p>Adaptamos tudo conforme sua realidade: regras de cálculo, formulários, orçamentos e relatórios sob medida — sem precisar de um exército de TI.</p>
+        <p>Adaptamos tudo conforme sua realidade: regras de cálculo, formulários, orçamentos e relatórios sob medida —
+          sem precisar de um exército de TI.</p>
       </div>
 
       <div class="card">
@@ -122,10 +153,11 @@
         <p>Após a implantação, seguimos ao seu lado! Estamos aqui para ajudar sua operação a crescer com segurança.</p>
       </div>
     </div>
+
   </div>
 </section>
 
-<section class="testimonials-section">
+<section class="testimonials-section" id="depoimentos">
   <h2>Depoimentos</h2>
   <p class="subtitle">O que nossos clientes estão dizendo</p>
 
@@ -137,18 +169,81 @@
       <p class="role">{{ depoimentos[idx].empresa }}</p>
     </div>
 
+    <!-- Botões empilhados à direita -->
     <div class="nav-stack">
-      <button class="nav-btn" (click)="prevDepo()">
-        <svg width="18" height="18">
-          <path d="M6 15l6-6 6 6" stroke="#2D3E46" stroke-width="2"/>
+      <button class="nav-btn" (click)="prevDepo()" aria-label="Anterior">
+        <!-- seta para cima -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M6 15l6-6 6 6" stroke="#2D3E46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button>
+      <button class="nav-btn" (click)="nextDepo()" aria-label="Próximo">
+        <!-- seta para baixo -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M18 9l-6 6-6-6" stroke="#2D3E46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
 
-      <button class="nav-btn" (click)="nextDepo()">
-        <svg width="18" height="18">
-          <path d="M18 9l-6 6-6-6" stroke="#2D3E46" stroke-width="2"/>
-        </svg>
-      </button>
+<section class="sobre-nos" id="sobre-nos">
+  <h2>Sobre nós</h2>
+  <p class="subtitulo">
+    Somos parceiros na sua rotina — ajudando você a focar no que realmente importa: crescer com controle
+  </p>
+
+  <div class="sobre-container">
+    <div class="texto">
+      <h3>A BudSys nasceu para simplificar sua rotina</h3>
+      <p>
+        A BudSys é uma empresa jovem, mas nascida da prática. Após anos atuando diretamente com obras,
+        serviços e orçamentos técnicos, decidimos transformar essa vivência em uma solução digital.
+        Criamos uma plataforma simples, moderna e eficiente para automatizar orçamentos de obras elétricas e
+        serviços, com o objetivo de economizar tempo, reduzir retrabalho e dar mais controle para quem está
+        na linha de frente. Mais do que tecnologia, entregamos visão prática de quem já sentiu na pele a
+        dificuldade de orçar com precisão — e agora quer resolver isso para o mercado.
+      </p>
+      <a class="btn-contato" href="#contato">Conversar Com Especialista</a>
+    </div>
+
+    <div class="imagem">
+      <img src="assets/Budsys_Notebook.png" alt="BudSys">
+    </div>
+  </div>
+</section>
+
+<section class="faq-section" id="faq">
+  <h2 class="faq-title">Perguntas frequentes</h2>
+
+  <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.active]="i === ativo">
+    <button class="faq-question" (click)="toggleFAQ(i)">
+      {{ faq.pergunta }}
+      <span class="icon">{{ i === ativo ? '−' : '+' }}</span>
+    </button>
+    <div class="faq-answer" *ngIf="i === ativo">
+      {{ faq.resposta }}
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contato">
+  <div class="cta-container">
+    <div class="cta-text">
+      <h2>
+        Pronto para ganhar <br />
+        tempo e profissionalizar <br />
+        sua gestão?
+      </h2>
+    </div>
+
+    <div class="cta-buttons">
+      <a href="#sobre-nos" (click)="abrirModal()" class="btn-outline">
+        Saiba Mais
+        <span class="arrow">↗</span>
+      </a>
+      <a href="https://wa.me/5535991569148?text=Oi%21%20Quero%20conhecer%20melhor%20o%20BudSys.%20Pode%20me%20ajudar%20com%20uma%20demonstra%C3%A7%C3%A3o%20ou%20mais%20informa%C3%A7%C3%B5es%3F
+" class="btn-solid" target="_blank">Comece Agora</a>
     </div>
   </div>
 </section>

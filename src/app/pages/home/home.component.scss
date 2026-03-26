@@ -241,7 +241,7 @@ html {
 /* =========================
    CARDS (funcionalidades/diferenciais)
 ========================= */
-#funcionalidades, #diferenciais {
+#solucoes, #diferenciais {
   background: #f4f7fa; padding: 150px 20px; text-align: center;
 
   h2 {
@@ -734,4 +734,64 @@ html {
   line-height: 1;
 }
 
+.features-section {
+  padding: 80px 20px;
+  text-align: center;
+}
 
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e3a46;
+  margin-bottom: 40px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.feature-card {
+  padding: 20px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.feature-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.cta {
+  margin-top: 40px;
+  background: #1f6f84;
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}
