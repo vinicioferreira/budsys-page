@@ -16,6 +16,16 @@ export class AppComponent implements OnInit {
   ) { }
   ngOnInit(): void { }
 
+  menuOpen = false;
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
+
   abrirModal() {
     this.dialog.open(ModalContatoComponent, {
       width: '400px',

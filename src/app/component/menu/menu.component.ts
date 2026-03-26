@@ -14,20 +14,19 @@ export class MenuComponent {
   nomeUsuario: string = '';
   espacoUsado = 0;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     // Se quiser carregar nome da empresa/usuário de localStorage ou outra fonte, implemente aqui
   }
 
-  toggleMenu() {
+  toggleMenu(): void {
     this.menuVisible = !this.menuVisible;
+  }
 
-    const toggleButton = document.querySelector('.menu-toggle');
-    if (this.menuVisible) {
-      toggleButton?.classList.add('menu-open');
-    } else {
-      toggleButton?.classList.remove('menu-open');
+  selectMenu(): void {
+    if (window.innerWidth <= 1024) {
+      this.menuVisible = false;
     }
   }
 
@@ -37,10 +36,6 @@ export class MenuComponent {
 
   toggleOrcamentos() {
     this.isOrcamentosExpanded = !this.isOrcamentosExpanded;
-  }
-
-  selectMenu() {
-    this.menuVisible = false;
   }
 
   logout() {

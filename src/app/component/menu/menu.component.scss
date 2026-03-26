@@ -1,89 +1,68 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700&display=swap');
 
+/* =========================
+   SIDEMENU BASE (DESKTOP)
+========================= */
 .sidemenu {
   position: fixed;
   top: 0;
   left: 0;
-  width: 260px; /* Largura do menu */
-  height: 100vh; /* Altura completa da tela */
+  width: 260px;
+  height: 100vh;
   background-color: var(--primary-color);
-  box-shadow: 4px 0px 10px 4px #0a0a0a30;
+  box-shadow: 4px 0 10px 4px #0a0a0a30;
   overflow-y: auto;
-  transition: transform 0.4s ease; /* Transição suave para abrir/fechar o menu */
   z-index: 1000;
   display: flex;
-  flex-direction: column; /* Flexbox para organizar o conteúdo verticalmente */
-  justify-content: space-between; /* Empurra o botão "Sair" para o final */
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease-in-out;
 
   ul {
     list-style: none;
     padding: 0;
+    margin: 0;
   }
 
   .logo {
-    width: 80px; /* Altere o valor conforme necessário */
-    height: auto;
+    width: 80px;
     margin-right: 10px;
-}
+  }
 
-/* Estilo para o nome da empresa sem o efeito do <li> */
-.nome-empresa {
-  color:  #F4F4F9; /* Cinza claro para o texto */
-  margin-top: 8px; /* Margem superior para separar do conteúdo acima */
-  font-weight: 550; /* Em negrito para destacar o nome */
-  font-size: 14px; /* Ajuste o tamanho conforme necessário */
-  text-align: center;
-  padding-left: 10px;
-  padding-right: 10px;
-}
+  .nome-empresa {
+    color: #f4f4f9;
+    font-size: 14px;
+    text-align: center;
+    padding: 0 10px 12px;
+    word-break: break-word;
+  }
 
-/* Estilo para o nome da usuario sem o efeito do <li> */
-.nome-usuario {
-  color:  #F4F4F9; /* Cinza claro para o texto */
-  font-weight: 400; /* Em negrito para destacar o nome */
-  font-size: 14px; /* Ajuste o tamanho conforme necessário */
-  text-align: center;
-  padding-left: 10px;
-  padding-right: 10px;
-  /* Borda superior e inferior */
-  border-bottom: 2px solid #F4F4F9;  /* Linha abaixo, mais fina e de cor cinza */
-  padding-bottom: 10px; /* Ajusta o espaçamento inferior */
-}
+  .system-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 26px;
+    color: white;
+  }
 
-/*Estilo do nome do sistema */
-.system-name {
-  display: flex;
-  justify-content: center; /* Centraliza horizontalmente */
-  align-items: center; /* Centraliza verticalmente */
-  padding: 15px 0; /* Padding superior e inferior para espaçamento */
-  font-family: 'Montserrat', sans-serif; /* Fonte para o nome */
-  font-weight: 600; /* Peso do nome "Bud" */
-  font-size: 26px; /* Tamanho do texto */
-  color: white; /* Cor branca para contraste */
-  list-style-type: none; /* Remove o estilo de lista padrão */
-}
-
-.system-name span {
-  font-weight: 400; /* Peso mais leve para "Sys" */
-  color: #d9f2ff; /* Azul claro para contraste */
-}
-
-.system-name::first-letter {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px; /* Opcional: Aumenta um pouco o "Bud" para destacar */
-  font-weight: normal; /* Bebas Neue já é naturalmente negrito */
-}
+  .system-name span {
+    color: #d9f2ff;
+    font-weight: 400;
+  }
 
   li {
     display: flex;
     align-items: center;
-    padding: 10px 15px;
+    padding: 12px 15px;
     color: #fafafa;
     font-size: 14px;
     transition: 0.3s;
 
     &:hover {
-      background-color: #FF743E;
+      background-color: #ff743e;
       color: var(--primary-color);
       cursor: pointer;
     }
@@ -91,192 +70,121 @@
     mat-icon {
       margin-right: 14px;
     }
-
-    span {
-      transition: opacity 0.3s;
-    }
-  }
-
-  .logout {
-    //position: relative;
-    bottom: 0;
-    width: 100%;
-  }
-
-  &.visible {
-    transform: translateX(0); /* Garante que o menu fique visível quando expandido */
-  }
-
-  &.hidden {
-    transform: translateX(-270px); /* Fecha o menu suavemente movendo-o para fora da tela */
   }
 }
 
-/* Recuo para os submenus */
-.sidemenu .submenu-no-indent li {
-  padding-left: 40px; /* Recuo para os itens de submenu */
-}
-
-/* Botão de alternância (hambúrguer) */
-/* HAMBÚGUER - aparece em telas pequenas e tablets */
+/* =========================
+   BOTÃO MENU
+========================= */
 .menu-toggle {
   display: none;
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 1200;
   background: none;
   border: none;
   font-size: 26px;
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 1100;
   color: #084d6e;
   cursor: pointer;
 }
 
-/* MENU lateral para telas até 1024px (mobile e tablet) */
-@media (max-width: 1024px) {
+/* =========================
+   BACKDROP
+========================= */
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 900;
+}
+
+/* =========================
+   DESKTOP (OK)
+========================= */
+@media (min-width: 1025px) {
   .sidemenu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 260px;
-    background-color: var(--menu-bg, #084d6e);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-    z-index: 1050;
-    overflow-y: auto;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Quando o menu estiver expandido, o ícone X fica branco */
-  .menu-toggle.menu-open {
-    color: #ffffff; /* Cor do ícone X quando o menu está aberto */
-    left: 220px;
-    top: 5px;
-  }
-
-  .sidemenu.visible {
     transform: translateX(0);
-    width: 260px; /* Largura do menu em telas menores */
   }
 
+  .menu-toggle {
+    display: none;
+  }
+}
+
+/* =========================
+   MOBILE / TABLET
+========================= */
+@media (max-width: 1024px) {
   .menu-toggle {
     display: block;
   }
 
-  .container-fluid,
-  .main-content {
+  .sidemenu {
+    transform: translateX(-100%); /* 🔥 escondido */
+  }
+
+  .sidemenu.visible {
+    transform: translateX(0); /* 🔥 abre */
+  }
+
+  /* remove espaço lateral do layout */
+  .main-content,
+  .container-fluid {
     margin-left: 0 !important;
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-}
-
-/* Exibir o botão hambúrguer em telas menores */
-@media (max-width: 950px) {
-  .sidemenu {
-    width: 0; /* Menu escondido por padrão em telas pequenas */
-    transform: translateX(-100%); /* Esconder o menu para fora da tela */
+    width: 100%;
+    padding: 16px !important;
   }
 
-  .sidemenu.visible {
-    width: 260px; /* Largura do menu em telas menores */
-    transform: translateX(0); /* Mostrar o menu */
-  }
-
-  .menu-toggle {
-    display: block; /* Exibir o botão de menu em telas pequenas */
-  }
-
-  /* Quando o menu estiver expandido, o ícone X fica branco */
+  /* botão X acompanha o menu */
   .menu-toggle.menu-open {
-    color: #ffffff; /* Cor do ícone X quando o menu está aberto */
     left: 220px;
-    top: 5px;
+    color: #fff;
   }
 }
 
-@media (max-width: 480px) {
+/* =========================
+   MOBILE FINO
+========================= */
+@media (max-width: 768px) {
   .sidemenu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
     width: 250px;
-    background-color: var(--primary-color);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-    z-index: 1050;
-    visibility: hidden;
   }
 
-  .sidemenu.visible {
-    width: 250px; /* Menu ainda mais estreito em telas muito pequenas */
-   // padding: 15px;
-    color: #ffffff;
-  }
-
-  /* Quando o menu estiver expandido, o ícone X fica branco */
   .menu-toggle.menu-open {
-    color: #ffffff; /* Cor do ícone X quando o menu está aberto */
     left: 210px;
-    top: 5px;
   }
 
   .sidemenu .logo {
-      width: 50px; /* Altere o valor conforme necessário */
-      height: auto;
-      margin-right: 10px;
-   // display: none; /* Esconder a logo em telas muito pequenas */
+    width: 60px;
   }
 
-    /* Recuo para os submenus */
-  .sidemenu .submenu-no-indent li {
-    padding-left: 20px; /* Recuo para os itens de submenu */
+  .sidemenu .system-name {
+    font-size: 22px;
   }
 
   .sidemenu li {
-    padding: 10px 8px;
-  }
-
-  main {
-    padding-top: 80px; /* Espaçamento maior em telas menores */
+    padding: 12px 10px;
   }
 }
 
-.storage-usage {
-  margin: 16px 12px;
-  color: #ffffff;
-  font-size: 0.85rem;
-  text-align: center;
-
-  p {
-    margin: 0 0 6px 0;
+/* =========================
+   MOBILE PEQUENO
+========================= */
+@media (max-width: 480px) {
+  .sidemenu {
+    width: 240px;
   }
 
-  .progress-bar-container {
-    width: 100%;
-    height: 8px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 12px;
+  .menu-toggle.menu-open {
+    left: 200px;
   }
 
-  .progress-bar {
-    height: 100%;
-    background-color: #00e676; // padrão: verde
-    transition: width 0.3s ease-in-out;
+  .sidemenu .logo {
+    width: 50px;
+  }
 
-    &.warning {
-      background-color: #ff9800; // laranja
-    }
-
-    &.exceeded {
-      background-color: #f44336; // vermelho
-    }
+  .sidemenu .system-name {
+    font-size: 20px;
   }
 }
-
-
-
