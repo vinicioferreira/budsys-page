@@ -15,6 +15,10 @@ html {
 /* =========================
    HEADER / NAV
 ========================= */
+.section {
+  scroll-margin-top: 90px;
+}
+
 .topbar {
   background: $bg;
   color: #fff;

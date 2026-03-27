@@ -1,19 +1,13 @@
 <header class="topbar">
   <div class="nav-wrap">
-    <a class="brand" routerLink="/">
+    <a class="brand" href="/#home" (click)="closeMenu()">
       <img src="assets/favicon_3.ico" alt="BudSys" class="logo" />
       <span class="brand-name">
         <span class="bud">Bud</span><span class="sys">Sys</span>
       </span>
     </a>
 
-    <button
-      class="menu-toggle"
-      type="button"
-      [class.open]="menuOpen"
-      (click)="toggleMenu()"
-      aria-label="Abrir menu"
-    >
+    <button class="menu-toggle" type="button" [class.open]="menuOpen" (click)="toggleMenu()" aria-label="Abrir menu">
       <span></span>
       <span></span>
       <span></span>
@@ -24,10 +18,11 @@
 
       <div class="menu-rail">
         <nav class="menu">
-          <a href="/#home" (click)="closeMenu()">Home</a>
           <a href="/#solucoes" (click)="closeMenu()">Soluções</a>
-          <a href="/#sobre-nos" (click)="closeMenu()">Sobre nós</a>
-          <a routerLink="/blog" (click)="closeMenu()">Blog</a>
+          <a href="/#como-funciona" (click)="closeMenu()">Como funciona</a>
+          <a href="/#tecnologia" (click)="closeMenu()">Resultados</a>
+          <a href="/#planos" (click)="closeMenu()">Planos</a>
+          <a href="/#sobre-nos" (click)="closeMenu()">Sobre</a>
         </nav>
       </div>
 
@@ -48,9 +43,16 @@
   <div class="footer-content container">
     <div class="footer-left">
       <div class="footer-logo">
-        <img src="assets/favicon_3.ico" alt="BudSys" class="logo" />
-        <h3><span class="bud">Bud</span><span class="sys">Sys</span></h3>
+        <a href="/#home" (click)="closeMenu()">
+          <img src="assets/favicon_3.ico" alt="BudSys" class="logo" />
+        </a>
+        <h3>
+          <a href="/#home" (click)="closeMenu()">
+            <span class="bud">Bud</span><span class="sys">Sys</span>
+          </a>
+        </h3>
       </div>
+
       <p class="footer-text">
         Plataforma SaaS para automação de orçamentos em obras e serviços.
         Ganhe tempo, reduza retrabalho e feche mais com a BudSys.
@@ -59,28 +61,36 @@
       <div class="social-icons">
         <a href="https://www.facebook.com/share/16P5rteCKa/" target="_blank" aria-label="Facebook">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="#005c73">
-            <path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 4.99 3.66 9.13 8.44 9.88v-6.99H7.9v-2.89h2.4V9.84c0-2.37 1.42-3.68 3.58-3.68 1.04 0 2.13.19 2.13.19v2.34h-1.2c-1.18 0-1.55.73-1.55 1.48v1.77h2.63l-.42 2.89h-2.21v6.99c4.78-.75 8.44-4.89 8.44-9.88z" />
+            <path
+              d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 4.99 3.66 9.13 8.44 9.88v-6.99H7.9v-2.89h2.4V9.84c0-2.37 1.42-3.68 3.58-3.68 1.04 0 2.13.19 2.13.19v2.34h-1.2c-1.18 0-1.55.73-1.55 1.48v1.77h2.63l-.42 2.89h-2.21v6.99c4.78-.75 8.44-4.89 8.44-9.88z" />
           </svg>
         </a>
 
         <a href="https://www.instagram.com/budsys_oficial" target="_blank" aria-label="Instagram">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="#005c73">
-            <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10 2c1.65 0 3 1.35 3 3v10c0 1.65-1.35 3-3 3H7c-1.65 0-3-1.35-3-3V7c0-1.65 1.35-3 3-3h10zm-5 3a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6zm4.5-.5a1 1 0 100 2 1 1 0 000-2z" />
+            <path
+              d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10 2c1.65 0 3 1.35 3 3v10c0 1.65-1.35 3-3 3H7c-1.65 0-3-1.35-3-3V7c0-1.65 1.35-3 3-3h10zm-5 3a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6zm4.5-.5a1 1 0 100 2 1 1 0 000-2z" />
           </svg>
         </a>
 
-        <a href="https://www.linkedin.com/company/107012851/admin/page-posts/published/" target="_blank" aria-label="LinkedIn">
+        <a href="https://www.linkedin.com/company/107012851/admin/page-posts/published/" target="_blank"
+          aria-label="LinkedIn">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="#005c73">
-            <path d="M19 3A2 2 0 0121 5V19A2 2 0 0119 21H5A2 2 0 013 19V5A2 2 0 015 3H19M8.34 17.67V10.5H6.03V17.67H8.34M7.18 9.33C8 9.33 8.67 8.66 8.67 7.83C8.67 7 8 6.33 7.18 6.33C6.35 6.33 5.68 7 5.68 7.83C5.68 8.66 6.35 9.33 7.18 9.33M18 17.67V13.63C18 11.5 17.5 10.17 15.34 10.17C14.17 10.17 13.33 10.84 13 11.5H12.97V10.5H10.66V17.67H12.97V13.97C12.97 13 13.17 12.17 14.34 12.17C15.5 12.17 15.5 13.23 15.5 14.03V17.67H18Z" />
+            <path
+              d="M19 3A2 2 0 0121 5V19A2 2 0 0119 21H5A2 2 0 013 19V5A2 2 0 015 3H19M8.34 17.67V10.5H6.03V17.67H8.34M7.18 9.33C8 9.33 8.67 8.66 8.67 7.83C8.67 7 8 6.33 7.18 6.33C6.35 6.33 5.68 7 5.68 7.83C5.68 8.66 6.35 9.33 7.18 9.33M18 17.67V13.63C18 11.5 17.5 10.17 15.34 10.17C14.17 10.17 13.33 10.84 13 11.5H12.97V10.5H10.66V17.67H12.97V13.97C12.97 13 13.17 12.17 14.34 12.17C15.5 12.17 15.5 13.23 15.5 14.03V17.67H18Z" />
           </svg>
         </a>
 
-        <a
-          href="https://wa.me/5535991569148?text=Oi%21%20Quero%20conhecer%20melhor%20o%20BudSys.%20Pode%20me%20ajudar%20com%20uma%20demonstra%C3%A7%C3%A3o%20ou%20mais%20informa%C3%A7%C3%B5es%3F"
-          target="_blank"
-          class="social wa"
-        >
+        <a href="https://wa.me/5535991569148?text=Oi%21%20Quero%20conhecer%20melhor%20o%20BudSys.%20Pode%20me%20ajudar%20com%20uma%20demonstra%C3%A7%C3%A3o%20ou%20mais%20informa%C3%A7%C3%B5es%3F"
+          target="_blank" class="social wa" aria-label="WhatsApp">
           <i class="fa-brands fa-whatsapp"></i>
+        </a>
+
+        <a href="https://www.youtube.com/@budsysSistemadeGest%C3%A3o" target="_blank" aria-label="YouTube">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="#005c73">
+            <path
+              d="M23.5 6.2s-.2-1.7-.8-2.5c-.8-1-1.7-1-2.1-1.1C17.8 2.3 12 2.3 12 2.3h0s-5.8 0-8.6.3c-.4 0-1.3.1-2.1 1.1-.6.8-.8 2.5-.8 2.5S0 8.1 0 10v1.9c0 1.9.5 3.8.5 3.8s.2 1.7.8 2.5c.8 1 1.9 1 2.4 1.1 1.7.2 7.3.3 8.3.3h0s5.8 0 8.6-.3c.4 0 1.3-.1 2.1-1.1.6-.8.8-2.5.8-2.5s.5-1.9.5-3.8V10c0-1.9-.5-3.8-.5-3.8zM9.5 14.5v-5l5 2.5-5 2.5z" />
+          </svg>
         </a>
       </div>
     </div>
@@ -88,10 +98,11 @@
     <div class="footer-menu">
       <h4>MENU</h4>
       <ul>
-        <li><a href="/#home">Home</a></li>
         <li><a href="/#solucoes">Soluções</a></li>
-        <li><a href="/#sobre-nos">Sobre nós</a></li>
-        <li><a routerLink="/blog">Blog</a></li>
+        <li><a href="/#como-funciona">Como funciona</a></li>
+        <li><a href="/#tecnologia">Resultados</a></li>
+        <li><a href="/#planos">Planos</a></li>
+        <li><a href="/#sobre-nos">Sobre</a></li>
         <li><a href="/#contato">Contato</a></li>
       </ul>
     </div>
@@ -99,9 +110,20 @@
     <div class="footer-social">
       <h4>SOCIAL</h4>
       <ul>
-        <li><a href="#">Twitter (X)</a></li>
-        <li><a href="#">Instagram</a></li>
-        <li><a href="#">Youtube</a></li>
+        <li><a href="https://www.instagram.com/budsys_oficial" target="_blank">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/company/107012851/admin/page-posts/published/"
+            target="_blank">LinkedIn</a></li>
+        <li>
+          <a href="https://wa.me/5535991569148?text=Oi%21%20Quero%20conhecer%20melhor%20o%20BudSys.%20Pode%20me%20ajudar%20com%20uma%20demonstra%C3%A7%C3%A3o%20ou%20mais%20informa%C3%A7%C3%B5es%3F"
+            target="_blank">
+            WhatsApp
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/@budsysSistemadeGest%C3%A3o">
+            YouTube
+          </a>
+        </li>
       </ul>
     </div>
   </div>
