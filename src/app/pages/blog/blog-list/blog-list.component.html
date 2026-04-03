@@ -8,38 +8,69 @@
   </div>
 </section>
 
-<section
-  class="container blog-grid"
-  *ngIf="(posts$ | async) as posts"
-  [class.single]="posts.length === 1"
->
+<section class="container" *ngIf="(posts$ | async) as posts">
   <ng-container *ngIf="posts.length > 0; else empty">
-    <article class="blog-card" *ngFor="let p of posts">
-      <div class="thumb" *ngIf="p.coverUrl; else noImg">
-        <img [src]="p.coverUrl" [alt]="p.title" />
+
+    <article class="featured-post" *ngIf="posts[0] as featured">
+      <div class="featured-thumb" *ngIf="featured.coverUrl; else featuredNoImg">
+        <img [src]="featured.coverUrl" [alt]="featured.title" />
       </div>
 
-      <ng-template #noImg>
-        <div class="thumb placeholder"><span>B</span></div>
+      <ng-template #featuredNoImg>
+        <div class="featured-thumb placeholder"><span>B</span></div>
       </ng-template>
 
-      <div class="content">
+      <div class="featured-content">
         <div class="meta">
           <span class="pill">BudSys</span>
-          <span class="date" *ngIf="p.publishedAt">
-            {{ p.publishedAt.toDate() | date:'dd/MM/yyyy' }}
+          <span class="date" *ngIf="featured.publishedAt">
+            {{ featured.publishedAt.toDate() | date:'dd/MM/yyyy' }}
           </span>
         </div>
 
-        <h2 class="title">
-          <a [routerLink]="['/blog', p.slug]">{{ p.title }}</a>
+        <h2 class="featured-title">
+          <a [routerLink]="['/blog', featured.slug]">{{ featured.title }}</a>
         </h2>
 
-        <p class="excerpt">{{ p.excerpt }}</p>
+        <p class="featured-excerpt">{{ featured.excerpt }}</p>
 
-        <a class="read" [routerLink]="['/blog', p.slug]">Ler artigo →</a>
+        <a class="read" [routerLink]="['/blog', featured.slug]">Ler artigo →</a>
       </div>
     </article>
+
+    <section
+      class="blog-grid"
+      *ngIf="posts.length > 1"
+      [class.single]="posts.length === 2"
+    >
+      <article class="blog-card" *ngFor="let p of posts.slice(1)">
+        <div class="thumb" *ngIf="p.coverUrl; else noImg">
+          <img [src]="p.coverUrl" [alt]="p.title" />
+        </div>
+
+        <ng-template #noImg>
+          <div class="thumb placeholder"><span>B</span></div>
+        </ng-template>
+
+        <div class="content">
+          <div class="meta">
+            <span class="pill">BudSys</span>
+            <span class="date" *ngIf="p.publishedAt">
+              {{ p.publishedAt.toDate() | date:'dd/MM/yyyy' }}
+            </span>
+          </div>
+
+          <h2 class="title">
+            <a [routerLink]="['/blog', p.slug]">{{ p.title }}</a>
+          </h2>
+
+          <p class="excerpt">{{ p.excerpt }}</p>
+
+          <a class="read" [routerLink]="['/blog', p.slug]">Ler artigo →</a>
+        </div>
+      </article>
+    </section>
+
   </ng-container>
 
   <ng-template #empty>

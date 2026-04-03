@@ -13,7 +13,27 @@
 
       <img *ngIf="p.coverUrl" [src]="p.coverUrl" [alt]="p.title" class="cover" />
 
+      <!-- CONTEÚDO -->
       <div class="content" [innerHTML]="p.contentHtml"></div>
+
+      <!-- CTA (AQUI 👇) -->
+      <div class="cta-box">
+        <h3>Quer ver isso na prática na sua empresa?</h3>
+
+        <p>
+          Fale com a equipe da BudSys e veja como automatizar seus orçamentos,
+          reduzir erros e ganhar mais previsibilidade.
+        </p>
+
+        <a
+          href="https://wa.me/5535991569148?text=Oi%21%20Li%20um%20artigo%20no%20blog%20da%20BudSys%20e%20quero%20entender%20melhor%20como%20o%20sistema%20pode%20me%20ajudar."
+          target="_blank"
+          class="cta-button"
+        >
+          Falar com a equipe →
+        </a>
+      </div>
+
     </article>
   </div>
 </section>
