@@ -10,7 +10,10 @@ export class BlogService {
   getPublishedPosts(): Observable<BlogPost[]> {
     return this.afs
       .collection<BlogPost>('posts', ref =>
-        ref.where('status', '==', 'published').limit(30)
+        ref
+          .where('status', '==', 'published')
+          .orderBy('publishedAt', 'desc')
+          .limit(30)
       )
       .snapshotChanges()
       .pipe(
