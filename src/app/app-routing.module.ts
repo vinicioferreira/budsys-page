@@ -7,15 +7,19 @@ import { CadenciaComponent } from './pages/cadencias/cadencia.component';
 import { BlogPostComponent } from './pages/blog/blog-post/blog-post.component';
 import { BlogListComponent } from './pages/blog/blog-list/blog-list.component';
 import { BlogAdminComponent } from './pages/blog/blog-admin/blog-admin.component';
+import { AuthGuard } from './guards/auth.guard';
+import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'admin', component: AdminComponent },
-  { path: 'agenda', component: AgendaComponent },
-  { path: 'cadencia', component: CadenciaComponent },
+
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  { path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard] },
+  { path: 'cadencia', component: CadenciaComponent, canActivate: [AuthGuard] },
+  { path: 'admin/blog', component: BlogAdminComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent },
+
   { path: 'blog', component: BlogListComponent },
-  { path: 'admin/blog', component: BlogAdminComponent },
-  { path: 'blog-admin', component: BlogAdminComponent },
   { path: 'blog/:slug', component: BlogPostComponent },
 
   { path: '**', redirectTo: '' }

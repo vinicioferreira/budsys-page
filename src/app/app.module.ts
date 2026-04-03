@@ -40,6 +40,7 @@ import { BlogPostComponent } from './pages/blog/blog-post/blog-post.component';
 import { BlogAdminComponent } from './pages/blog/blog-admin/blog-admin.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { LoginComponent } from './pages/login/login.component';
 
 
 
@@ -58,7 +59,8 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     BlogListComponent,
     BlogPostComponent,
     BlogAdminComponent,
-    ModalMessageComponent
+    ModalMessageComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

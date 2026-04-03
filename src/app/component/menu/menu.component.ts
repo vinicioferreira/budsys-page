@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-menu',
@@ -14,7 +15,10 @@ export class MenuComponent {
   nomeUsuario: string = '';
   espacoUsado = 0;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private afAuth: AngularFireAuth,
+  ) { }
 
   ngOnInit(): void {
     // Se quiser carregar nome da empresa/usuário de localStorage ou outra fonte, implemente aqui
@@ -38,10 +42,8 @@ export class MenuComponent {
     this.isOrcamentosExpanded = !this.isOrcamentosExpanded;
   }
 
-  logout() {
-    // Caso queira implementar logout no futuro
-    // Exemplo: limpar dados do sessionStorage/localStorage
-    sessionStorage.clear();
+  async logout() {
+    await this.afAuth.signOut(); // 🔥 isso é o principal
     this.router.navigate(['/login']);
   }
 }
