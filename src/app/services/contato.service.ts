@@ -49,17 +49,9 @@ export class ContatoService {
     });
   }
 
-  async atualizarContato(contatoId: string, dados: any): Promise<void> {
-    const contatoDocRef = doc(this.firestore, `contatos/${contatoId}`);
-
-    await updateDoc(contatoDocRef, {
-      nome: dados.nome || '',
-      email: dados.email || '',
-      telefone: dados.telefone || '',
-      empresa: dados.empresa || '',
-      mensagem: dados.mensagem || '',
-      canal: dados.canal || ''
-    });
+  async atualizarContato(id: string, dados: any): Promise<void> {
+    const ref = doc(this.firestore, 'contatos', id);
+    return updateDoc(ref, dados);
   }
 
   async excluirContato(contatoId: string): Promise<void> {

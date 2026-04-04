@@ -15,12 +15,23 @@ declare var gtag: Function;
 export class AppComponent implements OnInit {
 
   menuOpen = false;
+  showLayout = false;
 
   constructor(
     private dialog: MatDialog,
     private overlay: Overlay,
     private router: Router
-  ) { }
+  ) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const url = this.router.url;
+
+        this.showLayout =
+          url === '/' ||
+          url.startsWith('/blog');
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.router.events

@@ -1,4 +1,4 @@
-<header class="topbar">
+<header class="topbar" *ngIf="showLayout" >
   <div class="nav-wrap">
     <a class="brand" href="/#home" (click)="closeMenu()">
       <img src="assets/favicon_3.ico" alt="BudSys" class="logo" />
@@ -40,7 +40,7 @@
   <router-outlet></router-outlet>
 </main>
 
-<footer class="footer">
+<footer class="footer" *ngIf="showLayout">
   <div class="footer-content container">
     <div class="footer-left">
       <div class="footer-logo">

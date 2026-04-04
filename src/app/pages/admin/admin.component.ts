@@ -15,7 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent {
-  displayedColumns: string[] = ['seqId', 'nome', 'email', 'telefone', 'empresa', 'mensagem', 'dataCadastro', 'canal', 'actions'];
+  displayedColumns: string[] = ['seqId', 'status', 'nome', 'email', 'telefone', 'empresa', 'mensagem', 'dataCadastro', 'canal', 'actions'];
   dataSource = new MatTableDataSource<any>([]);
   listaCanais: { nome: string, cadenciaId: string }[] = [];
 
@@ -46,6 +46,10 @@ export class AdminComponent {
         direction: this.sort.direction
       });
     });
+
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      return true; // 🔥 desativa filtro automático
+    };
   }
 
   ngAfterViewInit() {
@@ -146,5 +150,11 @@ export class AdminComponent {
       console.error('Erro ao excluir cliente:', error);
       alert('Erro ao excluir cliente.');
     }
+  }
+
+  atualizarStatus(cliente: any) {
+    this.contatoService.atualizarContato(cliente.id, {
+      status: cliente.status
+    });
   }
 }
