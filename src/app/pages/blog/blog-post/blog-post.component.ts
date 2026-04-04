@@ -11,8 +11,6 @@ declare var gtag: Function;
   templateUrl: './blog-post.component.html',
   styleUrls: ['./blog-post.component.scss']
 })
-
-
 export class BlogPostComponent {
   post$: Observable<BlogPost | null>;
 
@@ -25,23 +23,20 @@ export class BlogPostComponent {
   trackWhats(slug: string, event: Event) {
     event.preventDefault();
 
-    // 🔹 clique
+    console.log('teste track whats');
+
     gtag('event', 'click_whatsapp', {
       event_category: 'engajamento',
       event_label: slug
     });
 
-    // 🔥 lead (ESSA LINHA QUE VOCÊ PERGUNTOU)
     gtag('event', 'generate_lead', {
       event_label: slug
     });
 
-    // abre o WhatsApp depois
-    setTimeout(() => {
-      window.open(
-        'https://wa.me/5535991569148?text=Oi%21%20Li%20um%20artigo...',
-        '_blank'
-      );
-    }, 150);
+    window.open(
+      'https://wa.me/5535991569148?text=Oi%21%20Li%20um%20artigo...',
+      '_blank'
+    );
   }
 }

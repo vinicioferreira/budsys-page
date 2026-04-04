@@ -25,10 +25,7 @@
           reduzir erros e ganhar mais previsibilidade.
         </p>
 
-        <a href="https://wa.me/5535991569148?text=Oi%21%20Li%20um%20artigo..." target="_blank" class="cta-button"
-          (click)="trackWhats(p.slug, $event)">
-          Falar com a equipe →
-        </a>
+        <app-button textButton="Falar com a equipe →" [icon]="'chat'" (click)="trackWhats(p.slug, $event)"></app-button>
       </div>
 
     </article>

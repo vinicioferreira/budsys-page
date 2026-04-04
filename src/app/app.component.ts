@@ -3,7 +3,7 @@ import { ModalContatoComponent } from './pages/modal-contato/modal-contato.compo
 import { MatDialog } from '@angular/material/dialog';
 import { Overlay } from '@angular/cdk/overlay';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 declare var gtag: Function;
 
@@ -14,22 +14,25 @@ declare var gtag: Function;
 })
 export class AppComponent implements OnInit {
 
+  menuOpen = false;
+
   constructor(
     private dialog: MatDialog,
     private overlay: Overlay,
     private router: Router
-  ) { 
-    this.router.events
-    .pipe(filter(event => event instanceof NavigationEnd))
-    .subscribe((event: any) => {
-      gtag('event', 'page_view', {
-        page_path: event.urlAfterRedirects
-      });
-    });
-  }
-  ngOnInit(): void { }
+  ) { }
 
-  menuOpen = false;
+  ngOnInit(): void {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        gtag('config', 'G-MD04DZP1G5', {
+          page_path: event.urlAfterRedirects,
+          page_title: document.title,
+          page_location: window.location.href
+        });
+      });
+  }
 
   toggleMenu(): void {
     this.menuOpen = !this.menuOpen;

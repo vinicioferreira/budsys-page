@@ -41,6 +41,7 @@ import { BlogAdminComponent } from './pages/blog/blog-admin/blog-admin.component
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { LoginComponent } from './pages/login/login.component';
+import { ButtonComponent } from './component/button/button.component';
 
 
 
@@ -48,6 +49,7 @@ import { LoginComponent } from './pages/login/login.component';
   declarations: [
     AppComponent,
     ModalContatoComponent,
+    ButtonComponent,
     AdminComponent,
     MenuComponent,
     HomeComponent,
