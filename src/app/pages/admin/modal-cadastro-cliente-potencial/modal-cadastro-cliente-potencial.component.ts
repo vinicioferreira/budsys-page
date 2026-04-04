@@ -11,6 +11,7 @@ import { AgendaService } from '../../../services/agenda.service';
 })
 export class ModalCadastroClientePotencialComponent implements OnInit {
   cliente: any = {
+    id: null,
     nome: '',
     email: '',
     telefone: '',
@@ -20,6 +21,7 @@ export class ModalCadastroClientePotencialComponent implements OnInit {
   };
 
   listaCanais: any[] = [];
+  modoEdicao = false;
 
   constructor(
     private dialogRef: MatDialogRef<ModalCadastroClientePotencialComponent>,
@@ -29,12 +31,16 @@ export class ModalCadastroClientePotencialComponent implements OnInit {
     private agendaService: AgendaService
   ) {
     if (data) {
-      this.cliente = { ...this.cliente, ...data }; // Garante campos definidos + dados recebidos
+      this.cliente = { ...this.cliente, ...data };
+      this.modoEdicao = !!data.id;
     }
   }
 
   ngOnInit(): void {
     this.carregarCanais();
+    console.log('📌 Dados recebidos no modal:', this.data);
+    console.log('📌 Cliente no modal:', this.cliente);
+    console.log('📌 Modo edição:', this.modoEdicao);
   }
 
   carregarCanais(): void {
@@ -43,48 +49,30 @@ export class ModalCadastroClientePotencialComponent implements OnInit {
     });
   }
 
-  vincularCanal(cliente: any) {
-    console.log('🔍 Vinculando canal para cliente:', cliente);
-
-    if (!cliente.canal || typeof cliente.canal !== 'string') {
-      console.warn('⚠ Cliente sem canal válido, não dá pra vincular.');
-      alert('⚠ Cliente sem canal válido!');
-      return;
-    }
-
-    const canalSelecionado = this.listaCanais.find(c =>
-      c.nome && typeof c.nome === 'string' &&
-      c.nome.toLowerCase() === cliente.canal.toLowerCase()
-    );
-
-    console.log('🔍 Canal selecionado na lista de cadências:', canalSelecionado);
-
-    if (canalSelecionado) {
-      this.cadenciaService.getCadenciaById(canalSelecionado.cadenciaId).then(cadencia => {
-        console.log('📌 Cadência carregada:', cadencia);
-
-        if (!cadencia || !cadencia.etapas || !Array.isArray(cadencia.etapas) || cadencia.etapas.length === 0) {
-          console.warn('⚠ Cadência inválida ou sem etapas!');
-          alert('⚠ Cadência sem etapas!');
-          return;
-        }
-
-        this.agendaService.gerarAtividadesDeCadencia(cadencia, cliente.id, cliente.nome, new Date());
-        alert(`✅ Cadência vinculada e atividades criadas na agenda para o canal "${cliente.canal}"`);
-      });
-    } else {
-      console.warn(`⚠ Nenhuma cadência vinculada ao canal: "${cliente.canal}"`);
-      alert(`⚠ Nenhuma cadência vinculada ao canal: "${cliente.canal}"`);
-    }
-  }
-
   async salvar(): Promise<void> {
     try {
-      const contatoId = await this.contatoService.salvarContato(this.cliente);
-      alert('✅ Cliente salvo com sucesso!');
+      const dadosParaSalvar = {
+        nome: this.cliente.nome,
+        email: this.cliente.email,
+        telefone: this.cliente.telefone,
+        empresa: this.cliente.empresa,
+        mensagem: this.cliente.mensagem,
+        canal: this.cliente.canal
+      };
+
+      let contatoId = this.cliente.id;
+
+      if (this.modoEdicao && this.cliente.id) {
+        console.log('✏️ Atualizando contato:', this.cliente.id, dadosParaSalvar);
+        await this.contatoService.atualizarContato(this.cliente.id, dadosParaSalvar);
+      } else {
+        console.log('🆕 Criando contato:', dadosParaSalvar);
+        contatoId = await this.contatoService.salvarContato(dadosParaSalvar);
+      }
+
       this.dialogRef.close(contatoId);
     } catch (error) {
-      console.error('Erro ao salvar cliente:', error);
+      console.error('❌ Erro real ao salvar cliente:', error);
       alert('❌ Ocorreu um erro ao salvar o cliente');
     }
   }

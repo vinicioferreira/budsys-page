@@ -12,11 +12,12 @@
     </li>
 
     <p class="nome-empresa">{{ nomeEmpresa }}</p>
-
+  <!--
     <li routerLink="/home" (click)="selectMenu()"><mat-icon>dashboard</mat-icon><span>Dashboard</span></li>
-    <li routerLink="/admin" (click)="selectMenu()"><mat-icon>handshake</mat-icon><span>Clientes Ponteciais</span></li>
-    <li routerLink="/agenda" (click)="selectMenu()"><mat-icon>calendar_month</mat-icon><span>Agenda</span></li>
     <li routerLink="/clientes" (click)="selectMenu()"><mat-icon>group</mat-icon><span>Clientes</span></li>
+  -->
+    <li routerLink="/agenda" (click)="selectMenu()"><mat-icon>calendar_month</mat-icon><span>Agenda</span></li>
+    <li routerLink="/admin" (click)="selectMenu()"><mat-icon>handshake</mat-icon><span>Clientes Ponteciais</span></li>
     <li routerLink="/admin/blog" (click)="selectMenu()"><mat-icon>article</mat-icon><span>Blog</span></li>
     <li routerLink="/cadencia" (click)="selectMenu()"><mat-icon>schema</mat-icon><span>Cadência de Vendas</span></li>
     <li routerLink="/configuracoes" (click)="selectMenu()"><mat-icon>settings</mat-icon><span>Configurações</span></li>

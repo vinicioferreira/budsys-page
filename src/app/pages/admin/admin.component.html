@@ -64,7 +64,7 @@
         </td>
       </ng-container>
       -->
-      
+
       <ng-container matColumnDef="dataCadastro">
         <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Data Cadastro</th>
         <td class="td-table" mat-cell *matCellDef="let cliente">
@@ -76,8 +76,8 @@
       <ng-container matColumnDef="actions">
         <th class="th-table" mat-header-cell *matHeaderCellDef></th>
         <td class="td-table" mat-cell *matCellDef="let cliente">
-          <mat-icon class="icone-tabela" >edit</mat-icon>
-          <mat-icon class="icone-tabela-delete">delete</mat-icon>
+          <mat-icon class="icone-tabela" (click)="editarCliente(cliente)">edit</mat-icon>
+          <mat-icon class="icone-tabela-delete" (click)="excluirCliente(cliente)">delete</mat-icon>
         </td>
       </ng-container>
 
@@ -92,7 +92,8 @@
 
     </table>
 
-    <mat-paginator class="shadow-sm" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons aria-label="Selecione clientes por página"></mat-paginator>
+    <mat-paginator class="shadow-sm" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons
+      aria-label="Selecione clientes por página"></mat-paginator>
   </div>
 
 </div>

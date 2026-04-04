@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ModalContatoComponent {
   contatoForm: FormGroup;
-    cliente: any = {
+  cliente: any = {
     nome: '',
     email: '',
     telefone: '',
@@ -87,124 +87,123 @@ export class ModalContatoComponent {
     }
   }
 
-  enviar(): void {
-  if (this.contatoForm.valid) {
+  async enviar(): Promise<void> {
+    if (this.contatoForm.invalid) {
+      alert('⚠ Preencha os campos obrigatórios.');
+      return;
+    }
+
     const templateParams = {
       nome: this.contatoForm.value.nome || '',
       email: this.contatoForm.value.email || '',
       telefone: this.contatoForm.value.telefone || '',
       empresa: this.contatoForm.value.empresa || '',
-      mensagem: this.contatoForm.value.mensagem || ''
+      mensagem: this.contatoForm.value.mensagem || '',
+      canal: 'Landing Page'
     };
 
-    // Envia email
-    emailjs.send(
-      'service_960gg1r',
-      'template_w60nnqq',
-      templateParams,
-      'vowCrOusn6wX9y7rC'
-    ).then(() => {
-      alert('Email enviado com sucesso!');
-      console.log('Dados enviados', templateParams);
-      this.dialogRef.close();
+    try {
+      // 1. Salva no Firestore
+      const docId = await this.contatoService.salvarContato(templateParams, 'Landing Page');
+      console.log('✅ Contato salvo no Firestore, ID:', docId);
 
-      // Envia para o Make via Webhook
-      fetch('https://hook.us2.make.com/xwmqyb6mv6jqqlszix0k6ivw6yjz0w7m', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(templateParams)
-      });
+      const cliente = {
+        id: docId,
+        ...templateParams,
+        canal: 'Landing Page'
+      };
 
-    }, (error) => {
-      console.error('Erro ao enviar:', error);
-      alert('Erro ao enviar email. Tente novamente.');
-    });
+      // 2. Busca a cadência fixa da Landing Page
+      const cadencia = await this.cadenciaService.getCadenciaByNome(cliente.canal);
+      console.log('📌 Cadência carregada:', cadencia);
 
-    // Salva o contato e já agenda
-    this.contatoService.salvarContato(templateParams, 'Landing Page')
-      .then((docId) => {
-        console.log('✅ Contato salvo no Firestore, ID:', docId);
-       const mensagem =
-      `📩 Novo lead recebido - Site!
+      if (!cadencia || !cadencia.etapas || !Array.isArray(cadencia.etapas) || cadencia.etapas.length === 0) {
+        alert('⚠ Cadência da Landing Page sem etapas!');
+        return;
+      }
 
-      👤 Nome: ${templateParams.nome}
-      📧 Email: ${templateParams.email}
-      📞 Telefone: ${templateParams.telefone}
-      🏢 Empresa: ${templateParams.empresa || '---'}
-      💬 Mensagem: ${templateParams.mensagem || '---'}`;
+      // 3. Gera atividades na agenda
+      this.agendaService.gerarAtividadesDeCadencia(
+        cadencia,
+        cliente.id,
+        cliente.nome,
+        new Date()
+      );
 
-
-        // Envia mensagem de WhatsApp para o ADM
-        this.http.post('https://us-central1-budsys.cloudfunctions.net/api/messaging/whatsapp', {
-          to: '+553591569148', // Ex: 'whatsapp:+553591234567'
-          message: mensagem
-          }).subscribe({
-            next: () => console.log('📲 Mensagem WhatsApp enviada com sucesso'),
-            error: err => console.error('❌ Erro ao enviar WhatsApp:', err)
-        });
-
-        const cliente = {
-          id: docId,
-          ...templateParams,
-          canal: 'Landing Page'
-        };
-
-        // Carrega a cadência fixa da Landing Page
-        this.cadenciaService.getCadenciaById('ucRcAjk2ESrQIRYED8l7').then(cadencia => {
-          console.log('📌 Cadência carregada:', cadencia);
-
-          if (!cadencia || !cadencia.etapas || !Array.isArray(cadencia.etapas) || cadencia.etapas.length === 0) {
-            console.warn('⚠ Cadência inválida ou sem etapas!');
-            alert('⚠ Cadência da Landing Page sem etapas!');
-            return;
-          }
-
-          // Gera atividades na agenda
-          this.agendaService.gerarAtividadesDeCadencia(cadencia, cliente.id, cliente.nome, new Date());
-          alert('✅ Dados enviados com sucesso!');
-          this.dialogRef.close();
-        }).catch(err => {
-          console.error('Erro ao buscar cadência:', err);
-          alert('❌ Erro ao buscar a cadência da Landing Page!');
-        });
-
-      })
-      .catch((error) => {
-        console.error('❌ Erro ao salvar no Firestore:', error);
-        alert('❌ Erro ao salvar no sistema. Verifique sua conexão.');
-      });
-  } else {
-    alert('⚠ Preencha os campos obrigatórios.');
-  }
-}
-
-
-/*    // Envia email
-      emailjs.send(
+      // 4. Dispara email
+      await emailjs.send(
         'service_960gg1r',
         'template_w60nnqq',
-        templateParams,
+        {
+          nome: templateParams.nome,
+          email: templateParams.email,
+          telefone: templateParams.telefone,
+          empresa: templateParams.empresa,
+          mensagem: templateParams.mensagem
+        },
         'vowCrOusn6wX9y7rC'
-      ).then(() => {
-        alert('Email enviado com sucesso!');
-        console.log('Dados enviados', templateParams);
-        this.dialogRef.close();
+      );
 
-        // Envia para o Make via Webhook
-        fetch('https://hook.us2.make.com/xwmqyb6mv6jqqlszix0k6ivw6yjz0w7m', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(templateParams)
-        });
+      console.log('✅ Email enviado com sucesso');
 
-      }, (error) => {
-        console.error('Erro ao enviar:', error);
-        alert('Erro ao enviar email. Tente novamente.');
+      // 5. Webhook Make
+      fetch('https://hook.us2.make.com/xwmqyb6mv6jqqlszix0k6ivw6yjz0w7m', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(templateParams)
+      }).catch(err => console.error('❌ Erro no webhook Make:', err));
+
+      // 6. WhatsApp ADM
+      const mensagem =
+        `📩 Novo lead recebido - Site!
+        👤 Nome: ${templateParams.nome}
+        📧 Email: ${templateParams.email}
+        📞 Telefone: ${templateParams.telefone}
+        🏢 Empresa: ${templateParams.empresa || '---'}
+        💬 Mensagem: ${templateParams.mensagem || '---'}`;
+
+      this.http.post('https://us-central1-budsys.cloudfunctions.net/api/messaging/whatsapp', {
+        to: '+553591569148',
+        message: mensagem
+      }).subscribe({
+        next: () => console.log('📲 Mensagem WhatsApp enviada com sucesso'),
+        error: err => console.error('❌ Erro ao enviar WhatsApp:', err)
       });
-*/
+
+      alert('✅ Dados enviados com sucesso!');
+      this.dialogRef.close(docId);
+
+    } catch (error) {
+      console.error('❌ Erro no envio do lead:', error);
+      alert('❌ Erro ao enviar os dados. Tente novamente.');
+    }
+  }
+
+
+  /*    // Envia email
+        emailjs.send(
+          'service_960gg1r',
+          'template_w60nnqq',
+          templateParams,
+          'vowCrOusn6wX9y7rC'
+        ).then(() => {
+          alert('Email enviado com sucesso!');
+          console.log('Dados enviados', templateParams);
+          this.dialogRef.close();
+  
+          // Envia para o Make via Webhook
+          fetch('https://hook.us2.make.com/xwmqyb6mv6jqqlszix0k6ivw6yjz0w7m', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(templateParams)
+          });
+  
+        }, (error) => {
+          console.error('Erro ao enviar:', error);
+          alert('Erro ao enviar email. Tente novamente.');
+        });
+  */
 }
 

@@ -1,4 +1,6 @@
-<h2 mat-dialog-title>Novo Cliente</h2>
+<h2 mat-dialog-title>
+  {{ modoEdicao ? 'Editar Cliente' : 'Novo Cliente' }}
+</h2>
 
 <mat-dialog-content>
   <mat-form-field appearance="fill" class="full-width">

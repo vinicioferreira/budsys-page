@@ -27,7 +27,7 @@ export class AdminComponent {
     private cadenciaService: CadenciaService,
     private agendaService: AgendaService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.cadenciaService.listarCadencias().subscribe(cadencias => {
@@ -120,5 +120,31 @@ export class AdminComponent {
         this.vincularCanal(cliente);  // 🚀 Chama o método que já funciona
       }
     });
+  }
+
+  editarCliente(cliente: any): void {
+    const dialogRef = this.dialog.open(ModalCadastroClientePotencialComponent, {
+      width: '600px',
+      data: cliente
+    });
+
+    dialogRef.afterClosed().subscribe((contatoId: string | null) => {
+      if (!contatoId) return;
+      console.log('Contato processado com ID:', contatoId);
+    });
+  }
+
+  async excluirCliente(cliente: any): Promise<void> {
+    const confirmacao = confirm(`Deseja realmente excluir o cliente "${cliente.nome}"?`);
+
+    if (!confirmacao) return;
+
+    try {
+      await this.contatoService.excluirContato(cliente.id);
+      alert('Cliente excluído com sucesso.');
+    } catch (error) {
+      console.error('Erro ao excluir cliente:', error);
+      alert('Erro ao excluir cliente.');
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, CollectionReference, DocumentData, arrayUnion, setDoc, arrayRemove, getDoc} from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, CollectionReference, DocumentData, arrayUnion, setDoc, arrayRemove, getDoc } from '@angular/fire/firestore';
 import { from, Observable } from 'rxjs';
 import { Cadencia, Etapa } from '../interfaces/cadencia';
 
@@ -8,7 +8,7 @@ import { Cadencia, Etapa } from '../interfaces/cadencia';
 })
 export class CadenciaService {
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) { }
 
   private get cadenciasCollection(): CollectionReference<DocumentData> {
     return collection(this.firestore, 'cadencias');
@@ -115,5 +115,19 @@ export class CadenciaService {
       console.log('📌 Cadência carregada do Firestore:', data);
       return data;
     });
+  }
+
+  async getCadenciaByNome(nome: string): Promise<any> {
+    const cadenciasRef = collection(this.firestore, 'cadencias');
+    const snapshot = await getDocs(cadenciasRef);
+
+    const cadencia = snapshot.docs
+      .map(docItem => ({
+        id: docItem.id,
+        ...docItem.data()
+      }))
+      .find((c: any) => c.nome?.trim().toLowerCase() === nome.trim().toLowerCase());
+
+    return cadencia || null;
   }
 }
