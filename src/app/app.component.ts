@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ModalContatoComponent } from './pages/modal-contato/modal-contato.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Overlay } from '@angular/cdk/overlay';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
+
+declare var gtag: Function;
 
 @Component({
   selector: 'app-root',
@@ -12,8 +16,17 @@ export class AppComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private overlay: Overlay
-  ) { }
+    private overlay: Overlay,
+    private router: Router
+  ) { 
+    this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe((event: any) => {
+      gtag('event', 'page_view', {
+        page_path: event.urlAfterRedirects
+      });
+    });
+  }
   ngOnInit(): void { }
 
   menuOpen = false;

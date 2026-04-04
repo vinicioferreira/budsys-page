@@ -22,10 +22,26 @@ export class BlogPostComponent {
     );
   }
 
-  trackWhats(slug: string) {
+  trackWhats(slug: string, event: Event) {
+    event.preventDefault();
+
+    // 🔹 clique
     gtag('event', 'click_whatsapp', {
       event_category: 'engajamento',
       event_label: slug
     });
+
+    // 🔥 lead (ESSA LINHA QUE VOCÊ PERGUNTOU)
+    gtag('event', 'generate_lead', {
+      event_label: slug
+    });
+
+    // abre o WhatsApp depois
+    setTimeout(() => {
+      window.open(
+        'https://wa.me/5535991569148?text=Oi%21%20Li%20um%20artigo...',
+        '_blank'
+      );
+    }, 150);
   }
 }
