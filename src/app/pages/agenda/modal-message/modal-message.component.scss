@@ -19,21 +19,22 @@
 
 .status-selector {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
-  margin: 10px 0;
+  margin: 10px 0 16px;
 
   .status-button {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 12px;
+    padding: 6px 14px;
     border: 1px solid var(--status-color);
     border-radius: 20px;
     background-color: #fff;
     color: #333;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 
     .dot {
       width: 10px;
@@ -89,8 +90,73 @@
   }
 }
 
-::ng-deep .mat-form-field {
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
   font-size: 14px;
 }
 
+/* ===== REAGENDAMENTO ===== */
 
+.reagendar-only {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 12px;
+  align-items: start;
+}
+
+.reagendar-field {
+  width: 100%;
+}
+
+/* usa fill no HTML para ficar mais limpo */
+::ng-deep .reagendar-field .mat-mdc-text-field-wrapper {
+  min-height: 48px;
+  border-radius: 10px;
+}
+
+::ng-deep .reagendar-field .mat-mdc-form-field-infix {
+  min-height: auto;
+  padding-top: 14px !important;
+  padding-bottom: 10px !important;
+}
+
+::ng-deep .reagendar-field input.mat-mdc-input-element {
+  font-size: 15px;
+}
+
+::ng-deep .reagendar-field .mdc-floating-label {
+  font-size: 14px;
+}
+
+/* deixa o bloco de ações mais limpo */
+::ng-deep .mat-mdc-dialog-actions {
+  gap: 8px;
+  padding-top: 12px;
+}
+
+/* melhora espaçamento do conteúdo do modal */
+::ng-deep .mat-mdc-dialog-content {
+  padding-top: 8px !important;
+}
+
+/* textareas */
+::ng-deep textarea.mat-mdc-input-element {
+  line-height: 1.5;
+}
+
+/* responsivo */
+@media (max-width: 700px) {
+  .status-selector {
+    gap: 8px;
+
+    .status-button {
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+  }
+
+  .reagendar-only {
+    grid-template-columns: 1fr;
+  }
+}

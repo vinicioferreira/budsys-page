@@ -1,64 +1,86 @@
 <h2 mat-dialog-title>
-  {{ isManual ? 'Atividade Manual' : 'Mensagem para Cliente' }}
+  {{ modoReagendar ? 'Reagendar contato' : (isManual ? 'Atividade Manual' : 'Mensagem para Cliente') }}
 </h2>
 
 <mat-dialog-content>
-  <ng-container *ngIf="!isManual; else atividadeManualTpl">
-    <p><strong>Cliente:</strong> {{ data.contatoNome || '—' }}</p>
-    <p><strong>Canal:</strong> {{ data.canal || '—' }}</p>
-    <p><strong>Telefone:</strong> {{ data.contatoTelefone || '—' }}</p>
-    <p><strong>E-mail:</strong> {{ data.contatoEmail || '—' }}</p>
+  <ng-container *ngIf="!modoReagendar; else blocoReagendar">
+
+    <ng-container *ngIf="!isManual; else atividadeManualTpl">
+      <p><strong>Cliente:</strong> {{ data.contatoNome || '—' }}</p>
+      <p><strong>Canal:</strong> {{ data.canal || '—' }}</p>
+      <p><strong>Telefone:</strong> {{ data.contatoTelefone || '—' }}</p>
+      <p><strong>E-mail:</strong> {{ data.contatoEmail || '—' }}</p>
+    </ng-container>
+
+    <ng-template #atividadeManualTpl>
+      <p><strong>Título:</strong> {{ data.contatoNome || data.mensagem || '—' }}</p>
+      <p><strong>Tipo:</strong> Atividade manual</p>
+    </ng-template>
+
+    <div class="status-selector">
+      <button *ngFor="let status of statusList" class="status-button"
+        [ngClass]="{ active: data.status === status.value }" [style.--status-color]="status.color"
+        (click)="atualizarStatus(status.value)">
+        <span class="dot"></span> {{ status.label }}
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>{{ isManual ? 'Descrição' : 'Mensagem' }}</mat-label>
+      <textarea matInput readonly [value]="getMensagemPersonalizada()"></textarea>
+      <button mat-icon-button matSuffix (click)="copiarMensagem()" aria-label="Copiar mensagem">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%; margin-top: 20px;">
+      <mat-label>Anotações / Histórico</mat-label>
+      <textarea matInput [(ngModel)]="anotacao" placeholder="Adicione aqui uma observação..." rows="3">
+      </textarea>
+    </mat-form-field>
+
   </ng-container>
 
-  <ng-template #atividadeManualTpl>
-    <p><strong>Título:</strong> {{ data.contatoNome || data.mensagem || '—' }}</p>
-    <p><strong>Tipo:</strong> Atividade manual</p>
+  <ng-template #blocoReagendar>
+    <div class="reagendar-only">
+      <mat-form-field appearance="outline" class="reagendar-field">
+        <mat-label>Data do retorno</mat-label>
+        <input matInput type="date" [(ngModel)]="novaDataStr">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="reagendar-field">
+        <mat-label>Horário</mat-label>
+        <input matInput type="time" [(ngModel)]="novaHora">
+      </mat-form-field>
+    </div>
   </ng-template>
-
-  <div class="status-selector">
-    <button
-      *ngFor="let status of statusList"
-      class="status-button"
-      [ngClass]="{ active: data.status === status.value }"
-      [style.--status-color]="status.color"
-      (click)="atualizarStatus(status.value)">
-      <span class="dot"></span> {{ status.label }}
-    </button>
-  </div>
-
-  <mat-form-field appearance="outline" style="width: 100%;">
-    <mat-label>{{ isManual ? 'Descrição' : 'Mensagem' }}</mat-label>
-    <textarea matInput readonly [value]="getMensagemPersonalizada()"></textarea>
-    <button mat-icon-button matSuffix (click)="copiarMensagem()" aria-label="Copiar mensagem">
-      <mat-icon>content_copy</mat-icon>
-    </button>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" style="width: 100%; margin-top: 20px;">
-    <mat-label>Anotações / Histórico</mat-label>
-    <textarea
-      matInput
-      [(ngModel)]="anotacao"
-      placeholder="Adicione aqui uma observação..."
-      rows="3">
-    </textarea>
-  </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="copiarMensagem()">Copiar</button>
+  <ng-container *ngIf="!modoReagendar; else acoesReagendar">
+    <button *ngIf="!isManual" mat-button color="primary" (click)="abrirReagendamento()">
+      Reagendar
+    </button>
 
-  <button *ngIf="!isManual && canalEh('whatsapp')" mat-button color="primary" (click)="abrirWhatsapp()">
-    WhatsApp
-  </button>
+    <button mat-button (click)="copiarMensagem()">Copiar</button>
 
-  <button *ngIf="!isManual && canalEh('email')" mat-button color="accent" (click)="abrirEmail()">
-    E-mail
-  </button>
+    <button *ngIf="!isManual && canalEh('whatsapp')" mat-button color="primary" (click)="abrirWhatsapp()">
+      WhatsApp
+    </button>
 
-  <button *ngIf="!isManual && canalEh('zoho')" mat-button color="warn" (click)="abrirZoho()">
-    Zoho Mail
-  </button>
+    <button *ngIf="!isManual && canalEh('email')" mat-button color="accent" (click)="abrirEmail()">
+      E-mail
+    </button>
 
-  <button mat-button mat-dialog-close>Fechar</button>
+    <button *ngIf="!isManual && canalEh('zoho')" mat-button color="warn" (click)="abrirZoho()">
+      Zoho Mail
+    </button>
+
+    <button mat-button mat-dialog-close>Fechar</button>
+  </ng-container>
+
+  <ng-template #acoesReagendar>
+    <button mat-button (click)="cancelarReagendamento()">Cancelar</button>
+    <button mat-button color="primary" (click)="reagendar()">Salvar</button>
+  </ng-template>
 </mat-dialog-actions>

@@ -44,7 +44,6 @@ import { LoginComponent } from './pages/login/login.component';
 import { ButtonComponent } from './component/button/button.component';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +60,6 @@ import { ButtonComponent } from './component/button/button.component';
     BlogListComponent,
     BlogPostComponent,
     BlogAdminComponent,
-    ModalMessageComponent,
     LoginComponent
   ],
   imports: [

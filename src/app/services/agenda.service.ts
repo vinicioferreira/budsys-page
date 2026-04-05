@@ -69,4 +69,18 @@ export class AgendaService {
 
     await updateDoc(atividadeRef, updateData);
   }
+
+  async reagendarAtividade(id: string, novaData: Date, anotacao?: string): Promise<void> {
+    const atividadeRef = doc(this.firestore, 'atividades', id);
+
+    const updateData: any = {
+      dataPrevista: novaData.toISOString()
+    };
+
+    if (anotacao) {
+      updateData.anotacao = anotacao;
+    }
+
+    await updateDoc(atividadeRef, updateData);
+  }
 }
