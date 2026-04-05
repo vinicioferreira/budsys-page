@@ -113,6 +113,11 @@ export class ModalMessageComponent {
       return;
     }
 
+    if (!this.data?.contatoId) {
+      alert('Contato não encontrado para deslocar a cadência.');
+      return;
+    }
+
     if (!this.novaDataStr || !this.novaHora) {
       alert('Preencha data e horário.');
       return;
@@ -124,17 +129,18 @@ export class ModalMessageComponent {
     const novaData = new Date(year, month - 1, day, hour, minute, 0);
 
     try {
-      await this.agendaService.reagendarAtividade(
+      await this.agendaService.reagendarAtividadeComDeslocamento(
         this.data.id,
+        this.data.contatoId,
         novaData,
         this.anotacao || `Reagendado para ${this.novaDataStr} ${this.novaHora}`
       );
 
-      alert('Reagendado com sucesso.');
+      alert('Atividade reagendada e próximas atividades deslocadas com sucesso.');
       this.dialogRef.close(true);
     } catch (error) {
-      console.error(error);
-      alert('Erro ao reagendar.');
+      console.error('Erro ao reagendar atividade:', error);
+      alert('Erro ao reagendar atividade.');
     }
   }
 

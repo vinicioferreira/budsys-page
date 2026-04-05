@@ -63,12 +63,14 @@ export class AgendaComponent implements OnInit {
         color: cor,
         meta: {
           id: doc.id,
+          contatoId: data['contatoId'],
           contatoNome: data['contatoNome'],
           contatoTelefone,
           contatoEmail,
           canal: data['canal'],
           mensagem: data['mensagem'],
-          status: data['status']
+          status: data['status'],
+          dataPrevista: data['dataPrevista']
         }
       };
     }));
@@ -82,12 +84,14 @@ export class AgendaComponent implements OnInit {
     const dialogRef = this.dialog.open(ModalMessageComponent, {
       data: {
         id: meta.id,
+        contatoId: meta.contatoId,
         contatoNome: meta.contatoNome,
         contatoTelefone: meta.contatoTelefone,
         contatoEmail: meta.contatoEmail,
         canal: meta.canal,
         mensagem: meta.mensagem,
-        status: meta.status
+        status: meta.status,
+        dataPrevista: meta.dataPrevista
       },
       width: '500px',
       height: '600px'

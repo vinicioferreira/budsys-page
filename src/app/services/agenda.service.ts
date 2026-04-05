@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, doc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, doc, updateDoc, where, query, getDocs } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -82,5 +82,70 @@ export class AgendaService {
     }
 
     await updateDoc(atividadeRef, updateData);
+  }
+
+  async reagendarAtividadeComDeslocamento(
+    atividadeId: string,
+    contatoId: string,
+    novaData: Date,
+    anotacao?: string
+  ): Promise<void> {
+    const atividadesRef = collection(this.firestore, 'atividades');
+    const q = query(atividadesRef, where('contatoId', '==', contatoId));
+    const snapshot = await getDocs(q);
+
+    let atividadeAtual: any = null;
+    let dataAntiga: Date | null = null;
+
+    // 1. achar a atividade atual
+    for (const docSnap of snapshot.docs) {
+      if (docSnap.id === atividadeId) {
+        atividadeAtual = docSnap;
+        const data = docSnap.data();
+        dataAntiga = new Date(data['dataPrevista']);
+        break;
+      }
+    }
+
+    if (!atividadeAtual || !dataAntiga) {
+      throw new Error('Atividade atual não encontrada.');
+    }
+
+    // 2. calcula diferença em milissegundos
+    const diffMs = novaData.getTime() - dataAntiga.getTime();
+
+    // 3. atualiza a atividade atual
+    const atividadeAtualRef = doc(this.firestore, 'atividades', atividadeId);
+
+    const updateData: any = {
+      dataPrevista: novaData.toISOString()
+    };
+
+    if (anotacao) {
+      updateData.anotacao = anotacao;
+    }
+
+    await updateDoc(atividadeAtualRef, updateData);
+
+    // 4. desloca as próximas atividades pendentes
+    for (const docSnap of snapshot.docs) {
+      if (docSnap.id === atividadeId) continue;
+
+      const data = docSnap.data();
+      const dataPrevista = data['dataPrevista'] ? new Date(data['dataPrevista']) : null;
+
+      if (!dataPrevista) continue;
+      if (data['status'] !== 'pendente') continue;
+
+      // só move atividades futuras em relação à atividade original
+      if (dataPrevista.getTime() > dataAntiga.getTime()) {
+        const novaDataFutura = new Date(dataPrevista.getTime() + diffMs);
+        const atividadeRef = doc(this.firestore, 'atividades', docSnap.id);
+
+        await updateDoc(atividadeRef, {
+          dataPrevista: novaDataFutura.toISOString()
+        });
+      }
+    }
   }
 }
