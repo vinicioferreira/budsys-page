@@ -5,6 +5,7 @@ import { addDays, subDays, addWeeks, subWeeks, addMonths, subMonths } from 'date
 import { MatDialog } from '@angular/material/dialog';
 import { ModalMessageComponent } from './modal-message/modal-message.component';
 import { ChangeDetectorRef } from '@angular/core';
+import { AgendaService } from '../../services/agenda.service';
 
 
 @Component({
@@ -23,8 +24,9 @@ export class AgendaComponent implements OnInit {
   constructor(
     private firestore: Firestore,
     public dialog: MatDialog,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private agendaService: AgendaService
+  ) { }
 
   ngOnInit(): void {
     this.carregarAtividades();
@@ -35,22 +37,29 @@ export class AgendaComponent implements OnInit {
     const snapshot = await getDocs(atividadesRef);
 
     const statusCor: { [key: string]: { primary: string; secondary: string } } = {
-      pendente:   { primary: '#e53935', secondary: '#ffcdd2' },
-      andamento:  { primary: '#fb8c00', secondary: '#ffe0b2' },
-      feito:      { primary: '#43a047', secondary: '#c8e6c9' }
+      pendente: { primary: '#e53935', secondary: '#ffcdd2' },
+      andamento: { primary: '#fb8c00', secondary: '#ffe0b2' },
+      feito: { primary: '#43a047', secondary: '#c8e6c9' }
     };
 
     const eventos = await Promise.all(snapshot.docs.map(async doc => {
       const data = doc.data();
 
-      const contatoTelefone = await this.buscarTelefonePorContatoId(data['contatoId']);
-      const contatoEmail = await this.buscarEmailContatoId(data['contatoId']);
+      const contatoTelefone = data['contatoId']
+        ? await this.buscarTelefonePorContatoId(data['contatoId'])
+        : '';
+
+      const contatoEmail = data['contatoId']
+        ? await this.buscarEmailContatoId(data['contatoId'])
+        : '';
 
       const cor = statusCor[data['status']] || { primary: '#2196f3', secondary: '#bbdefb' };
 
       return {
         start: new Date(data['dataPrevista']),
-        title: `${data['contatoNome']} - ${data['canal']}`,
+        title: data['canal'] === 'manual'
+          ? data['mensagem']
+          : `${data['contatoNome']} - ${data['canal']}`,
         color: cor,
         meta: {
           id: doc.id,
@@ -102,15 +111,31 @@ export class AgendaComponent implements OnInit {
     ];
   }
 
-  onAddActivity(): void {
-    if (this.newTitle && this.newDateStr && this.newTimeStr) {
-      const [year, month, day] = this.newDateStr.split('-').map(Number);
-      const [hour, minute] = this.newTimeStr.split(':').map(Number);
-      const date = new Date(year, month - 1, day, hour, minute, 0);
-      this.addActivity(date, this.newTitle);
+  async onAddActivity(): Promise<void> {
+    if (!this.newTitle || !this.newDateStr || !this.newTimeStr) {
+      alert('Preencha título, data e hora.');
+      return;
+    }
+
+    const [year, month, day] = this.newDateStr.split('-').map(Number);
+    const [hour, minute] = this.newTimeStr.split(':').map(Number);
+    const date = new Date(year, month - 1, day, hour, minute, 0);
+
+    try {
+      await this.agendaService.criarAtividadeManual(this.newTitle, date);
+      await this.carregarAtividades();
+
+      this.viewDate = new Date(date);
+      this.view = 'day';
+
       this.newTitle = '';
       this.newDateStr = '';
       this.newTimeStr = '';
+
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Erro ao adicionar atividade manual:', error);
+      alert('Erro ao adicionar atividade.');
     }
   }
 

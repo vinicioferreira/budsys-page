@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AgendaService } from '../../../services/agenda.service';
-import { doc, updateDoc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-modal-message',
@@ -15,9 +14,12 @@ export class ModalMessageComponent {
     private agendaService: AgendaService,
     public dialogRef: MatDialogRef<ModalMessageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
-  // Substitui {{variaveis}} pela informação real
+  get isManual(): boolean {
+    return this.data?.canal?.toLowerCase() === 'manual';
+  }
+
   getMensagemPersonalizada(): string {
     return (this.data.mensagem || '').replace(/{{\s*(\w+)\s*}}/g, (_match: string, chave: string) => {
       return this.data[chave] || '';
@@ -56,7 +58,7 @@ export class ModalMessageComponent {
   }
 
   abrirZoho(): void {
-    this.copiarMensagem(); // Copia antes de abrir
+    this.copiarMensagem();
     alert('Abrindo Zoho Mail...\nCole a mensagem no corpo do e-mail.');
     window.open('https://mail.zoho.com/zm/#compose', '_blank');
   }
@@ -76,7 +78,7 @@ export class ModalMessageComponent {
     this.agendaService.atualizarStatusAtividade(this.data.id, novoStatus, this.anotacao)
       .then(() => {
         console.log('✅ Status atualizado para', novoStatus);
-        this.dialogRef.close(true); // força recarregamento
+        this.dialogRef.close(true);
       })
       .catch((error) => {
         console.error('Erro ao atualizar status:', error);
@@ -89,5 +91,4 @@ export class ModalMessageComponent {
     { label: 'Em andamento', value: 'andamento', color: '#fb8c00' },
     { label: 'Feito', value: 'feito', color: '#43a047' }
   ];
-
 }

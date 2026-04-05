@@ -6,11 +6,8 @@ import { Firestore, collection, addDoc, doc, updateDoc } from '@angular/fire/fir
 })
 export class AgendaService {
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) { }
 
-  /**
-   * Gera atividades no Firestore com base em uma cadência real (puxando etapas do banco)
-   */
   async gerarAtividadesDeCadencia(cadencia: any, contatoId: string, nome: string, dataBase: Date): Promise<void> {
     console.log('⚡ gerarAtividadesDeCadencia chamado:', cadencia, contatoId, nome, dataBase);
 
@@ -46,6 +43,22 @@ export class AgendaService {
     }
   }
 
+  async criarAtividadeManual(titulo: string, data: Date): Promise<void> {
+    const atividadesRef = collection(this.firestore, 'atividades');
+
+    const atividade = {
+      contatoId: null,
+      contatoNome: titulo,
+      canal: 'manual',
+      mensagem: titulo,
+      telefone: '',
+      dataPrevista: data.toISOString(),
+      status: 'pendente'
+    };
+
+    await addDoc(atividadesRef, atividade);
+  }
+
   async atualizarStatusAtividade(id: string, status: string, anotacao?: string): Promise<void> {
     const atividadeRef = doc(this.firestore, 'atividades', id);
 
@@ -56,5 +69,4 @@ export class AgendaService {
 
     await updateDoc(atividadeRef, updateData);
   }
-
 }
