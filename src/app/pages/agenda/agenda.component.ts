@@ -37,13 +37,13 @@ export class AgendaComponent implements OnInit {
     const snapshot = await getDocs(atividadesRef);
 
     const statusCor: { [key: string]: { primary: string; secondary: string } } = {
-      novo: { primary: '#546e7a', secondary: '#cfd8dc' },
-      tentando_contato: { primary: '#e53935', secondary: '#ffcdd2' },
-      contatado: { primary: '#fb8c00', secondary: '#ffe0b2' },
-      reuniao_agendada: { primary: '#1e88e5', secondary: '#bbdefb' },
-      proposta_enviada: { primary: '#8e24aa', secondary: '#e1bee7' },
-      fechado: { primary: '#43a047', secondary: '#c8e6c9' },
-      perdido: { primary: '#757575', secondary: '#eeeeee' }
+      novo: { primary: '#1e88e5', secondary: '#bbdefb' },              // azul
+      tentando_contato: { primary: '#e53935', secondary: '#ffcdd2' },  // vermelho
+      contatado: { primary: '#fb8c00', secondary: '#ffe0b2' },         // laranja
+      reuniao_agendada: { primary: '#00acc1', secondary: '#b2ebf2' },  // ciano (CORRIGIDO)
+      proposta_enviada: { primary: '#8e24aa', secondary: '#e1bee7' },  // roxo
+      fechado: { primary: '#43a047', secondary: '#c8e6c9' },           // verde
+      perdido: { primary: '#616161', secondary: '#eeeeee' }            // cinza
     };
 
     const eventos = await Promise.all(snapshot.docs.map(async doc => {
@@ -203,4 +203,15 @@ export class AgendaComponent implements OnInit {
 
     return '';
   }
+
+  statusList = [
+    { label: 'Novo', value: 'novo', color: '#1e88e5' },
+    { label: 'Tentando contato', value: 'tentando_contato', color: '#e53935' },
+    { label: 'Contatado', value: 'contatado', color: '#fb8c00' },
+    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#00acc1' },
+    { label: 'Proposta enviada', value: 'proposta_enviada', color: '#8e24aa' },
+    { label: 'Fechado', value: 'fechado', color: '#43a047' },
+    { label: 'Perdido', value: 'perdido', color: '#757575' }
+  ];
+
 }

@@ -28,6 +28,27 @@
   margin-top: 10px;
 }
 
+.status-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0 16px;
+  font-size: 13px;
+  color: #666;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+}
+
 
 
 

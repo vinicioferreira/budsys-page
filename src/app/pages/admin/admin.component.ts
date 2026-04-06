@@ -31,10 +31,10 @@ export class AdminComponent {
   listaCanais: { nome: string; cadenciaId: string }[] = [];
 
   statusList = [
-    { label: 'Novo', value: 'novo', color: '#607d8b' },
+    { label: 'Novo', value: 'novo', color: '#1e88e5' },
     { label: 'Tentando contato', value: 'tentando_contato', color: '#e53935' },
     { label: 'Contatado', value: 'contatado', color: '#fb8c00' },
-    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#1e88e5' },
+    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#00acc1' },
     { label: 'Proposta enviada', value: 'proposta_enviada', color: '#8e24aa' },
     { label: 'Fechado', value: 'fechado', color: '#43a047' },
     { label: 'Perdido', value: 'perdido', color: '#757575' }
