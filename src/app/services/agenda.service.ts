@@ -1,12 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, doc, updateDoc, where, query, getDocs } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  where,
+  query,
+  getDocs
+} from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AgendaService {
-
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore) {}
 
   async gerarAtividadesDeCadencia(
     cadencia: any,
@@ -36,7 +44,8 @@ export class AgendaService {
         mensagem: etapa.mensagem || 'Sem mensagem',
         telefone: etapa.telefone || 'Sem telefone',
         dataPrevista: data.toISOString(),
-        status: 'pendente'
+        status: 'pendente',
+        anotacao: ''
       };
 
       console.log('🚀 Tentando salvar atividade:', atividade);
@@ -61,7 +70,8 @@ export class AgendaService {
       mensagem: titulo,
       telefone: '',
       dataPrevista: data.toISOString(),
-      status: 'pendente'
+      status: 'pendente',
+      anotacao: ''
     };
 
     await addDoc(atividadesRef, atividade);
@@ -71,8 +81,9 @@ export class AgendaService {
     const atividadeRef = doc(this.firestore, 'atividades', id);
 
     const updateData: any = { status };
-    if (anotacao) {
-      updateData.anotacao = anotacao;
+
+    if (anotacao?.trim()) {
+      updateData.anotacao = anotacao.trim();
     }
 
     await updateDoc(atividadeRef, updateData);
@@ -85,8 +96,8 @@ export class AgendaService {
       dataPrevista: novaData.toISOString()
     };
 
-    if (anotacao) {
-      updateData.anotacao = anotacao;
+    if (anotacao?.trim()) {
+      updateData.anotacao = anotacao.trim();
     }
 
     await updateDoc(atividadeRef, updateData);
@@ -102,19 +113,17 @@ export class AgendaService {
     const q = query(atividadesRef, where('contatoId', '==', contatoId));
     const snapshot = await getDocs(q);
 
-    let atividadeAtual: any = null;
     let dataAntiga: Date | null = null;
 
     for (const docSnap of snapshot.docs) {
       if (docSnap.id === atividadeId) {
-        atividadeAtual = docSnap;
         const data = docSnap.data();
         dataAntiga = new Date(data['dataPrevista']);
         break;
       }
     }
 
-    if (!atividadeAtual || !dataAntiga) {
+    if (!dataAntiga) {
       throw new Error('Atividade atual não encontrada.');
     }
 
@@ -126,8 +135,8 @@ export class AgendaService {
       dataPrevista: novaData.toISOString()
     };
 
-    if (anotacao) {
-      updateData.anotacao = anotacao;
+    if (anotacao?.trim()) {
+      updateData.anotacao = anotacao.trim();
     }
 
     await updateDoc(atividadeAtualRef, updateData);
@@ -150,5 +159,33 @@ export class AgendaService {
         });
       }
     }
+  }
+
+  async atualizarAnotacaoAtividade(id: string, texto: string): Promise<void> {
+    const textoLimpo = (texto || '').trim();
+
+    if (!textoLimpo) {
+      throw new Error('Anotação vazia.');
+    }
+
+    const atividadeRef = doc(this.firestore, 'atividades', id);
+
+    await updateDoc(atividadeRef, {
+      anotacao: textoLimpo
+    });
+  }
+
+  async atualizarMensagemAtividade(id: string, mensagem: string): Promise<void> {
+    const mensagemLimpa = (mensagem || '').trim();
+
+    if (!mensagemLimpa) {
+      throw new Error('Mensagem vazia.');
+    }
+
+    const atividadeRef = doc(this.firestore, 'atividades', id);
+
+    await updateDoc(atividadeRef, {
+      mensagem: mensagemLimpa
+    });
   }
 }

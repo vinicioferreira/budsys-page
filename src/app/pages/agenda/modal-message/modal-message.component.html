@@ -19,8 +19,11 @@
     </ng-template>
 
     <div class="status-selector">
-      <button *ngFor="let status of statusList" class="status-button"
-        [ngClass]="{ active: data.status === status.value }" [style.--status-color]="status.color"
+      <button
+        *ngFor="let status of statusList"
+        class="status-button"
+        [ngClass]="{ active: data.status === status.value }"
+        [style.--status-color]="status.color"
         (click)="atualizarStatus(status.value)">
         <span class="dot"></span> {{ status.label }}
       </button>
@@ -28,16 +31,61 @@
 
     <mat-form-field appearance="outline" style="width: 100%;">
       <mat-label>{{ isManual ? 'Descrição' : 'Mensagem' }}</mat-label>
-      <textarea matInput readonly [value]="getMensagemPersonalizada()"></textarea>
-      <button mat-icon-button matSuffix (click)="copiarMensagem()" aria-label="Copiar mensagem">
-        <mat-icon>content_copy</mat-icon>
+
+      <textarea
+        matInput
+        [(ngModel)]="mensagemEditada"
+        [readonly]="!editandoMensagem"
+        rows="3">
+      </textarea>
+
+      <button
+        *ngIf="!editandoMensagem"
+        mat-icon-button
+        matSuffix
+        (click)="abrirEdicaoMensagem()"
+        aria-label="Editar mensagem">
+        <mat-icon>edit</mat-icon>
+      </button>
+
+      <button
+        *ngIf="editandoMensagem"
+        mat-icon-button
+        matSuffix
+        (click)="salvarMensagem()"
+        aria-label="Salvar mensagem">
+        <mat-icon>save</mat-icon>
       </button>
     </mat-form-field>
 
     <mat-form-field appearance="outline" style="width: 100%; margin-top: 20px;">
-      <mat-label>Anotações / Histórico</mat-label>
-      <textarea matInput [(ngModel)]="anotacao" placeholder="Adicione aqui uma observação..." rows="3">
+      <mat-label>Anotação</mat-label>
+
+      <textarea
+        matInput
+        [(ngModel)]="anotacaoEditada"
+        [readonly]="!editandoAnotacao"
+        placeholder="Adicione aqui uma observação..."
+        rows="3">
       </textarea>
+
+      <button
+        *ngIf="!editandoAnotacao"
+        mat-icon-button
+        matSuffix
+        (click)="abrirEdicaoAnotacao()"
+        aria-label="Editar anotação">
+        <mat-icon>edit</mat-icon>
+      </button>
+
+      <button
+        *ngIf="editandoAnotacao"
+        mat-icon-button
+        matSuffix
+        (click)="salvarAnotacao()"
+        aria-label="Salvar anotação">
+        <mat-icon>save</mat-icon>
+      </button>
     </mat-form-field>
 
   </ng-container>

@@ -72,6 +72,7 @@ export class AgendaComponent implements OnInit {
           contatoEmail,
           canal: data['canal'],
           mensagem: data['mensagem'],
+          anotacao: data['anotacao'] || '',
           status: data['status'],
           dataPrevista: data['dataPrevista']
         }
@@ -94,6 +95,7 @@ export class AgendaComponent implements OnInit {
         contatoEmail: meta.contatoEmail,
         canal: meta.canal,
         mensagem: meta.mensagem,
+        anotacao: meta.anotacao || '',
         status: meta.status,
         dataPrevista: meta.dataPrevista
       },
