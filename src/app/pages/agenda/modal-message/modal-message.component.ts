@@ -90,7 +90,12 @@ export class ModalMessageComponent {
 
     this.data.status = novoStatus;
 
-    this.agendaService.atualizarStatusAtividade(this.data.id, novoStatus, this.anotacaoEditada)
+    this.agendaService.atualizarStatusAtividade(
+      this.data.id,
+      novoStatus,
+      this.anotacaoEditada,
+      this.data.contatoId
+    )
       .then(() => {
         this.dialogRef.close(true);
       })

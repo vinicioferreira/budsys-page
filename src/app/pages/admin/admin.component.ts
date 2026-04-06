@@ -158,9 +158,26 @@ export class AdminComponent {
     }
   }
 
-  atualizarStatus(cliente: any) {
-    this.contatoService.atualizarContato(cliente.id, {
-      status: cliente.status
-    });
+  async atualizarStatus(cliente: any) {
+    try {
+      await this.contatoService.atualizarContato(cliente.id, {
+        status: cliente.status
+      });
+
+      await this.agendaService.atualizarStatusAtividadesPorContato(cliente.id, cliente.status);
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error);
+      alert('Erro ao atualizar status.');
+    }
   }
+
+  statusList = [
+    { label: 'Novo', value: 'novo' },
+    { label: 'Tentando contato', value: 'tentando_contato' },
+    { label: 'Contatado', value: 'contatado' },
+    { label: 'Reunião agendada', value: 'reuniao_agendada' },
+    { label: 'Proposta enviada', value: 'proposta_enviada' },
+    { label: 'Fechado', value: 'fechado' },
+    { label: 'Perdido', value: 'perdido' }
+  ];
 }

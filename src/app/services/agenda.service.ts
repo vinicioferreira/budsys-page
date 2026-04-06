@@ -14,7 +14,7 @@ import {
   providedIn: 'root'
 })
 export class AgendaService {
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) { }
 
   async gerarAtividadesDeCadencia(
     cadencia: any,
@@ -77,7 +77,12 @@ export class AgendaService {
     await addDoc(atividadesRef, atividade);
   }
 
-  async atualizarStatusAtividade(id: string, status: string, anotacao?: string): Promise<void> {
+  async atualizarStatusAtividade(
+    id: string,
+    status: string,
+    anotacao?: string,
+    contatoId?: string
+  ): Promise<void> {
     const atividadeRef = doc(this.firestore, 'atividades', id);
 
     const updateData: any = { status };
@@ -87,6 +92,10 @@ export class AgendaService {
     }
 
     await updateDoc(atividadeRef, updateData);
+
+    if (contatoId) {
+      await this.atualizarStatusContato(contatoId, status);
+    }
   }
 
   async reagendarAtividade(id: string, novaData: Date, anotacao?: string): Promise<void> {
@@ -187,5 +196,24 @@ export class AgendaService {
     await updateDoc(atividadeRef, {
       mensagem: mensagemLimpa
     });
+  }
+
+  async atualizarStatusContato(contatoId: string, status: string): Promise<void> {
+    const contatoRef = doc(this.firestore, 'contatos', contatoId);
+
+    await updateDoc(contatoRef, {
+      status
+    });
+  }
+
+  async atualizarStatusAtividadesPorContato(contatoId: string, status: string): Promise<void> {
+    const atividadesRef = collection(this.firestore, 'atividades');
+    const q = query(atividadesRef, where('contatoId', '==', contatoId));
+    const snapshot = await getDocs(q);
+
+    for (const docSnap of snapshot.docs) {
+      const atividadeRef = doc(this.firestore, 'atividades', docSnap.id);
+      await updateDoc(atividadeRef, { status });
+    }
   }
 }
