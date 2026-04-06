@@ -242,6 +242,45 @@ export class ModalMessageComponent {
     return this.statusList.find(s => s.value === status)?.label || status;
   }
 
+  async excluirAtividadeAtual(): Promise<void> {
+    if (!this.data?.id) {
+      alert('ID da atividade não encontrado.');
+      return;
+    }
+
+    const confirmar = confirm('Deseja realmente excluir esta atividade?');
+    if (!confirmar) return;
+
+    try {
+      await this.agendaService.excluirAtividade(this.data.id);
+      this.dialogRef.close(true);
+    } catch (error) {
+      console.error('Erro ao excluir atividade:', error);
+      alert('Erro ao excluir atividade.');
+    }
+  }
+
+  async excluirProximasAtividades(): Promise<void> {
+    if (!this.data?.contatoId) {
+      alert('Contato não encontrado.');
+      return;
+    }
+
+    const confirmar = confirm('Deseja excluir as próximas atividades deste contato?');
+    if (!confirmar) return;
+
+    try {
+      await this.agendaService.excluirAtividadesFuturasPorContato(
+        this.data.contatoId,
+        this.data.id
+      );
+      this.dialogRef.close(true);
+    } catch (error) {
+      console.error('Erro ao excluir próximas atividades:', error);
+      alert('Erro ao excluir próximas atividades.');
+    }
+  }
+
   statusList = [
     { label: 'Novo', value: 'novo', color: '#546e7a' },
     { label: 'Tentando contato', value: 'tentando_contato', color: '#e53935' },

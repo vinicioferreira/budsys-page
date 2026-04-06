@@ -7,14 +7,15 @@ import {
   updateDoc,
   where,
   query,
-  getDocs
+  getDocs,
+  deleteDoc
 } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AgendaService {
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore) {}
 
   async gerarAtividadesDeCadencia(
     cadencia: any,
@@ -23,8 +24,6 @@ export class AgendaService {
     empresa: string,
     dataBase: Date
   ): Promise<void> {
-    console.log('⚡ gerarAtividadesDeCadencia chamado:', cadencia, contatoId, nome, empresa, dataBase);
-
     if (!cadencia.etapas || !Array.isArray(cadencia.etapas) || cadencia.etapas.length === 0) {
       console.warn('❌ Esta cadência não tem etapas válidas. Nada será gerado.');
       return;
@@ -44,18 +43,11 @@ export class AgendaService {
         mensagem: etapa.mensagem || 'Sem mensagem',
         telefone: etapa.telefone || 'Sem telefone',
         dataPrevista: data.toISOString(),
-        status: 'pendente',
+        status: 'novo',
         anotacao: ''
       };
 
-      console.log('🚀 Tentando salvar atividade:', atividade);
-
-      try {
-        const docRef = await addDoc(atividadesRef, atividade);
-        console.log(`✅ Atividade salva no Firestore com ID: ${docRef.id}`, atividade);
-      } catch (err) {
-        console.error('❌ ERRO ao salvar atividade no Firestore:', err);
-      }
+      await addDoc(atividadesRef, atividade);
     }
   }
 
@@ -70,11 +62,37 @@ export class AgendaService {
       mensagem: titulo,
       telefone: '',
       dataPrevista: data.toISOString(),
-      status: 'pendente',
+      status: 'novo',
       anotacao: ''
     };
 
     await addDoc(atividadesRef, atividade);
+  }
+
+  async atualizarStatusContato(contatoId: string, status: string): Promise<void> {
+    const contatoRef = doc(this.firestore, 'contatos', contatoId);
+
+    await updateDoc(contatoRef, {
+      status
+    });
+  }
+
+  async atualizarStatusAtividadesPorContato(contatoId: string, status: string): Promise<void> {
+    const atividadesRef = collection(this.firestore, 'atividades');
+    const q = query(atividadesRef, where('contatoId', '==', contatoId));
+    const snapshot = await getDocs(q);
+
+    const agora = new Date();
+
+    for (const docSnap of snapshot.docs) {
+      const data = docSnap.data();
+      const dataPrevista = data['dataPrevista'] ? new Date(data['dataPrevista']) : null;
+
+      if (dataPrevista && dataPrevista >= agora) {
+        const atividadeRef = doc(this.firestore, 'atividades', docSnap.id);
+        await updateDoc(atividadeRef, { status });
+      }
+    }
   }
 
   async atualizarStatusAtividade(
@@ -122,12 +140,25 @@ export class AgendaService {
     const q = query(atividadesRef, where('contatoId', '==', contatoId));
     const snapshot = await getDocs(q);
 
+    const normalizarData = (d: Date) =>
+      new Date(
+        d.getFullYear(),
+        d.getMonth(),
+        d.getDate(),
+        d.getHours(),
+        d.getMinutes(),
+        0,
+        0
+      );
+
     let dataAntiga: Date | null = null;
 
     for (const docSnap of snapshot.docs) {
       if (docSnap.id === atividadeId) {
         const data = docSnap.data();
-        dataAntiga = new Date(data['dataPrevista']);
+        if (data['dataPrevista']) {
+          dataAntiga = normalizarData(new Date(data['dataPrevista']));
+        }
         break;
       }
     }
@@ -136,7 +167,8 @@ export class AgendaService {
       throw new Error('Atividade atual não encontrada.');
     }
 
-    const diffMs = novaData.getTime() - dataAntiga.getTime();
+    const novaDataNormalizada = normalizarData(novaData);
+    const diffMs = novaDataNormalizada.getTime() - dataAntiga.getTime();
 
     const atividadeAtualRef = doc(this.firestore, 'atividades', atividadeId);
 
@@ -154,12 +186,11 @@ export class AgendaService {
       if (docSnap.id === atividadeId) continue;
 
       const data = docSnap.data();
-      const dataPrevista = data['dataPrevista'] ? new Date(data['dataPrevista']) : null;
+      if (!data['dataPrevista']) continue;
 
-      if (!dataPrevista) continue;
-      if (data['status'] !== 'pendente') continue;
+      const dataPrevista = normalizarData(new Date(data['dataPrevista']));
 
-      if (dataPrevista.getTime() > dataAntiga.getTime()) {
+      if (dataPrevista > dataAntiga) {
         const novaDataFutura = new Date(dataPrevista.getTime() + diffMs);
         const atividadeRef = doc(this.firestore, 'atividades', docSnap.id);
 
@@ -198,22 +229,70 @@ export class AgendaService {
     });
   }
 
-  async atualizarStatusContato(contatoId: string, status: string): Promise<void> {
-    const contatoRef = doc(this.firestore, 'contatos', contatoId);
-
-    await updateDoc(contatoRef, {
-      status
-    });
+  async excluirAtividade(atividadeId: string): Promise<void> {
+    const atividadeRef = doc(this.firestore, 'atividades', atividadeId);
+    await deleteDoc(atividadeRef);
   }
 
-  async atualizarStatusAtividadesPorContato(contatoId: string, status: string): Promise<void> {
+  async excluirAtividadesFuturasPorContato(
+    contatoId: string,
+    atividadeAtualId?: string
+  ): Promise<void> {
+    const atividadesRef = collection(this.firestore, 'atividades');
+    const q = query(atividadesRef, where('contatoId', '==', contatoId));
+    const snapshot = await getDocs(q);
+
+    const normalizarData = (d: Date) =>
+      new Date(
+        d.getFullYear(),
+        d.getMonth(),
+        d.getDate(),
+        d.getHours(),
+        d.getMinutes(),
+        0,
+        0
+      );
+
+    let dataAtual: Date | null = null;
+
+    if (atividadeAtualId) {
+      const atual = snapshot.docs.find(docSnap => docSnap.id === atividadeAtualId);
+
+      if (atual) {
+        const data = atual.data();
+        if (data['dataPrevista']) {
+          dataAtual = normalizarData(new Date(data['dataPrevista']));
+        }
+      }
+    }
+
+    if (!dataAtual) {
+      throw new Error('Atividade atual não encontrada para definir corte das próximas.');
+    }
+
+    for (const docSnap of snapshot.docs) {
+      if (atividadeAtualId && docSnap.id === atividadeAtualId) continue;
+
+      const data = docSnap.data();
+      if (!data['dataPrevista']) continue;
+
+      const dataPrevista = normalizarData(new Date(data['dataPrevista']));
+
+      if (dataPrevista > dataAtual) {
+        const atividadeRef = doc(this.firestore, 'atividades', docSnap.id);
+        await deleteDoc(atividadeRef);
+      }
+    }
+  }
+
+  async excluirTodasAtividadesPorContato(contatoId: string): Promise<void> {
     const atividadesRef = collection(this.firestore, 'atividades');
     const q = query(atividadesRef, where('contatoId', '==', contatoId));
     const snapshot = await getDocs(q);
 
     for (const docSnap of snapshot.docs) {
       const atividadeRef = doc(this.firestore, 'atividades', docSnap.id);
-      await updateDoc(atividadeRef, { status });
+      await deleteDoc(atividadeRef);
     }
   }
 }

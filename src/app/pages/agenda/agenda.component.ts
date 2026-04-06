@@ -104,7 +104,7 @@ export class AgendaComponent implements OnInit {
         dataPrevista: meta.dataPrevista
       },
       width: '500px',
-      height: '600px'
+      height: '850px'
     });
 
     dialogRef.afterClosed().subscribe((reload: boolean) => {

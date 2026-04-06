@@ -5,23 +5,50 @@
 <mat-dialog-content>
   <ng-container *ngIf="!modoReagendar; else blocoReagendar">
 
-    <ng-container *ngIf="!isManual; else atividadeManualTpl">
-      <p><strong>Contato:</strong> {{ data.contatoNome || '—' }}</p>
-      <p><strong>Cliente:</strong> {{ data.empresa || '—' }}</p>
-      <p><strong>Canal:</strong> {{ data.canal || '—' }}</p>
-      <p><strong>Telefone:</strong> {{ data.contatoTelefone || '—' }}</p>
-      <p><strong>E-mail:</strong> {{ data.contatoEmail || '—' }}</p>
-    </ng-container>
+    <div class="contact-summary" *ngIf="!isManual; else atividadeManualTpl">
+      <div class="summary-row">
+        <span class="label">Contato</span>
+        <span class="value">{{ data.contatoNome || '—' }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span class="label">Cliente</span>
+        <span class="value">{{ data.empresa || '—' }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span class="label">Canal</span>
+        <span class="value">{{ data.canal || '—' }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span class="label">Telefone</span>
+        <span class="value">{{ data.contatoTelefone || '—' }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span class="label">E-mail</span>
+        <span class="value">{{ data.contatoEmail || '—' }}</span>
+      </div>
+    </div>
 
     <ng-template #atividadeManualTpl>
-      <p><strong>Título:</strong> {{ data.contatoNome || data.mensagem || '—' }}</p>
-      <p><strong>Tipo:</strong> Atividade manual</p>
+      <div class="contact-summary">
+        <div class="summary-row">
+          <span class="label">Título</span>
+          <span class="value">{{ data.contatoNome || data.mensagem || '—' }}</span>
+        </div>
+
+        <div class="summary-row">
+          <span class="label">Tipo</span>
+          <span class="value">Atividade manual</span>
+        </div>
+      </div>
     </ng-template>
 
-    <mat-form-field appearance="outline" class="status-field" style="width: 100%;">
+    <mat-form-field appearance="outline" class="full-width status-field">
       <mat-label>Status</mat-label>
       <mat-select [(value)]="data.status" (selectionChange)="atualizarStatus($event.value)">
-
         <mat-select-trigger>
           <span class="status-option">
             <span class="dot" [style.background]="getStatusColor(data.status)"></span>
@@ -35,44 +62,67 @@
             {{ status.label }}
           </span>
         </mat-option>
-
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>{{ isManual ? 'Descrição' : 'Mensagem' }}</mat-label>
+    <div class="editor-card">
+      <div class="editor-header">
+        <span>{{ isManual ? 'Descrição' : 'Mensagem' }}</span>
 
-      <textarea matInput [(ngModel)]="mensagemEditada" [readonly]="!editandoMensagem" rows="3">
+        <button
+          *ngIf="!editandoMensagem"
+          mat-icon-button
+          (click)="abrirEdicaoMensagem()"
+          aria-label="Editar mensagem">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button
+          *ngIf="editandoMensagem"
+          mat-icon-button
+          (click)="salvarMensagem()"
+          aria-label="Salvar mensagem">
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
+
+      <textarea
+        class="editor-textarea"
+        [(ngModel)]="mensagemEditada"
+        [readonly]="!editandoMensagem"
+        rows="4">
       </textarea>
+    </div>
 
-      <button *ngIf="!editandoMensagem" mat-icon-button matSuffix (click)="abrirEdicaoMensagem()"
-        aria-label="Editar mensagem">
-        <mat-icon>edit</mat-icon>
-      </button>
+    <div class="editor-card">
+      <div class="editor-header">
+        <span>Anotação</span>
 
-      <button *ngIf="editandoMensagem" mat-icon-button matSuffix (click)="salvarMensagem()"
-        aria-label="Salvar mensagem">
-        <mat-icon>save</mat-icon>
-      </button>
-    </mat-form-field>
+        <button
+          *ngIf="!editandoAnotacao"
+          mat-icon-button
+          (click)="abrirEdicaoAnotacao()"
+          aria-label="Editar anotação">
+          <mat-icon>edit</mat-icon>
+        </button>
 
-    <mat-form-field appearance="outline" style="width: 100%; margin-top: 20px;">
-      <mat-label>Anotação</mat-label>
+        <button
+          *ngIf="editandoAnotacao"
+          mat-icon-button
+          (click)="salvarAnotacao()"
+          aria-label="Salvar anotação">
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
 
-      <textarea matInput [(ngModel)]="anotacaoEditada" [readonly]="!editandoAnotacao"
-        placeholder="Adicione aqui uma observação..." rows="3">
+      <textarea
+        class="editor-textarea"
+        [(ngModel)]="anotacaoEditada"
+        [readonly]="!editandoAnotacao"
+        placeholder="Adicione aqui uma observação..."
+        rows="3">
       </textarea>
-
-      <button *ngIf="!editandoAnotacao" mat-icon-button matSuffix (click)="abrirEdicaoAnotacao()"
-        aria-label="Editar anotação">
-        <mat-icon>edit</mat-icon>
-      </button>
-
-      <button *ngIf="editandoAnotacao" mat-icon-button matSuffix (click)="salvarAnotacao()"
-        aria-label="Salvar anotação">
-        <mat-icon>save</mat-icon>
-      </button>
-    </mat-form-field>
+    </div>
 
   </ng-container>
 
@@ -93,6 +143,7 @@
 
 <mat-dialog-actions align="end">
   <ng-container *ngIf="!modoReagendar; else acoesReagendar">
+
     <button *ngIf="!isManual" mat-button color="primary" (click)="abrirReagendamento()">
       Reagendar
     </button>
@@ -107,8 +158,12 @@
       E-mail
     </button>
 
-    <button *ngIf="!isManual && canalEh('zoho')" mat-button color="warn" (click)="abrirZoho()">
-      Zoho Mail
+    <button *ngIf="data.id" mat-button color="warn" (click)="excluirAtividadeAtual()">
+      Excluir atividade
+    </button>
+
+    <button *ngIf="data.contatoId" mat-button color="warn" (click)="excluirProximasAtividades()">
+      Excluir próximas
     </button>
 
     <button mat-button mat-dialog-close>Fechar</button>

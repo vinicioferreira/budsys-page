@@ -1,101 +1,80 @@
-.status-legenda {
-  margin: 10px 0;
-  display: flex;
-  gap: 15px;
-  align-items: center;
-
-  .legenda {
-    width: 12px;
-    height: 12px;
-    display: inline-block;
-    border-radius: 50%;
-    margin-right: 5px;
-  }
-
-  .cor-vermelha { background-color: #f44336; }
-  .cor-laranja { background-color: #ff9800; }
-  .cor-verde { background-color: #4caf50; }
-}
-
-.status-selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin: 10px 0 16px;
-
-  .status-button {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border: 1px solid var(--status-color);
-    border-radius: 20px;
-    background-color: #fff;
-    color: #333;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      background-color: var(--status-color);
-      border-radius: 50%;
-    }
-
-    &.active {
-      background-color: var(--status-color);
-      color: #fff;
-
-      .dot {
-        background-color: #fff;
-      }
-    }
-
-    &:hover {
-      background-color: var(--status-color);
-      color: #fff;
-
-      .dot {
-        background-color: #fff;
-      }
-    }
-  }
-}
-
-.form-group {
-  margin-top: 20px;
-
-  label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #333;
-  }
-
-  .anotacao-textarea {
-    width: 95%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-    resize: vertical;
-    transition: border-color 0.3s ease;
-
-    &:focus {
-      border-color: #3f51b5;
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
-    }
-  }
-}
-
-::ng-deep .mat-mdc-form-field {
+.full-width {
   width: 100%;
-  font-size: 14px;
 }
 
-/* ===== REAGENDAMENTO ===== */
+.contact-summary {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.summary-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.label {
+  font-weight: 600;
+  color: #424242;
+}
+
+.value {
+  color: #5f6368;
+  word-break: break-word;
+}
+
+.status-field {
+  margin-bottom: 16px;
+}
+
+.status-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.2;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: 0 0 10px;
+}
+
+.editor-card {
+  border: 1px solid #d8d8d8;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  background: #fff;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #424242;
+}
+
+.editor-textarea {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  resize: vertical;
+  background: transparent;
+  font: inherit;
+  line-height: 1.5;
+  color: #333;
+  min-height: 72px;
+}
+
+.editor-textarea[readonly] {
+  cursor: default;
+}
 
 .reagendar-only {
   margin-top: 8px;
@@ -109,7 +88,11 @@
   width: 100%;
 }
 
-/* usa fill no HTML para ficar mais limpo */
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+  font-size: 14px;
+}
+
 ::ng-deep .reagendar-field .mat-mdc-text-field-wrapper {
   min-height: 48px;
   border-radius: 10px;
@@ -129,58 +112,27 @@
   font-size: 14px;
 }
 
-/* deixa o bloco de ações mais limpo */
 ::ng-deep .mat-mdc-dialog-actions {
   gap: 8px;
   padding-top: 12px;
+  flex-wrap: wrap;
 }
 
-/* melhora espaçamento do conteúdo do modal */
 ::ng-deep .mat-mdc-dialog-content {
   padding-top: 8px !important;
 }
 
-/* textareas */
 ::ng-deep textarea.mat-mdc-input-element {
   line-height: 1.5;
 }
 
-/* responsivo */
 @media (max-width: 700px) {
-  .status-selector {
-    gap: 8px;
-
-    .status-button {
-      padding: 6px 10px;
-      font-size: 13px;
-    }
+  .summary-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
 
   .reagendar-only {
     grid-template-columns: 1fr;
   }
-}
-
-.status-selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 12px 0 18px;
-}
-
-.status-selector .status-button {
-  padding: 8px 14px;
-  font-size: 14px;
-}
-
-.status-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.status-option .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
 }
