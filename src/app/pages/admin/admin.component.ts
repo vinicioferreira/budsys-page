@@ -8,16 +8,37 @@ import { AgendaService } from '../../services/agenda.service';
 import { ModalCadastroClientePotencialComponent } from '../../pages/admin/modal-cadastro-cliente-potencial/modal-cadastro-cliente-potencial.component';
 import { MatDialog } from '@angular/material/dialog';
 
-
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent {
-  displayedColumns: string[] = ['seqId', 'status', 'nome', 'email', 'telefone', 'empresa', 'mensagem', 'dataCadastro', 'canal', 'actions'];
+  displayedColumns: string[] = [
+    'seqId',
+    'status',
+    'nome',
+    'email',
+    'telefone',
+    'empresa',
+    'mensagem',
+    'dataCadastro',
+    'canal',
+    'actions'
+  ];
+
   dataSource = new MatTableDataSource<any>([]);
-  listaCanais: { nome: string, cadenciaId: string }[] = [];
+  listaCanais: { nome: string; cadenciaId: string }[] = [];
+
+  statusList = [
+    { label: 'Novo', value: 'novo', color: '#607d8b' },
+    { label: 'Tentando contato', value: 'tentando_contato', color: '#e53935' },
+    { label: 'Contatado', value: 'contatado', color: '#fb8c00' },
+    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#1e88e5' },
+    { label: 'Proposta enviada', value: 'proposta_enviada', color: '#8e24aa' },
+    { label: 'Fechado', value: 'fechado', color: '#43a047' },
+    { label: 'Perdido', value: 'perdido', color: '#757575' }
+  ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -27,7 +48,7 @@ export class AdminComponent {
     private cadenciaService: CadenciaService,
     private agendaService: AgendaService,
     private dialog: MatDialog
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.cadenciaService.listarCadencias().subscribe(cadencias => {
@@ -36,20 +57,19 @@ export class AdminComponent {
 
     this.contatoService.listarContatos().subscribe(data => {
       this.dataSource.data = data;
-      console.log('Lista atualizada automaticamente:', data);
 
-      this.dataSource.sort = this.sort;
-      this.sort.active = 'dataCadastro';
-      this.sort.direction = 'desc';
-      this.sort.sortChange.emit({
-        active: this.sort.active,
-        direction: this.sort.direction
-      });
+      if (this.sort) {
+        this.dataSource.sort = this.sort;
+        this.sort.active = 'dataCadastro';
+        this.sort.direction = 'desc';
+        this.sort.sortChange.emit({
+          active: this.sort.active,
+          direction: this.sort.direction
+        });
+      }
     });
 
-    this.dataSource.filterPredicate = (data: any, filter: string) => {
-      return true; // 🔥 desativa filtro automático
-    };
+    this.dataSource.filterPredicate = () => true;
   }
 
   ngAfterViewInit() {
@@ -62,16 +82,23 @@ export class AdminComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  vincularCanal(cliente: any) {
-    console.log('🔍 Vinculando canal para cliente:', cliente);
+  getStatusLabel(statusValue: string): string {
+    return this.statusList.find(status => status.value === statusValue)?.label || 'Sem status';
+  }
 
+  getStatusColor(statusValue: string): string {
+    return this.statusList.find(status => status.value === statusValue)?.color || '#9e9e9e';
+  }
+
+  vincularCanal(cliente: any) {
     if (!cliente.canal) {
       alert('⚠ Este cliente não tem canal definido!');
       return;
     }
 
-    const canalSelecionado = this.listaCanais.find(c => c.nome.toLowerCase() === cliente.canal.toLowerCase());
-    console.log('🔍 Canal selecionado na lista de cadências:', canalSelecionado);
+    const canalSelecionado = this.listaCanais.find(
+      c => c.nome.toLowerCase() === cliente.canal.toLowerCase()
+    );
 
     if (canalSelecionado) {
       this.cadenciaService.getCadenciaById(canalSelecionado.cadenciaId).then(cadencia => {
@@ -96,18 +123,16 @@ export class AdminComponent {
   listarContatos(): void {
     this.contatoService.listarContatos().subscribe(data => {
       this.dataSource.data = data;
-      console.log('Clientes potenciais carregados:', data);
 
-      // Aplica sort
-      this.dataSource.sort = this.sort;
-
-      // Ordenação inicial
-      this.sort.active = 'dataCadastro';
-      this.sort.direction = 'desc';
-      this.sort.sortChange.emit({
-        active: this.sort.active,
-        direction: this.sort.direction
-      });
+      if (this.sort) {
+        this.dataSource.sort = this.sort;
+        this.sort.active = 'dataCadastro';
+        this.sort.direction = 'desc';
+        this.sort.sortChange.emit({
+          active: this.sort.active,
+          direction: this.sort.direction
+        });
+      }
     });
   }
 
@@ -118,16 +143,13 @@ export class AdminComponent {
 
     dialogRef.afterClosed().subscribe((contatoId: string | null) => {
       if (contatoId) {
-        console.log('Contato salvo com ID:', contatoId);
-
         const cliente = this.dataSource.data.find(c => c.id === contatoId);
 
         if (!cliente) {
-          console.warn('⚠ Cliente não encontrado na lista');
           return;
         }
 
-        this.vincularCanal(cliente);  // 🚀 Chama o método que já funciona
+        this.vincularCanal(cliente);
       }
     });
   }
@@ -140,7 +162,6 @@ export class AdminComponent {
 
     dialogRef.afterClosed().subscribe((contatoId: string | null) => {
       if (!contatoId) return;
-      console.log('Contato processado com ID:', contatoId);
     });
   }
 
@@ -164,20 +185,13 @@ export class AdminComponent {
         status: cliente.status
       });
 
-      await this.agendaService.atualizarStatusAtividadesPorContato(cliente.id, cliente.status);
+      await this.agendaService.atualizarStatusAtividadesPorContato(
+        cliente.id,
+        cliente.status
+      );
     } catch (error) {
       console.error('Erro ao atualizar status:', error);
       alert('Erro ao atualizar status.');
     }
   }
-
-  statusList = [
-    { label: 'Novo', value: 'novo' },
-    { label: 'Tentando contato', value: 'tentando_contato' },
-    { label: 'Contatado', value: 'contatado' },
-    { label: 'Reunião agendada', value: 'reuniao_agendada' },
-    { label: 'Proposta enviada', value: 'proposta_enviada' },
-    { label: 'Fechado', value: 'fechado' },
-    { label: 'Perdido', value: 'perdido' }
-  ];
 }

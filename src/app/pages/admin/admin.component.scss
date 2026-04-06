@@ -1,7 +1,7 @@
 .main-content {
   margin-left: 260px;
-  padding: 20px; /* Opcional: para dar respiro interno */
-  transition: margin-left 0.3s ease; /* Opcional: suave se o menu mudar */
+  padding: 20px;
+  transition: margin-left 0.3s ease;
 }
 
 .float-end {
@@ -10,15 +10,14 @@
 
 table {
   width: 100%;
-  table-layout: fixed; /* Mantém a largura das colunas consistente */
+  table-layout: fixed;
   border-collapse: collapse;
 }
 
-/* Container da tabela com rolagem */
 .table-container {
-  max-height: 500px; /* Ajuste a altura conforme necessário */
-  overflow-y: auto; /* Adiciona rolagem vertical */
-  overflow-x: auto; /* Permite rolagem horizontal */
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 .no-data {
@@ -28,36 +27,81 @@ table {
   color: var(--primary-color);
 }
 
-tr {
-  height: 35px;
+.data-row {
+  height: 58px;
 }
 
 .th-table {
   font-size: 14px;
-  font-weight: 500;
-  color: #5a5a5a;
-  white-space: nowrap; /* Evita quebra de linha nas células */
+  font-weight: 600;
+  color: #4f4f4f;
+  white-space: nowrap;
 }
 
 .td-table {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
-  color: #767676;
+  color: #6d6d6d;
+  vertical-align: middle;
+}
+
+.truncate-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions-cell {
+  white-space: nowrap;
+  width: 110px;
+  text-align: center;
+}
+
+.mat-column-seqId {
+  width: 60px;
+}
+
+.mat-column-status {
+  width: 210px;
+}
+
+.mat-column-nome {
+  width: 180px;
+}
+
+.mat-column-email {
+  width: 220px;
+}
+
+.mat-column-telefone {
+  width: 150px;
+}
+
+.mat-column-empresa {
+  width: 200px;
+}
+
+.mat-column-mensagem {
+  width: 220px;
+}
+
+.mat-column-dataCadastro {
+  width: 160px;
+}
+
+.mat-column-canal {
+  width: 130px;
 }
 
 .mat-column-actions {
-  white-space: nowrap;
-  width: 150px; /* Define a largura fixa para a coluna de ações */
-  text-align: center; /* Centraliza os ícones */
+  width: 90px;
 }
 
-/* Ícones da tabela */
-.icone-tabela{
+.icone-tabela {
   color: #767676;
-  margin-right: 1px;
-  transform: rotate(0deg);
   transition: 0.3s linear all;
-  margin: 0 5px; /* Adiciona uma pequena margem entre os ícones */
+  margin: 0 5px;
+
   &:hover {
     cursor: pointer;
     color: var(--primary-color);
@@ -65,16 +109,70 @@ tr {
   }
 }
 
-.icone-tabela-delete{
+.icone-tabela-delete {
   color: #767676;
-  margin-right: 1px;
-  transform: rotate(0deg);
   transition: 0.3s linear all;
+
   &:hover {
     cursor: pointer;
     color: var(--error-color);
     transform: rotate(359deg);
   }
+}
+
+.status-cell {
+  padding-right: 12px;
+}
+
+.status-select {
+  width: 100%;
+  font-size: 14px;
+}
+
+.status-badge,
+.status-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.2;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: 0 0 10px;
+}
+
+::ng-deep .status-select .mat-mdc-select-trigger {
+  min-height: auto;
+  align-items: center;
+}
+
+::ng-deep .status-select .mat-mdc-select-value {
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep .status-select .mat-mdc-form-field-infix {
+  min-height: auto;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+::ng-deep .status-select .mat-mdc-text-field-wrapper {
+  background: transparent !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .status-select .mdc-line-ripple {
+  display: none !important;
+}
+
+::ng-deep .status-select .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
 }
 
 .mat-header {
@@ -83,62 +181,38 @@ tr {
   z-index: 1;
 }
 
-/* Definindo a largura das colunas */
-.mat-column-seqId,
-.seqId-column {
-  width: 50px; /* Defina a largura desejada para a coluna 'id' */
-}
-
-.mat-column-cargo,
-.id-column {
-  width: 280px; /* Defina a largura desejada para a coluna 'id' */
-}
-
-/* Media query para telas menores que 768px */
 @media (max-width: 768px) {
-  /* Oculta o menu lateral e ajusta a largura do conteúdo */
   .container-fluid {
     margin-left: 0;
     width: 100%;
     padding: 8px;
   }
 
-  /* Oculta o subtítulo em telas menores */
   .subtitulo {
     display: none;
   }
 
-  /* Ajustes para título em telas pequenas */
   .titulo {
     font-size: 22px;
   }
 
-  /* Campo de busca ocupa toda a largura */
-  .mat-form-field {
-    width: 100%;
-  }
-
-  /* Ajusta a tabela para telas pequenas */
   .table-container {
-    overflow-x: auto; /* Permite rolagem horizontal */
+    overflow-x: auto;
     width: 100%;
   }
 
   table {
     display: block;
-    min-width: 600px; /* Define uma largura mínima para garantir que a tabela role */
+    min-width: 1200px;
   }
 
-  th, td {
-    white-space: nowrap; /* Evita quebra de linha nas células */
-    font-size: 12px; /* Reduz o tamanho da fonte em telas menores */
+  th,
+  td {
+    white-space: nowrap;
+    font-size: 12px;
   }
 
-  /* Reduz a largura da coluna de ações */
   .mat-column-actions {
     width: 100px;
   }
 }
-
-
-
