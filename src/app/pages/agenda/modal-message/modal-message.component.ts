@@ -48,16 +48,18 @@ export class ModalMessageComponent {
 
   abrirEmail(): void {
     const email = this.data.contatoEmail || this.data.email || '';
-    const assunto = encodeURIComponent('Mensagem para você');
-    const corpo = encodeURIComponent(this.getMensagemPersonalizada());
 
     if (!email) {
       alert('E-mail não informado!');
       return;
     }
 
-    const mailtoLink = `mailto:${email}?subject=${assunto}&body=${corpo}`;
-    window.open(mailtoLink, '_blank');
+    // copia mensagem
+    const mensagem = this.getMensagemPersonalizada();
+    navigator.clipboard.writeText(mensagem);
+
+    // abre Zoho direto no compose
+    window.open('https://mail.zoho.com/zm/#compose', '_blank');
   }
 
   abrirZoho(): void {
