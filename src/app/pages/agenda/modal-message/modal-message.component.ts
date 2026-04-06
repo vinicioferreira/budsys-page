@@ -229,9 +229,21 @@ export class ModalMessageComponent {
     }
   }
 
+  getStatusColor(status: string): string {
+    return this.statusList.find(s => s.value === status)?.color || '#999';
+  }
+
+  getStatusLabel(status: string): string {
+    return this.statusList.find(s => s.value === status)?.label || status;
+  }
+
   statusList = [
-    { label: 'Pendente', value: 'pendente', color: '#e53935' },
-    { label: 'Em andamento', value: 'andamento', color: '#fb8c00' },
-    { label: 'Feito', value: 'feito', color: '#43a047' }
+    { label: 'Novo', value: 'novo', color: '#546e7a' },
+    { label: 'Tentando contato', value: 'tentando_contato', color: '#e53935' },
+    { label: 'Contatado', value: 'contatado', color: '#fb8c00' },
+    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#1e88e5' },
+    { label: 'Proposta enviada', value: 'proposta_enviada', color: '#8e24aa' },
+    { label: 'Fechado', value: 'fechado', color: '#43a047' },
+    { label: 'Perdido', value: 'perdido', color: '#757575' }
   ];
 }

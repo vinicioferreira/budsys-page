@@ -37,9 +37,13 @@ export class AgendaComponent implements OnInit {
     const snapshot = await getDocs(atividadesRef);
 
     const statusCor: { [key: string]: { primary: string; secondary: string } } = {
-      pendente: { primary: '#e53935', secondary: '#ffcdd2' },
-      andamento: { primary: '#fb8c00', secondary: '#ffe0b2' },
-      feito: { primary: '#43a047', secondary: '#c8e6c9' }
+      novo: { primary: '#546e7a', secondary: '#cfd8dc' },
+      tentando_contato: { primary: '#e53935', secondary: '#ffcdd2' },
+      contatado: { primary: '#fb8c00', secondary: '#ffe0b2' },
+      reuniao_agendada: { primary: '#1e88e5', secondary: '#bbdefb' },
+      proposta_enviada: { primary: '#8e24aa', secondary: '#e1bee7' },
+      fechado: { primary: '#43a047', secondary: '#c8e6c9' },
+      perdido: { primary: '#757575', secondary: '#eeeeee' }
     };
 
     const eventos = await Promise.all(snapshot.docs.map(async doc => {

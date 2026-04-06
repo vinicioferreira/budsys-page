@@ -160,3 +160,27 @@
     grid-template-columns: 1fr;
   }
 }
+
+.status-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0 18px;
+}
+
+.status-selector .status-button {
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+.status-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-option .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
