@@ -75,7 +75,13 @@ export class ModalContatoComponent {
           return;
         }
 
-        this.agendaService.gerarAtividadesDeCadencia(cadencia, cliente.id, cliente.nome, new Date());
+        this.agendaService.gerarAtividadesDeCadencia(
+          cadencia,
+          cliente.id,
+          cliente.nome,
+          cliente.empresa || '',
+          new Date()
+        );
         alert(`✅ Cadência vinculada e atividades criadas na agenda para o canal "${cliente.canal}"`);
       }).catch(err => {
         console.error('❌ Erro ao carregar a cadência:', err);
@@ -127,6 +133,7 @@ export class ModalContatoComponent {
         cadencia,
         cliente.id,
         cliente.nome,
+        cliente.empresa || '',
         new Date()
       );
 

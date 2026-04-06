@@ -59,12 +59,15 @@ export class AgendaComponent implements OnInit {
         start: new Date(data['dataPrevista']),
         title: data['canal'] === 'manual'
           ? data['mensagem']
-          : `${data['contatoNome']} - ${data['canal']}`,
+          : data['empresa']
+            ? `${data['empresa']} • ${data['contatoNome']} • ${data['canal']}`
+            : `${data['contatoNome']} • ${data['canal']}`,
         color: cor,
         meta: {
           id: doc.id,
           contatoId: data['contatoId'],
           contatoNome: data['contatoNome'],
+          empresa: data['empresa'],
           contatoTelefone,
           contatoEmail,
           canal: data['canal'],
@@ -86,6 +89,7 @@ export class AgendaComponent implements OnInit {
         id: meta.id,
         contatoId: meta.contatoId,
         contatoNome: meta.contatoNome,
+        empresa: meta.empresa,
         contatoTelefone: meta.contatoTelefone,
         contatoEmail: meta.contatoEmail,
         canal: meta.canal,

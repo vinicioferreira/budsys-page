@@ -8,8 +8,14 @@ export class AgendaService {
 
   constructor(private firestore: Firestore) { }
 
-  async gerarAtividadesDeCadencia(cadencia: any, contatoId: string, nome: string, dataBase: Date): Promise<void> {
-    console.log('⚡ gerarAtividadesDeCadencia chamado:', cadencia, contatoId, nome, dataBase);
+  async gerarAtividadesDeCadencia(
+    cadencia: any,
+    contatoId: string,
+    nome: string,
+    empresa: string,
+    dataBase: Date
+  ): Promise<void> {
+    console.log('⚡ gerarAtividadesDeCadencia chamado:', cadencia, contatoId, nome, empresa, dataBase);
 
     if (!cadencia.etapas || !Array.isArray(cadencia.etapas) || cadencia.etapas.length === 0) {
       console.warn('❌ Esta cadência não tem etapas válidas. Nada será gerado.');
@@ -25,6 +31,7 @@ export class AgendaService {
       const atividade = {
         contatoId,
         contatoNome: nome,
+        empresa: empresa || '',
         canal: etapa.canal || 'Sem canal',
         mensagem: etapa.mensagem || 'Sem mensagem',
         telefone: etapa.telefone || 'Sem telefone',
@@ -49,6 +56,7 @@ export class AgendaService {
     const atividade = {
       contatoId: null,
       contatoNome: titulo,
+      empresa: '',
       canal: 'manual',
       mensagem: titulo,
       telefone: '',
@@ -97,7 +105,6 @@ export class AgendaService {
     let atividadeAtual: any = null;
     let dataAntiga: Date | null = null;
 
-    // 1. achar a atividade atual
     for (const docSnap of snapshot.docs) {
       if (docSnap.id === atividadeId) {
         atividadeAtual = docSnap;
@@ -111,10 +118,8 @@ export class AgendaService {
       throw new Error('Atividade atual não encontrada.');
     }
 
-    // 2. calcula diferença em milissegundos
     const diffMs = novaData.getTime() - dataAntiga.getTime();
 
-    // 3. atualiza a atividade atual
     const atividadeAtualRef = doc(this.firestore, 'atividades', atividadeId);
 
     const updateData: any = {
@@ -127,7 +132,6 @@ export class AgendaService {
 
     await updateDoc(atividadeAtualRef, updateData);
 
-    // 4. desloca as próximas atividades pendentes
     for (const docSnap of snapshot.docs) {
       if (docSnap.id === atividadeId) continue;
 
@@ -137,7 +141,6 @@ export class AgendaService {
       if (!dataPrevista) continue;
       if (data['status'] !== 'pendente') continue;
 
-      // só move atividades futuras em relação à atividade original
       if (dataPrevista.getTime() > dataAntiga.getTime()) {
         const novaDataFutura = new Date(dataPrevista.getTime() + diffMs);
         const atividadeRef = doc(this.firestore, 'atividades', docSnap.id);

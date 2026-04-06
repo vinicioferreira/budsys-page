@@ -76,7 +76,13 @@ export class AdminComponent {
     if (canalSelecionado) {
       this.cadenciaService.getCadenciaById(canalSelecionado.cadenciaId).then(cadencia => {
         if (cadencia) {
-          this.agendaService.gerarAtividadesDeCadencia(cadencia, cliente.id, cliente.nome, new Date());
+          this.agendaService.gerarAtividadesDeCadencia(
+            cadencia,
+            cliente.id,
+            cliente.nome,
+            cliente.empresa || '',
+            new Date()
+          );
           alert(`✅ Cadência vinculada e atividades criadas na agenda para o canal "${cliente.canal}"`);
         } else {
           alert('⚠ Cadência não encontrada no banco!');

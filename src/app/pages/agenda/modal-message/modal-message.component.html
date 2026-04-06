@@ -6,7 +6,8 @@
   <ng-container *ngIf="!modoReagendar; else blocoReagendar">
 
     <ng-container *ngIf="!isManual; else atividadeManualTpl">
-      <p><strong>Cliente:</strong> {{ data.contatoNome || '—' }}</p>
+      <p><strong>Contato:</strong> {{ data.contatoNome || '—' }}</p>
+      <p><strong>Cliente:</strong> {{ data.empresa || '—' }}</p>
       <p><strong>Canal:</strong> {{ data.canal || '—' }}</p>
       <p><strong>Telefone:</strong> {{ data.contatoTelefone || '—' }}</p>
       <p><strong>E-mail:</strong> {{ data.contatoEmail || '—' }}</p>
