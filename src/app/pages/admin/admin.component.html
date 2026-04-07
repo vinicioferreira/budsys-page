@@ -1,15 +1,17 @@
 <app-menu></app-menu>
 
-<div class="pt-3 main-content">
-  <h2>Clientes Potenciais</h2>
+<div class="page-clientes main-content">
+  <div class="page-header">
+    <h2 class="page-title">Clientes Potenciais</h2>
 
-  <div class="btn-addCliente">
-    <button mat-raised-button color="primary" (click)="abrirModalNovoCliente()">
-      Novo Cliente
-    </button>
+    <div class="btn-addCliente">
+      <button mat-raised-button color="primary" (click)="abrirModalNovoCliente()">
+        Novo Cliente
+      </button>
+    </div>
   </div>
 
-  <div class="table-container mat-elevation-z8" style="margin-top: 20px;">
+  <div class="table-container mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="seqId">
@@ -46,7 +48,6 @@
                 {{ status.label }}
               </span>
             </mat-option>
-
           </mat-select>
         </td>
       </ng-container>

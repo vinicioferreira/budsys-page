@@ -1,14 +1,37 @@
 .container-fluid {
   margin-left: 260px;
-  padding: 20px; /* opcional para dar espaçamento interno */
-  transition: margin-left 0.3s ease; /* opcional para suavizar animação se o menu recolher/expandir */
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  box-sizing: border-box;
+}
+
+.page-cadencias {
+  width: calc(100% - 260px);
+  max-width: 100%;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
 }
 
 .container {
   padding: 16px;
 }
 
-.nova-cadencia, .cadencias-salvas {
+.nova-cadencia,
+.cadencias-salvas {
   margin-bottom: 24px;
 }
 
@@ -32,6 +55,7 @@
   margin-top: 16px;
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 mat-form-field {
@@ -39,42 +63,176 @@ mat-form-field {
 }
 
 .actions {
-  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .texto-etapa {
   flex: 1;
   padding-right: 10px;
+  min-width: 0;
+  word-break: break-word;
+}
+
+mat-accordion {
+  display: block;
+  width: 100%;
 }
 
 mat-expansion-panel {
-  width: 83%; /* Garante que o painel não passe da largura do container pai */
-  box-sizing: border-box; /* Inclui padding/border no cálculo do width */
-  margin-bottom: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .painel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   width: 100%;
 }
 
 .header-conteudo {
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
-.acoes {
-  display: flex;
+::ng-deep .painel-header .mat-content {
   align-items: center;
-  margin-left: auto;
+}
+
+::ng-deep .painel-header .mat-expansion-panel-header-title {
+  min-width: 0;
+}
+
+::ng-deep .painel-header .mat-expansion-panel-header-description {
+  justify-content: flex-end;
+  margin-right: 0;
+}
+
+mat-panel-title {
+  display: block;
+  min-width: 0;
+  white-space: normal;
+  line-height: 1.35;
+}
+
+.lista-etapas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lista-etapas li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eceff3;
+}
+
+.lista-etapas li:last-child {
+  border-bottom: 0;
 }
 
 .linha-etapa {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.acoes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .container-fluid,
+  .page-cadencias {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px !important;
+  }
+
+  .page-header {
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .page-header .actions button {
+    width: 100%;
+  }
+
+  .botoes {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .botoes button {
+    width: 100%;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  .linha-etapa {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .texto-etapa {
+    padding-right: 0;
+    font-size: 14px;
+  }
+
+  .linha-etapa .acoes {
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  mat-panel-title {
+    font-size: 15px;
+  }
+}
+
+.painel-header {
+  display: flex;
   align-items: center;
   width: 100%;
 }
 
+/* força layout interno do material */
+::ng-deep .painel-header .mat-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* lado esquerdo (título) */
+.header-conteudo {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+/* lado direito (ações) */
+.acoes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+/* remove comportamento estranho do material */
+::ng-deep .painel-header .mat-expansion-indicator {
+  margin-left: 8px;
+}

@@ -1,10 +1,17 @@
 <app-menu></app-menu>
 
-<div class="container-fluid">
-  <h2><mat-icon>calendar_today</mat-icon> Cadências de Vendas</h2>
+<div class="page-cadencias container-fluid">
+  <div class="page-header">
+    <h2 class="page-title">
+      <mat-icon>calendar_today</mat-icon>
+      Cadências de Vendas
+    </h2>
 
-  <div class="actions">
-    <button mat-raised-button color="primary" (click)="abrirModalCadastro()">Nova Cadência</button>
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="abrirModalCadastro()">
+        Nova Cadência
+      </button>
+    </div>
   </div>
 
   <section class="cadencias-salvas">
@@ -16,6 +23,7 @@
               {{ c.nome }} - {{ c.descricao }}
             </mat-panel-title>
           </div>
+
           <div class="acoes">
             <button mat-icon-button (click)="editar(c.id)">
               <mat-icon>edit</mat-icon>
@@ -26,12 +34,13 @@
           </div>
         </mat-expansion-panel-header>
 
-        <ul>
+        <ul class="lista-etapas">
           <li *ngFor="let e of c.etapas; let i = index">
             <div class="linha-etapa">
-              <div>
+              <div class="texto-etapa">
                 <strong>Dia {{ e.dia }}</strong> | Canal: {{ e.canal }} | Mensagem: {{ e.mensagem }}
               </div>
+
               <div class="acoes">
                 <button mat-icon-button (click)="editarEtapa(c.id, e, i)">
                   <mat-icon>edit</mat-icon>

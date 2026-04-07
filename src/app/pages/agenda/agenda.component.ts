@@ -39,6 +39,7 @@ export class AgendaComponent implements OnInit {
   newDateStr: string = '';
   newTimeStr: string = '';
   locale: string = 'pt-BR';
+  expandedDayKey: string | null = null;
 
   readonly statusList = [
     { label: 'Novo', value: 'novo', color: '#1e88e5' },
@@ -381,4 +382,27 @@ export class AgendaComponent implements OnInit {
 
     return '';
   }
+
+  getDayKey(day: any): string {
+    const d = day?.date ? new Date(day.date) : new Date(day);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const da = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${da}`;
+  }
+
+  isDayExpanded(day: any): boolean {
+    return this.expandedDayKey === this.getDayKey(day);
+  }
+
+  toggleDayExpansion(day: any, event?: MouseEvent): void {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    const key = this.getDayKey(day);
+    this.expandedDayKey = this.expandedDayKey === key ? null : key;
+  }
 }
+
+

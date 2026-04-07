@@ -56,7 +56,7 @@
   </mwl-calendar-day-view>
 
   <ng-template #monthCellTemplate let-day="day">
-    <div class="custom-month-cell">
+    <div class="custom-month-cell" [class.expanded]="isDayExpanded(day)">
       <div class="custom-month-header" (click)="onDayClicked(day)">
         <span class="custom-month-day">
           {{ day.date | calendarDate:'monthViewDayNumber':locale }}
@@ -64,8 +64,9 @@
       </div>
 
       <div class="custom-month-body">
-        <ng-container *ngFor="let grupo of getGroupedEvents(day.events)">
-          <div class="empresa-group">
+        <ng-container *ngFor="let grupo of getGroupedEvents(day.events); let i = index">
+          <div class="empresa-group" *ngIf="isDayExpanded(day) || i < 3">
+
             <div class="empresa-group__header">
               <span class="empresa-group__name" [title]="grupo.empresa">
                 {{ grupo.empresa }}
@@ -76,13 +77,30 @@
             </div>
 
             <div class="empresa-group__chips">
-              <button type="button" class="canal-chip" *ngFor="let item of grupo.items" [title]="item.labelCompleta"
-                [style.border-left-color]="item.color" (click)="onEventChipClick($event, item.event)">
+              <button type="button" class="canal-chip" *ngFor="let item of grupo.items | slice: 0 : 2"
+                [title]="item.labelCompleta" [style.border-left-color]="item.color"
+                (click)="onEventChipClick($event, item.event)">
                 {{ item.labelCurta }}
               </button>
+
+              <span class="canal-chip canal-chip--more" *ngIf="grupo.items.length > 2">
+                +{{ grupo.items.length - 2 }}
+              </span>
             </div>
           </div>
         </ng-container>
+
+        <button type="button" class="empresa-group empresa-group--more clickable"
+          *ngIf="!isDayExpanded(day) && getGroupedEvents(day.events).length > 3"
+          (click)="toggleDayExpansion(day, $event)">
+          +{{ getGroupedEvents(day.events).length - 3 }} empresas
+        </button>
+
+        <button type="button" class="empresa-group empresa-group--more clickable"
+          *ngIf="isDayExpanded(day) && getGroupedEvents(day.events).length > 3"
+          (click)="toggleDayExpansion(day, $event)">
+          Ver menos
+        </button>
       </div>
     </div>
   </ng-template>
