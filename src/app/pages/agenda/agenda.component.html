@@ -1,22 +1,30 @@
 <app-menu></app-menu>
 
+<!-- LINHA 2 -->
 <div class="agenda-header">
-  <h2><mat-icon>calendar_today</mat-icon> Agenda de Clientes</h2>
+  <h2>
+    <mat-icon>calendar_today</mat-icon>
+    Agenda de Clientes
+  </h2>
 
-  <div class="view-buttons">
-    <button mat-button (click)="view = 'month'">Mês</button>
-    <button mat-button (click)="view = 'week'">Semana</button>
-    <button mat-button (click)="view = 'day'">Dia</button>
-  </div>
+  <div class="agenda-toolbar">
+    <div class="view-buttons">
+      <button mat-button (click)="view = 'month'">Mês</button>
+      <button mat-button (click)="view = 'week'">Semana</button>
+      <button mat-button (click)="view = 'day'">Dia</button>
+    </div>
 
-  <div class="navigation-buttons">
-    <button mat-icon-button (click)="previous()">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <span class="view-title">{{ viewDate | date: 'MMMM yyyy' }}</span>
-    <button mat-icon-button (click)="next()">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
+    <div class="navigation-buttons">
+      <button mat-icon-button (click)="previous()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <span class="view-title">{{ viewDate | date: 'MMMM yyyy' }}</span>
+
+      <button mat-icon-button (click)="next()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -35,67 +43,46 @@
     </span>
   </div>
 
-  <mwl-calendar-month-view
-    *ngIf="view === 'month'"
-    [viewDate]="viewDate"
-    [events]="events"
-    [cellTemplate]="monthCellTemplate"
-    (eventClicked)="handleEvent($event.event)"
-    (dayClicked)="onDayClicked($event.day)">
+  <mwl-calendar-month-view *ngIf="view === 'month'" [viewDate]="viewDate" [events]="events"
+    [cellTemplate]="monthCellTemplate" (dayClicked)="onDayClicked($event.day)">
   </mwl-calendar-month-view>
 
-  <mwl-calendar-week-view
-    *ngIf="view === 'week'"
-    [viewDate]="viewDate"
-    [events]="events"
+  <mwl-calendar-week-view *ngIf="view === 'week'" [viewDate]="viewDate" [events]="events"
     (eventClicked)="handleEvent($event.event)">
   </mwl-calendar-week-view>
 
-  <mwl-calendar-day-view
-    *ngIf="view === 'day'"
-    [viewDate]="viewDate"
-    [events]="events"
+  <mwl-calendar-day-view *ngIf="view === 'day'" [viewDate]="viewDate" [events]="events"
     (eventClicked)="handleEvent($event.event)">
   </mwl-calendar-day-view>
-</div>
 
-<ng-template #monthCellTemplate let-day="day">
-  <div class="custom-month-cell" (click)="onDayClicked(day)">
-    <div class="custom-month-header">
-      <span class="custom-month-day">{{ day.date | calendarDate:(view + 'ViewDayNumber'):locale }}</span>
-    </div>
+  <ng-template #monthCellTemplate let-day="day">
+    <div class="custom-month-cell">
+      <div class="custom-month-header" (click)="onDayClicked(day)">
+        <span class="custom-month-day">
+          {{ day.date | calendarDate:'monthViewDayNumber':locale }}
+        </span>
+      </div>
 
-    <div class="custom-month-body">
-      <ng-container *ngFor="let grupo of getGroupedEvents(day.events); let i = index">
-        <div class="empresa-group" *ngIf="i < 3">
-          <div class="empresa-group__header">
-            <span class="empresa-group__name" [title]="grupo.empresa">
-              {{ grupo.empresa }}
-            </span>
-            <span class="empresa-group__count">{{ grupo.items.length }}</span>
+      <div class="custom-month-body">
+        <ng-container *ngFor="let grupo of getGroupedEvents(day.events)">
+          <div class="empresa-group">
+            <div class="empresa-group__header">
+              <span class="empresa-group__name" [title]="grupo.empresa">
+                {{ grupo.empresa }}
+              </span>
+              <span class="empresa-group__count">
+                {{ grupo.items.length }}
+              </span>
+            </div>
+
+            <div class="empresa-group__chips">
+              <button type="button" class="canal-chip" *ngFor="let item of grupo.items" [title]="item.labelCompleta"
+                [style.border-left-color]="item.color" (click)="onEventChipClick($event, item.event)">
+                {{ item.labelCurta }}
+              </button>
+            </div>
           </div>
-
-          <div class="empresa-group__chips">
-            <button
-              type="button"
-              class="canal-chip"
-              *ngFor="let item of grupo.items | slice:0:2"
-              [title]="item.labelCompleta"
-              [style.border-left-color]="item.color"
-              (click)="onEventChipClick($event, item.event)">
-              {{ item.labelCurta }}
-            </button>
-
-            <span class="canal-chip canal-chip--more" *ngIf="grupo.items.length > 2">
-              +{{ grupo.items.length - 2 }}
-            </span>
-          </div>
-        </div>
-      </ng-container>
-
-      <div class="empresa-group empresa-group--more" *ngIf="getGroupedEvents(day.events).length > 3">
-        +{{ getGroupedEvents(day.events).length - 3 }} empresas
+        </ng-container>
       </div>
     </div>
-  </div>
-</ng-template>
+  </ng-template>

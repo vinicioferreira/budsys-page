@@ -1,35 +1,60 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { Firestore, collection, doc, getDoc, getDocs } from '@angular/fire/firestore';
-import { addDays, subDays, addWeeks, subWeeks, addMonths, subMonths } from 'date-fns';
+import {
+  Firestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+} from '@angular/fire/firestore';
+import {
+  addDays,
+  subDays,
+  addWeeks,
+  subWeeks,
+  addMonths,
+  subMonths,
+} from 'date-fns';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalMessageComponent } from './modal-message/modal-message.component';
 import { ChangeDetectorRef } from '@angular/core';
-import { AgendaService } from '../../services/agenda.service';
 
+import { ModalMessageComponent } from './modal-message/modal-message.component';
+import { AgendaService } from '../../services/agenda.service';
+import {
+  AgendaCalendarEvent,
+  AgendaGroupedEmpresa,
+  AgendaEventMeta,
+} from '../../interfaces/agenda-group';
 
 @Component({
   selector: 'app-agenda',
   templateUrl: './agenda.component.html',
-  styleUrls: ['./agenda.component.scss']
+  styleUrls: ['./agenda.component.scss'],
 })
 export class AgendaComponent implements OnInit {
   viewDate: Date = new Date();
   view: string = 'month';
-  events: CalendarEvent[] = [];
+  events: AgendaCalendarEvent[] = [];
   newTitle: string = '';
   newDateStr: string = '';
   newTimeStr: string = '';
   locale: string = 'pt-BR';
 
-  typeGroupedItem?: any;
-  typeGroupedEmpresa?: any;
+  readonly statusList = [
+    { label: 'Novo', value: 'novo', color: '#1e88e5' },
+    { label: 'Tentando contato', value: 'tentando_contato', color: '#e53935' },
+    { label: 'Contatado', value: 'contatado', color: '#fb8c00' },
+    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#00acc1' },
+    { label: 'Proposta enviada', value: 'proposta_enviada', color: '#8e24aa' },
+    { label: 'Fechado', value: 'fechado', color: '#43a047' },
+    { label: 'Perdido', value: 'perdido', color: '#757575' },
+  ];
 
   constructor(
     private firestore: Firestore,
     public dialog: MatDialog,
     private cdr: ChangeDetectorRef,
-    private agendaService: AgendaService
+    private agendaService: AgendaService,
   ) { }
 
   ngOnInit(): void {
@@ -40,58 +65,190 @@ export class AgendaComponent implements OnInit {
     const atividadesRef = collection(this.firestore, 'atividades');
     const snapshot = await getDocs(atividadesRef);
 
-    const statusCor: { [key: string]: { primary: string; secondary: string } } = {
-      novo: { primary: '#1e88e5', secondary: '#bbdefb' },              // azul
-      tentando_contato: { primary: '#e53935', secondary: '#ffcdd2' },  // vermelho
-      contatado: { primary: '#fb8c00', secondary: '#ffe0b2' },         // laranja
-      reuniao_agendada: { primary: '#00acc1', secondary: '#b2ebf2' },  // ciano (CORRIGIDO)
-      proposta_enviada: { primary: '#8e24aa', secondary: '#e1bee7' },  // roxo
-      fechado: { primary: '#43a047', secondary: '#c8e6c9' },           // verde
-      perdido: { primary: '#616161', secondary: '#eeeeee' }            // cinza
+    const statusCor: Record<string, { primary: string; secondary: string }> = {
+      novo: { primary: '#1e88e5', secondary: '#bbdefb' },
+      tentando_contato: { primary: '#e53935', secondary: '#ffcdd2' },
+      contatado: { primary: '#fb8c00', secondary: '#ffe0b2' },
+      reuniao_agendada: { primary: '#00acc1', secondary: '#b2ebf2' },
+      proposta_enviada: { primary: '#8e24aa', secondary: '#e1bee7' },
+      fechado: { primary: '#43a047', secondary: '#c8e6c9' },
+      perdido: { primary: '#616161', secondary: '#eeeeee' },
     };
 
-    const eventos = await Promise.all(snapshot.docs.map(async doc => {
-      const data = doc.data();
+    const eventos: AgendaCalendarEvent[] = await Promise.all(
+      snapshot.docs.map(async (docSnap) => {
+        const data = docSnap.data();
 
-      const contatoTelefone = data['contatoId']
-        ? await this.buscarTelefonePorContatoId(data['contatoId'])
-        : '';
+        const contatoId = data['contatoId'] ?? null;
+        const contatoTelefone = contatoId
+          ? await this.buscarTelefonePorContatoId(contatoId)
+          : '';
 
-      const contatoEmail = data['contatoId']
-        ? await this.buscarEmailContatoId(data['contatoId'])
-        : '';
+        const contatoEmail = contatoId
+          ? await this.buscarEmailContatoId(contatoId)
+          : '';
 
-      const cor = statusCor[data['status']] || { primary: '#2196f3', secondary: '#bbdefb' };
+        const cor = statusCor[data['status']] || {
+          primary: '#2196f3',
+          secondary: '#bbdefb',
+        };
 
-      return {
-        start: new Date(data['dataPrevista']),
-        title: data['canal'] === 'manual'
-          ? data['mensagem']
-          : data['empresa']
-            ? `${data['empresa']} • ${data['contatoNome']} • ${data['canal']}`
-            : `${data['contatoNome']} • ${data['canal']}`,
-        color: cor,
-        meta: {
-          id: doc.id,
-          contatoId: data['contatoId'],
-          contatoNome: data['contatoNome'],
-          empresa: data['empresa'],
+        const empresa = String(data['empresa'] || '').trim();
+        const contatoNome = String(data['contatoNome'] || '').trim();
+        const canal = String(data['canal'] || '').trim();
+
+        const meta: AgendaEventMeta = {
+          id: docSnap.id,
+          contatoId,
+          contatoNome,
+          empresa,
           contatoTelefone,
           contatoEmail,
-          canal: data['canal'],
-          mensagem: data['mensagem'],
-          anotacao: data['anotacao'] || '',
-          status: data['status'],
-          dataPrevista: data['dataPrevista']
-        }
-      };
-    }));
+          canal,
+          mensagem: String(data['mensagem'] || ''),
+          anotacao: String(data['anotacao'] || ''),
+          status: String(data['status'] || ''),
+          dataPrevista: String(data['dataPrevista'] || ''),
+        };
 
-    this.events = [...eventos]; // cria nova referência para forçar update
+        return {
+          start: new Date(data['dataPrevista']),
+          title: this.montarTituloEvento(empresa, contatoNome, canal),
+          color: cor,
+          meta,
+        };
+      }),
+    );
+
+    this.events = [...eventos];
+    this.cdr.detectChanges();
+  }
+
+  montarTituloEvento(empresa: string, contatoNome: string, canal: string): string {
+    const canalLabel = this.getCanalLabel(canal);
+
+    if (empresa && contatoNome) {
+      return `${empresa} • ${contatoNome} • ${canalLabel}`;
+    }
+
+    if (empresa) {
+      return `${empresa} • ${canalLabel}`;
+    }
+
+    if (contatoNome) {
+      return `${contatoNome} • ${canalLabel}`;
+    }
+
+    return canalLabel;
+  }
+
+  getCanalLabel(canal: string): string {
+    const value = (canal || '').toLowerCase();
+
+    switch (value) {
+      case 'ligacao':
+      case 'ligar':
+        return 'Ligação';
+      case 'whatsapp':
+        return 'WhatsApp';
+      case 'email':
+        return 'E-mail';
+      case 'reuniao':
+      case 'reunião':
+      case 'reuniao_agendada':
+        return 'Reunião';
+      case 'manual':
+        return 'Manual';
+      default:
+        return canal || 'Atividade';
+    }
+  }
+
+  getCanalCurto(canal: string): string {
+    const value = (canal || '').toLowerCase();
+
+    switch (value) {
+      case 'ligacao':
+      case 'ligar':
+        return 'Lig';
+      case 'whatsapp':
+        return 'Whats';
+      case 'email':
+        return 'E-mail';
+      case 'reuniao':
+      case 'reunião':
+      case 'reuniao_agendada':
+        return 'Reun';
+      case 'manual':
+        return 'Manual';
+      default:
+        return canal || 'Ativ';
+    }
+  }
+
+  getEmpresaOuContato(event: AgendaCalendarEvent): string {
+    const empresa = event.meta?.empresa?.trim();
+    const contatoNome = event.meta?.contatoNome?.trim();
+
+    if (empresa) return empresa;
+    if (contatoNome) return contatoNome;
+
+    return 'Sem empresa';
+  }
+
+  getGroupedEvents(events: CalendarEvent[]): AgendaGroupedEmpresa[] {
+    if (!events?.length) return [];
+
+    const mapa = new Map<string, AgendaGroupedEmpresa>();
+
+    const eventosOrdenados = [...events].sort((a, b) => {
+      const da = a.start ? new Date(a.start).getTime() : 0;
+      const db = b.start ? new Date(b.start).getTime() : 0;
+      return da - db;
+    });
+
+    for (const eventBase of eventosOrdenados) {
+      const event = eventBase as AgendaCalendarEvent;
+
+      const empresa = this.getEmpresaOuContato(event);
+      const canal = event.meta?.canal || '';
+      const statusColor = event.color?.primary || '#2196f3';
+      const hora = event.start
+        ? new Date(event.start).toLocaleTimeString('pt-BR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+        : '';
+
+      if (!mapa.has(empresa)) {
+        mapa.set(empresa, {
+          empresa,
+          items: [],
+        });
+      }
+
+      mapa.get(empresa)!.items.push({
+        event,
+        color: statusColor,
+        canal,
+        labelCurta: `${this.getCanalCurto(canal)} ${hora}`.trim(),
+        labelCompleta: `${this.getCanalLabel(canal)}${hora ? ' • ' + hora : ''
+          }${event.meta?.contatoNome ? ' • ' + event.meta.contatoNome : ''}`.trim(),
+      });
+    }
+
+    return Array.from(mapa.values()).sort(
+      (a, b) => b.items.length - a.items.length,
+    );
+  }
+
+  onEventChipClick(mouseEvent: MouseEvent, event: AgendaCalendarEvent): void {
+    mouseEvent.stopPropagation();
+    this.handleEvent(event);
   }
 
   handleEvent(event: CalendarEvent): void {
-    const meta = event.meta;
+    const meta = event.meta as AgendaEventMeta;
 
     const dialogRef = this.dialog.open(ModalMessageComponent, {
       data: {
@@ -105,15 +262,15 @@ export class AgendaComponent implements OnInit {
         mensagem: meta.mensagem,
         anotacao: meta.anotacao || '',
         status: meta.status,
-        dataPrevista: meta.dataPrevista
+        dataPrevista: meta.dataPrevista,
       },
       width: '500px',
-      height: '850px'
+      height: '850px',
     });
 
     dialogRef.afterClosed().subscribe((reload: boolean) => {
       if (reload) {
-        this.carregarAtividades(); // recarrega as atividades após atualização
+        this.carregarAtividades();
       }
     });
   }
@@ -123,9 +280,26 @@ export class AgendaComponent implements OnInit {
       ...this.events,
       {
         start: date,
-        title: title,
+        title,
         allDay: false,
-      }
+        color: {
+          primary: '#1e88e5',
+          secondary: '#bbdefb',
+        },
+        meta: {
+          id: '',
+          contatoId: null,
+          contatoNome: title,
+          empresa: '',
+          contatoTelefone: '',
+          contatoEmail: '',
+          canal: 'manual',
+          mensagem: title,
+          anotacao: '',
+          status: 'novo',
+          dataPrevista: date.toISOString(),
+        },
+      },
     ];
   }
 
@@ -190,7 +364,7 @@ export class AgendaComponent implements OnInit {
 
     if (contatoSnap.exists()) {
       const contato = contatoSnap.data();
-      return contato['telefone'] || '';
+      return String(contato['telefone'] || '');
     }
 
     return '';
@@ -202,20 +376,9 @@ export class AgendaComponent implements OnInit {
 
     if (contatoSnap.exists()) {
       const contato = contatoSnap.data();
-      return contato['email'] || '';
+      return String(contato['email'] || '');
     }
 
     return '';
   }
-
-  statusList = [
-    { label: 'Novo', value: 'novo', color: '#1e88e5' },
-    { label: 'Tentando contato', value: 'tentando_contato', color: '#e53935' },
-    { label: 'Contatado', value: 'contatado', color: '#fb8c00' },
-    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#00acc1' },
-    { label: 'Proposta enviada', value: 'proposta_enviada', color: '#8e24aa' },
-    { label: 'Fechado', value: 'fechado', color: '#43a047' },
-    { label: 'Perdido', value: 'perdido', color: '#757575' }
-  ];
-
 }
