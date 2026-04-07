@@ -20,6 +20,10 @@ export class AgendaComponent implements OnInit {
   newTitle: string = '';
   newDateStr: string = '';
   newTimeStr: string = '';
+  locale: string = 'pt-BR';
+
+  typeGroupedItem?: any;
+  typeGroupedEmpresa?: any;
 
   constructor(
     private firestore: Firestore,
