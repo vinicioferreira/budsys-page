@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, collection, getDocs, query, where, orderBy, Timestamp } from '@angular/fire/firestore';
+import { Firestore, collection, getDocs, query, where, Timestamp } from '@angular/fire/firestore';
 import { STATUS_COMERCIAL, inferirFasePorStatus } from '../../shared/status-comercial';
 
 interface EtapaFunil {
@@ -197,14 +197,61 @@ export class DashboardComponent implements OnInit {
 
   async carregarContatarEm(): Promise<void> {
     try {
-      const q = query(
-        collection(this.firestore, 'contatos'),
-        where('contatarEm', '>=', Timestamp.fromDate(new Date(2020, 0, 1))),
-        orderBy('contatarEm', 'asc')
-      );
-      const snapshot = await getDocs(q);
-
       const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+
+      // 1. Busca todos os contatos
+      const snapshotContatos = await getDocs(collection(this.firestore, 'contatos'));
+      const mapaContatos = new Map<string, any>();
+      for (const docSnap of snapshotContatos.docs) {
+        mapaContatos.set(docSnap.id, docSnap.data());
+      }
+
+      // 2. Busca próxima atividade por contato (cadências)
+      const snapshotAtividades = await getDocs(collection(this.firestore, 'atividades'));
+      const mapaProximas = new Map<string, Date>();
+      for (const docSnap of snapshotAtividades.docs) {
+        const d = docSnap.data();
+        const contatoId = d['contatoId'];
+        if (!contatoId || !d['dataPrevista']) continue;
+        const dataPrevista = new Date(d['dataPrevista']);
+        if (isNaN(dataPrevista.getTime())) continue;
+        const atual = mapaProximas.get(contatoId);
+        if (!atual || dataPrevista < atual) {
+          mapaProximas.set(contatoId, dataPrevista);
+        }
+      }
+
+      // 3. Para cada contato, usa a data mais próxima entre contatarEm e próxima atividade
+      const itens: { contatoId: string; data: Date; observacao: string }[] = [];
+
+      for (const [id, contato] of mapaContatos) {
+        let melhorData: Date | null = null;
+        let observacao = '';
+
+        if (contato['contatarEm']) {
+          const d: Date = contato['contatarEm'].toDate
+            ? contato['contatarEm'].toDate()
+            : new Date(contato['contatarEm']);
+          melhorData = d;
+          observacao = contato['observacaoContatar'] || '';
+        }
+
+        const proxAtiv = mapaProximas.get(id);
+        if (proxAtiv && (!melhorData || proxAtiv < melhorData)) {
+          melhorData = proxAtiv;
+          observacao = '';
+        }
+
+        if (!melhorData) continue;
+
+        const alvo = new Date(melhorData); alvo.setHours(0, 0, 0, 0);
+        const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
+        if (diff > 30) continue;
+
+        itens.push({ contatoId: id, data: melhorData, observacao });
+      }
+
+      itens.sort((a, b) => a.data.getTime() - b.data.getTime());
 
       this.contatarAtrasados  = 0;
       this.contatarHoje       = 0;
@@ -212,10 +259,9 @@ export class DashboardComponent implements OnInit {
       this.contatarProximos   = 0;
       this.contatarLista      = [];
 
-      for (const doc of snapshot.docs) {
-        const d = doc.data();
-        const data: Date = d['contatarEm'].toDate();
-        const alvo = new Date(data); alvo.setHours(0, 0, 0, 0);
+      for (const item of itens) {
+        const contato = mapaContatos.get(item.contatoId)!;
+        const alvo = new Date(item.data); alvo.setHours(0, 0, 0, 0);
         const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
 
         let classe = 'contatar-futuro';
@@ -224,18 +270,16 @@ export class DashboardComponent implements OnInit {
         if (diff < 0)        { this.contatarAtrasados++;  classe = 'contatar-atrasado'; labelData = `Atrasado ${Math.abs(diff)}d`; }
         else if (diff === 0) { this.contatarHoje++;        classe = 'contatar-hoje';     labelData = 'Hoje'; }
         else if (diff <= 7)  { this.contatarEstaSemana++;  classe = 'contatar-breve';    labelData = diff === 1 ? 'Amanhã' : `Em ${diff} dias`; }
-        else if (diff <= 30) { this.contatarProximos++;    classe = 'contatar-futuro';   labelData = data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }); }
+        else                 { this.contatarProximos++;    classe = 'contatar-futuro';   labelData = item.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }); }
 
-        if (diff <= 30) {
-          this.contatarLista.push({
-            nome:       d['nome'] || '—',
-            empresa:    d['empresa'] || '',
-            data,
-            observacao: d['observacaoContatar'] || '',
-            classe,
-            labelData,
-          });
-        }
+        this.contatarLista.push({
+          nome:      contato['nome']    || '—',
+          empresa:   contato['empresa'] || '',
+          data:      item.data,
+          observacao: item.observacao,
+          classe,
+          labelData,
+        });
       }
     } catch (error) {
       console.error('Erro ao carregar contatarEm:', error);
