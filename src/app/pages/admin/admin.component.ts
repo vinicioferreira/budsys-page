@@ -123,6 +123,7 @@ export class AdminComponent {
 
       this.dataSource.data = data.map(cliente => ({
         ...cliente,
+        status: cliente.status || 'novo',
         proximaAtividade: mapaAtividades.get(cliente.id) || null
       }));
 
