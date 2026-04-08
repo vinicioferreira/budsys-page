@@ -53,6 +53,18 @@ export class DashboardComponent implements OnInit {
   listaSemana:     ContatarItem[] = [];
   listaProximos:   ContatarItem[] = [];
 
+  expandedColunas = new Set<string>();
+
+  toggleColuna(coluna: string): void {
+    this.expandedColunas.has(coluna)
+      ? this.expandedColunas.delete(coluna)
+      : this.expandedColunas.add(coluna);
+  }
+
+  isColunaExpanded(coluna: string): boolean {
+    return this.expandedColunas.has(coluna);
+  }
+
   filtros: FiltroPeriodo[] = [
     { label: 'Mês atual',    value: 'mes_atual' },
     { label: 'Mês anterior', value: 'mes_anterior' },

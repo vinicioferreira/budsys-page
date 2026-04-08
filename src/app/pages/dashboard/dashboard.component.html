@@ -130,15 +130,20 @@
             <span class="col-num">{{ listaAtrasados.length }}</span>
             <span class="col-label">Atrasado{{ listaAtrasados.length !== 1 ? 's' : '' }}</span>
           </div>
-          <div class="col-items">
-            <div class="col-item" *ngFor="let item of listaAtrasados">
-              <span class="col-item-detalhe">{{ item.labelData }}</span>
-              <span class="col-item-nome">{{ item.nome }}</span>
-              <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
-              <span class="col-item-obs" *ngIf="item.observacao" [matTooltip]="item.observacao"><mat-icon>notes</mat-icon></span>
-            </div>
+          <div class="col-items" [class.col-items--expanded]="isColunaExpanded('atrasado')">
+            <ng-container *ngFor="let item of listaAtrasados; let i = index">
+              <div class="col-item" *ngIf="isColunaExpanded('atrasado') || i < 3">
+                <span class="col-item-detalhe">{{ item.labelData }}</span>
+                <span class="col-item-nome">{{ item.nome }}</span>
+                <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
+                <span class="col-item-obs" *ngIf="item.observacao" [matTooltip]="item.observacao"><mat-icon>notes</mat-icon></span>
+              </div>
+            </ng-container>
             <span class="col-vazio" *ngIf="!listaAtrasados.length">—</span>
           </div>
+          <button class="col-mais" *ngIf="!isColunaExpanded('atrasado') && listaAtrasados.length > 3" (click)="toggleColuna('atrasado')">
+            +{{ listaAtrasados.length - 3 }} ações
+          </button>
         </div>
 
         <!-- Hoje -->
@@ -148,14 +153,19 @@
             <span class="col-num">{{ listaHoje.length }}</span>
             <span class="col-label">Hoje</span>
           </div>
-          <div class="col-items">
-            <div class="col-item" *ngFor="let item of listaHoje">
-              <span class="col-item-nome">{{ item.nome }}</span>
-              <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
-              <span class="col-item-obs" *ngIf="item.observacao" [matTooltip]="item.observacao"><mat-icon>notes</mat-icon></span>
-            </div>
+          <div class="col-items" [class.col-items--expanded]="isColunaExpanded('hoje')">
+            <ng-container *ngFor="let item of listaHoje; let i = index">
+              <div class="col-item" *ngIf="isColunaExpanded('hoje') || i < 3">
+                <span class="col-item-nome">{{ item.nome }}</span>
+                <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
+                <span class="col-item-obs" *ngIf="item.observacao" [matTooltip]="item.observacao"><mat-icon>notes</mat-icon></span>
+              </div>
+            </ng-container>
             <span class="col-vazio" *ngIf="!listaHoje.length">—</span>
           </div>
+          <button class="col-mais" *ngIf="!isColunaExpanded('hoje') && listaHoje.length > 3" (click)="toggleColuna('hoje')">
+            +{{ listaHoje.length - 3 }} ações
+          </button>
         </div>
 
         <!-- Esta semana -->
@@ -165,15 +175,20 @@
             <span class="col-num">{{ listaSemana.length }}</span>
             <span class="col-label">Esta semana</span>
           </div>
-          <div class="col-items">
-            <div class="col-item" *ngFor="let item of listaSemana">
-              <span class="col-item-detalhe">{{ item.labelData }}</span>
-              <span class="col-item-nome">{{ item.nome }}</span>
-              <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
-              <span class="col-item-obs" *ngIf="item.observacao" [matTooltip]="item.observacao"><mat-icon>notes</mat-icon></span>
-            </div>
+          <div class="col-items" [class.col-items--expanded]="isColunaExpanded('semana')">
+            <ng-container *ngFor="let item of listaSemana; let i = index">
+              <div class="col-item" *ngIf="isColunaExpanded('semana') || i < 3">
+                <span class="col-item-detalhe">{{ item.labelData }}</span>
+                <span class="col-item-nome">{{ item.nome }}</span>
+                <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
+                <span class="col-item-obs" *ngIf="item.observacao" [matTooltip]="item.observacao"><mat-icon>notes</mat-icon></span>
+              </div>
+            </ng-container>
             <span class="col-vazio" *ngIf="!listaSemana.length">—</span>
           </div>
+          <button class="col-mais" *ngIf="!isColunaExpanded('semana') && listaSemana.length > 3" (click)="toggleColuna('semana')">
+            +{{ listaSemana.length - 3 }} ações
+          </button>
         </div>
 
         <!-- Próximos 30 dias -->
@@ -183,15 +198,20 @@
             <span class="col-num">{{ listaProximos.length }}</span>
             <span class="col-label">Próximos 30 dias</span>
           </div>
-          <div class="col-items">
-            <div class="col-item" *ngFor="let item of listaProximos">
-              <span class="col-item-detalhe">{{ item.labelData }}</span>
-              <span class="col-item-nome">{{ item.nome }}</span>
-              <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
-              <span class="col-item-obs" *ngIf="item.observacao" [matTooltip]="item.observacao"><mat-icon>notes</mat-icon></span>
-            </div>
+          <div class="col-items" [class.col-items--expanded]="isColunaExpanded('proximos')">
+            <ng-container *ngFor="let item of listaProximos; let i = index">
+              <div class="col-item" *ngIf="isColunaExpanded('proximos') || i < 3">
+                <span class="col-item-detalhe">{{ item.labelData }}</span>
+                <span class="col-item-nome">{{ item.nome }}</span>
+                <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
+                <span class="col-item-obs" *ngIf="item.observacao" [matTooltip]="item.observacao"><mat-icon>notes</mat-icon></span>
+              </div>
+            </ng-container>
             <span class="col-vazio" *ngIf="!listaProximos.length">—</span>
           </div>
+          <button class="col-mais" *ngIf="!isColunaExpanded('proximos') && listaProximos.length > 3" (click)="toggleColuna('proximos')">
+            +{{ listaProximos.length - 3 }} ações
+          </button>
         </div>
 
       </div>
