@@ -41,6 +41,7 @@ import { BlogAdminComponent } from './pages/blog/blog-admin/blog-admin.component
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { LoginComponent } from './pages/login/login.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ButtonComponent } from './component/button/button.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -61,7 +62,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     BlogListComponent,
     BlogPostComponent,
     BlogAdminComponent,
-    LoginComponent
+    LoginComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

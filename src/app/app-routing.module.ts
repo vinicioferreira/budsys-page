@@ -9,10 +9,12 @@ import { BlogListComponent } from './pages/blog/blog-list/blog-list.component';
 import { BlogAdminComponent } from './pages/blog/blog-admin/blog-admin.component';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginComponent } from './pages/login/login.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
 
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard] },
   { path: 'cadencia', component: CadenciaComponent, canActivate: [AuthGuard] },

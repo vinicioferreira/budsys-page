@@ -1,0 +1,114 @@
+<app-menu></app-menu>
+
+<div class="dashboard main-content">
+
+  <div class="page-header">
+    <h2 class="page-title">Dashboard</h2>
+  </div>
+
+  <div class="loading" *ngIf="carregando">
+    <mat-icon>hourglass_empty</mat-icon>
+    Carregando métricas...
+  </div>
+
+  <ng-container *ngIf="!carregando">
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <mat-icon class="kpi-icon" style="color: #546e7a">group</mat-icon>
+        <div class="kpi-valor">{{ total }}</div>
+        <div class="kpi-label">Total de leads</div>
+      </div>
+
+      <div class="kpi-card">
+        <mat-icon class="kpi-icon" style="color: #1e88e5">pending_actions</mat-icon>
+        <div class="kpi-valor">{{ emAndamento }}</div>
+        <div class="kpi-label">Em andamento</div>
+      </div>
+
+      <div class="kpi-card">
+        <mat-icon class="kpi-icon" style="color: #43a047">handshake</mat-icon>
+        <div class="kpi-valor">{{ fechados }}</div>
+        <div class="kpi-label">Fechados</div>
+      </div>
+
+      <div class="kpi-card">
+        <mat-icon class="kpi-icon" style="color: #e53935">cancel</mat-icon>
+        <div class="kpi-valor">{{ perdidos }}</div>
+        <div class="kpi-label">Perdidos</div>
+      </div>
+
+      <div class="kpi-card kpi-card--destaque">
+        <mat-icon class="kpi-icon" style="color: #43a047">trending_up</mat-icon>
+        <div class="kpi-valor">{{ taxaFinal }}%</div>
+        <div class="kpi-label">Taxa de conversão</div>
+      </div>
+    </div>
+
+    <!-- Funil -->
+    <div class="section-title">Funil de conversão</div>
+
+    <div class="funil-card">
+      <div class="funil">
+        <ng-container *ngFor="let etapa of etapasFunil; let i = index; let last = last">
+
+          <div class="funil-etapa">
+            <div class="funil-icon-wrap" [style.background]="iconeBg(etapa.color)">
+              <mat-icon [style.color]="etapa.color">{{ etapa.icon }}</mat-icon>
+            </div>
+            <div class="funil-count" [style.color]="etapa.color">{{ etapa.count }}</div>
+            <div class="funil-label">{{ etapa.label }}</div>
+            <div class="funil-badge" *ngIf="etapa.conversao !== null">
+              do total
+            </div>
+          </div>
+
+          <div class="funil-conector" *ngIf="!last">
+            <div class="conector-pct" *ngIf="etapasFunil[i + 1].conversao !== null">
+              {{ etapasFunil[i + 1].conversao }}%
+            </div>
+            <mat-icon class="conector-seta">arrow_forward</mat-icon>
+          </div>
+
+        </ng-container>
+      </div>
+
+      <!-- Barra de progresso do funil -->
+      <div class="funil-barra-wrap">
+        <ng-container *ngFor="let etapa of etapasFunil">
+          <div class="funil-barra-segmento"
+            [style.flex]="etapa.count"
+            [style.background]="etapa.color"
+            [title]="etapa.label + ': ' + etapa.count">
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Distribuição por status -->
+    <div class="section-title">Distribuição atual por status</div>
+
+    <div class="dist-card">
+      <div class="dist-item" *ngFor="let item of distribuicao">
+        <div class="dist-header">
+          <span class="dist-dot" [style.background]="item.color"></span>
+          <span class="dist-label">{{ item.label }}</span>
+          <span class="dist-count">{{ item.count }}</span>
+          <span class="dist-pct">{{ item.percentual }}%</span>
+        </div>
+        <div class="dist-bar-bg">
+          <div class="dist-bar-fill"
+            [style.width.%]="item.percentual"
+            [style.background]="item.color">
+          </div>
+        </div>
+      </div>
+
+      <div class="dist-vazio" *ngIf="!distribuicao.length">
+        Nenhum dado disponível.
+      </div>
+    </div>
+
+  </ng-container>
+</div>
