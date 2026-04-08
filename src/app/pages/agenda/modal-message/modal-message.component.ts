@@ -80,14 +80,6 @@ export class ModalMessageComponent {
     this.dialogRef.close(this.hasChanges);
   }
 
-  copiarMensagem(): void {
-    const texto = this.editandoMensagem
-      ? this.mensagemEditada
-      : this.getMensagemPersonalizada();
-    navigator.clipboard.writeText(texto || '');
-    alert('Mensagem copiada para a área de transferência!');
-  }
-
   abrirWhatsapp(): void {
     const telefone = this.data?.contatoTelefone?.replace(/\D/g, '');
     if (!telefone) { alert('Telefone não informado!'); return; }

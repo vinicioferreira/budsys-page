@@ -203,7 +203,6 @@
 <mat-dialog-actions align="end">
   <ng-container *ngIf="!modoReagendar; else acoesReagendar">
     <app-button *ngIf="!isManual" variant="outline" textButton="Reagendar" icon="event" (click)="abrirReagendamento()"></app-button>
-    <app-button variant="outline" textButton="Copiar" icon="content_copy" (click)="copiarMensagem()"></app-button>
     <app-button *ngIf="!isManual && canalEh('whatsapp')" variant="outline" textButton="WhatsApp" icon="whatsapp" (click)="abrirWhatsapp()"></app-button>
     <app-button *ngIf="!isManual && canalEh('email')" variant="outline" textButton="E-mail" icon="email" (click)="abrirEmail()"></app-button>
     <app-button *ngIf="data.id" variant="danger" textButton="Excluir atividade" (click)="excluirAtividadeAtual()"></app-button>
