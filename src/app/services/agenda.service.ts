@@ -8,7 +8,8 @@ import {
   where,
   query,
   getDocs,
-  deleteDoc
+  deleteDoc,
+  arrayUnion
 } from '@angular/fire/firestore';
 
 @Injectable({
@@ -224,6 +225,18 @@ export class AgendaService {
     await updateDoc(atividadeRef, {
       anotacao: textoLimpo
     });
+  }
+
+  async adicionarAnotacao(id: string, texto: string): Promise<{ texto: string; criadoEm: string }> {
+    const nota = { texto: texto.trim(), criadoEm: new Date().toISOString() };
+    const atividadeRef = doc(this.firestore, 'atividades', id);
+    await updateDoc(atividadeRef, { anotacaoLog: arrayUnion(nota) });
+    return nota;
+  }
+
+  async atualizarAcoesAtividade(id: string, acoes: any[]): Promise<void> {
+    const atividadeRef = doc(this.firestore, 'atividades', id);
+    await updateDoc(atividadeRef, { acoes });
   }
 
   async atualizarMensagemAtividade(id: string, mensagem: string): Promise<void> {

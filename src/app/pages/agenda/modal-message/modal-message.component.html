@@ -10,17 +10,14 @@
         <span class="label">Contato</span>
         <span class="value">{{ data.contatoNome || '—' }}</span>
       </div>
-
       <div class="summary-row">
         <span class="label">Cliente</span>
         <span class="value">{{ data.empresa || '—' }}</span>
       </div>
-
       <div class="summary-row">
         <span class="label">Telefone</span>
         <span class="value">{{ data.contatoTelefone || '—' }}</span>
       </div>
-
       <div class="summary-row">
         <span class="label">E-mail</span>
         <span class="value">{{ data.contatoEmail || '—' }}</span>
@@ -33,7 +30,6 @@
           <span class="label">Título</span>
           <span class="value">{{ data.contatoNome || data.mensagem || '—' }}</span>
         </div>
-
         <div class="summary-row">
           <span class="label">Tipo</span>
           <span class="value">Atividade manual</span>
@@ -41,16 +37,16 @@
       </div>
     </ng-template>
 
-    <mat-form-field appearance="outline" class="full-width status-field">
-      <mat-label>Status</mat-label>
-      <mat-select [(value)]="data.status" (selectionChange)="atualizarStatus($event.value)">
+    <!-- STATUS COMERCIAL -->
+    <mat-form-field appearance="outline" class="full-width status-field" *ngIf="!isManual">
+      <mat-label>Status comercial</mat-label>
+      <mat-select [value]="data.status" (selectionChange)="selecionarStatus($event.value)">
         <mat-select-trigger>
           <span class="status-option">
             <span class="dot" [style.background]="getStatusColor(data.status)"></span>
             {{ getStatusLabel(data.status) }}
           </span>
         </mat-select-trigger>
-
         <mat-option *ngFor="let status of statusList" [value]="status.value">
           <span class="status-option">
             <span class="dot" [style.background]="status.color"></span>
@@ -68,75 +64,125 @@
 
       <div class="acoes-dia" *ngIf="data.acoes?.length; else mensagemUnicaTpl">
         <div class="acao-dia-item" *ngFor="let acao of data.acoes; let i = index">
+
           <div class="acao-dia-topo">
-            <div class="acao-dia-esquerda">
-              <strong>Ação {{ i + 1 }} {{ acao.canal }}</strong>
+            <button mat-icon-button type="button" class="btn-feito"
+              [class.feito]="acao.feito"
+              (click)="toggleAcaoFeita(i)"
+              [title]="acao.feito ? 'Marcar como pendente' : 'Marcar como feita'">
+              <mat-icon>{{ acao.feito ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+            </button>
+
+            <div class="acao-dia-esquerda" [class.acao-feita]="acao.feito">
+              <div class="acao-titulo">
+                <strong>Ação {{ i + 1 }} &bull; {{ getCanalLabel(acao.canal) }}</strong>
+                <span class="acao-horario" *ngIf="acao.horario">&nbsp;· {{ acao.horario }}</span>
+              </div>
+              <span class="acao-condicao"
+                *ngIf="acao.condicao && acao.condicao !== 'normal'">
+                {{ getCondicaoLabel(acao.condicao) }}
+              </span>
             </div>
 
-            <button mat-icon-button type="button" class="btn-acao-editar">
-              <mat-icon>edit</mat-icon>
-            </button>
+            <ng-container *ngIf="editandoAcaoIndex !== i">
+              <button mat-icon-button type="button" class="btn-acao-editar"
+                (click)="abrirEdicaoAcao(i)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </ng-container>
+
+            <ng-container *ngIf="editandoAcaoIndex === i">
+              <button mat-icon-button type="button" class="btn-acao-editar"
+                (click)="salvarEdicaoAcao(i)">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button mat-icon-button type="button" class="btn-acao-editar"
+                (click)="cancelarEdicaoAcao()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </ng-container>
           </div>
 
-          <div class="acao-mensagem">
+          <div class="acao-mensagem" *ngIf="editandoAcaoIndex !== i"
+            [class.acao-feita-texto]="acao.feito">
             {{ acao.mensagem || 'Sem mensagem cadastrada.' }}
           </div>
+
+          <textarea *ngIf="editandoAcaoIndex === i"
+            class="editor-textarea"
+            [(ngModel)]="acaoMensagemEditada"
+            rows="3">
+          </textarea>
         </div>
       </div>
 
       <ng-template #mensagemUnicaTpl>
         <div class="editor-header mt-8">
           <span>Mensagem</span>
-
-          <button *ngIf="!editandoMensagem" mat-icon-button (click)="abrirEdicaoMensagem()"
-            aria-label="Editar mensagem">
+          <button *ngIf="!editandoMensagem" mat-icon-button (click)="abrirEdicaoMensagem()">
             <mat-icon>edit</mat-icon>
           </button>
-
-          <button *ngIf="editandoMensagem" mat-icon-button (click)="salvarMensagem()" aria-label="Salvar mensagem">
+          <button *ngIf="editandoMensagem" mat-icon-button (click)="salvarMensagem()">
             <mat-icon>save</mat-icon>
           </button>
         </div>
-
-        <textarea class="editor-textarea" [(ngModel)]="mensagemEditada" [readonly]="!editandoMensagem" rows="4">
-    </textarea>
+        <textarea class="editor-textarea" [(ngModel)]="mensagemEditada"
+          [readonly]="!editandoMensagem" rows="4">
+        </textarea>
       </ng-template>
     </div>
 
-    <!-- atividade manual continua como antes -->
+    <!-- ATIVIDADE MANUAL -->
     <div class="editor-card" *ngIf="isManual">
       <div class="editor-header">
         <span>Descrição</span>
-
-        <button *ngIf="!editandoMensagem" mat-icon-button (click)="abrirEdicaoMensagem()" aria-label="Editar mensagem">
+        <button *ngIf="!editandoMensagem" mat-icon-button (click)="abrirEdicaoMensagem()">
           <mat-icon>edit</mat-icon>
         </button>
-
-        <button *ngIf="editandoMensagem" mat-icon-button (click)="salvarMensagem()" aria-label="Salvar mensagem">
+        <button *ngIf="editandoMensagem" mat-icon-button (click)="salvarMensagem()">
           <mat-icon>save</mat-icon>
         </button>
       </div>
-
-      <textarea class="editor-textarea" [(ngModel)]="mensagemEditada" [readonly]="!editandoMensagem" rows="4">
+      <textarea class="editor-textarea" [(ngModel)]="mensagemEditada"
+        [readonly]="!editandoMensagem" rows="4">
       </textarea>
     </div>
 
+    <!-- LOG DE ANOTAÇÕES -->
     <div class="editor-card">
       <div class="editor-header">
-        <span>Anotação</span>
-
-        <button *ngIf="!editandoAnotacao" mat-icon-button (click)="abrirEdicaoAnotacao()" aria-label="Editar anotação">
-          <mat-icon>edit</mat-icon>
-        </button>
-
-        <button *ngIf="editandoAnotacao" mat-icon-button (click)="salvarAnotacao()" aria-label="Salvar anotação">
-          <mat-icon>save</mat-icon>
-        </button>
+        <span>Anotações</span>
       </div>
 
-      <textarea class="editor-textarea" [(ngModel)]="anotacaoEditada" [readonly]="!editandoAnotacao"
-        placeholder="Adicione aqui uma observação..." rows="3">
-      </textarea>
+      <!-- Log de entradas -->
+      <div class="anotacao-log" *ngIf="getAnotacoes().length">
+        <div class="anotacao-entry" *ngFor="let nota of getAnotacoes()">
+          <div class="anotacao-texto">{{ nota.texto }}</div>
+          <div class="anotacao-data">{{ formatarData(nota.criadoEm) }}</div>
+        </div>
+      </div>
+
+      <!-- Anotação legada (campo antigo, somente leitura) -->
+      <div class="anotacao-log" *ngIf="!getAnotacoes().length && data.anotacao">
+        <div class="anotacao-entry anotacao-entry--legacy">
+          <div class="anotacao-texto">{{ data.anotacao }}</div>
+          <div class="anotacao-data">—</div>
+        </div>
+      </div>
+
+      <!-- Adicionar nova nota -->
+      <div class="anotacao-nova">
+        <textarea class="editor-textarea anotacao-input"
+          [(ngModel)]="novaAnotacao"
+          placeholder="Nova anotação..."
+          rows="2">
+        </textarea>
+        <button mat-stroked-button class="btn-add-nota"
+          (click)="adicionarNota()"
+          [disabled]="!novaAnotacao.trim()">
+          <mat-icon>add</mat-icon> Adicionar
+        </button>
+      </div>
     </div>
 
   </ng-container>
@@ -147,7 +193,6 @@
         <mat-label>Data do retorno</mat-label>
         <input matInput type="date" [(ngModel)]="novaDataStr">
       </mat-form-field>
-
       <mat-form-field appearance="outline" class="reagendar-field">
         <mat-label>Horário</mat-label>
         <input matInput type="time" [(ngModel)]="novaHora">
@@ -158,30 +203,23 @@
 
 <mat-dialog-actions align="end">
   <ng-container *ngIf="!modoReagendar; else acoesReagendar">
-
     <button *ngIf="!isManual" mat-button color="primary" (click)="abrirReagendamento()">
       Reagendar
     </button>
-
     <button mat-button (click)="copiarMensagem()">Copiar</button>
-
     <button *ngIf="!isManual && canalEh('whatsapp')" mat-button color="primary" (click)="abrirWhatsapp()">
       WhatsApp
     </button>
-
     <button *ngIf="!isManual && canalEh('email')" mat-button color="accent" (click)="abrirEmail()">
       E-mail
     </button>
-
     <button *ngIf="data.id" mat-button color="warn" (click)="excluirAtividadeAtual()">
       Excluir atividade
     </button>
-
     <button *ngIf="data.contatoId" mat-button color="warn" (click)="excluirProximasAtividades()">
       Excluir próximas
     </button>
-
-    <button mat-button mat-dialog-close>Fechar</button>
+    <button mat-button (click)="fechar()">Fechar</button>
   </ng-container>
 
   <ng-template #acoesReagendar>

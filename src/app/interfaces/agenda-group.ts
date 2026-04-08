@@ -5,11 +5,17 @@ export type AgendaCondicao =
   | 'se_nao_atender'
   | 'se_nao_responder';
 
+export interface AgendaAnotacao {
+  texto: string;
+  criadoEm: string;
+}
+
 export interface AgendaAcao {
   canal: string;
   mensagem: string;
   condicao?: AgendaCondicao;
   horario?: string;
+  feito?: boolean;
 }
 
 export interface AgendaEventMeta {
@@ -20,6 +26,7 @@ export interface AgendaEventMeta {
   contatoTelefone: string;
   contatoEmail: string;
   anotacao: string;
+  anotacaoLog: AgendaAnotacao[];
   status: string;
   dataPrevista: string;
   acoes: AgendaAcao[];

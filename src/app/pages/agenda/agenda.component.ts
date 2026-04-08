@@ -25,6 +25,7 @@ import {
   AgendaGroupedEmpresa,
   AgendaEventMeta,
   AgendaAcao,
+  AgendaAnotacao,
   AgendaCondicao,
 } from '../../interfaces/agenda-group';
 
@@ -44,10 +45,12 @@ export class AgendaComponent implements OnInit {
   expandedDayKey: string | null = null;
 
   readonly statusList = [
-    { label: 'Novo', value: 'novo', color: '#1e88e5' },
+    { label: 'Novo', value: 'novo', color: '#546e7a' },
     { label: 'Tentando contato', value: 'tentando_contato', color: '#e53935' },
     { label: 'Contatado', value: 'contatado', color: '#fb8c00' },
-    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#00acc1' },
+    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#1e88e5' },
+    { label: 'Reunião realizada', value: 'reuniao_realizada', color: '#00897b' },
+    { label: 'Reunião cancelada', value: 'reuniao_cancelada', color: '#f4511e' },
     { label: 'Proposta enviada', value: 'proposta_enviada', color: '#8e24aa' },
     { label: 'Fechado', value: 'fechado', color: '#43a047' },
     { label: 'Perdido', value: 'perdido', color: '#757575' },
@@ -69,10 +72,12 @@ export class AgendaComponent implements OnInit {
     const snapshot = await getDocs(atividadesRef);
 
     const statusCor: Record<string, { primary: string; secondary: string }> = {
-      novo: { primary: '#1e88e5', secondary: '#bbdefb' },
+      novo: { primary: '#546e7a', secondary: '#eceff1' },
       tentando_contato: { primary: '#e53935', secondary: '#ffcdd2' },
       contatado: { primary: '#fb8c00', secondary: '#ffe0b2' },
-      reuniao_agendada: { primary: '#00acc1', secondary: '#b2ebf2' },
+      reuniao_agendada: { primary: '#1e88e5', secondary: '#bbdefb' },
+      reuniao_realizada: { primary: '#00897b', secondary: '#b2dfdb' },
+      reuniao_cancelada: { primary: '#f4511e', secondary: '#fbe9e7' },
       proposta_enviada: { primary: '#8e24aa', secondary: '#e1bee7' },
       fechado: { primary: '#43a047', secondary: '#c8e6c9' },
       perdido: { primary: '#616161', secondary: '#eeeeee' },
@@ -108,7 +113,8 @@ export class AgendaComponent implements OnInit {
                 ? acao.condicao
                 : 'normal'
             ) as AgendaCondicao,
-            horario: String(acao?.horario || '').trim()
+            horario: String(acao?.horario || '').trim(),
+            feito: Boolean(acao?.feito ?? false)
           }))
           : [
             {
@@ -119,6 +125,13 @@ export class AgendaComponent implements OnInit {
             }
           ];
 
+        const anotacaoLog: AgendaAnotacao[] = Array.isArray(data['anotacaoLog'])
+          ? data['anotacaoLog'].map((n: any) => ({
+            texto: String(n?.texto || ''),
+            criadoEm: String(n?.criadoEm || '')
+          }))
+          : [];
+
         const meta: AgendaEventMeta = {
           id: docSnap.id,
           contatoId,
@@ -127,6 +140,7 @@ export class AgendaComponent implements OnInit {
           contatoTelefone,
           contatoEmail,
           anotacao: String(data['anotacao'] || ''),
+          anotacaoLog,
           status: String(data['status'] || ''),
           dataPrevista: String(data['dataPrevista'] || ''),
           acoes
@@ -287,6 +301,7 @@ export class AgendaComponent implements OnInit {
         contatoTelefone: meta.contatoTelefone,
         contatoEmail: meta.contatoEmail,
         anotacao: meta.anotacao || '',
+        anotacaoLog: meta.anotacaoLog || [],
         status: meta.status,
         dataPrevista: meta.dataPrevista,
         acoes: meta.acoes || [],
@@ -323,6 +338,7 @@ export class AgendaComponent implements OnInit {
           contatoTelefone: '',
           contatoEmail: '',
           anotacao: '',
+          anotacaoLog: [],
           status: 'novo',
           dataPrevista: date.toISOString(),
           acoes: [
