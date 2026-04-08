@@ -10,9 +10,10 @@ export const STATUS_COMERCIAL: StatusComercial[] = [
   { label: 'Tentando contato',   value: 'tentando_contato',   color: '#e53935', colorSecondary: '#ffcdd2' },
   { label: 'Contatado',          value: 'contatado',           color: '#fb8c00', colorSecondary: '#ffe0b2' },
   { label: 'Reunião agendada',   value: 'reuniao_agendada',   color: '#1e88e5', colorSecondary: '#bbdefb' },
-  { label: 'Reunião realizada',  value: 'reuniao_realizada',  color: '#00897b', colorSecondary: '#b2dfdb' },
-  { label: 'Reunião cancelada',  value: 'reuniao_cancelada',  color: '#f4511e', colorSecondary: '#fbe9e7' },
-  { label: 'Proposta enviada',   value: 'proposta_enviada',   color: '#8e24aa', colorSecondary: '#e1bee7' },
+  { label: 'Reunião realizada',  value: 'reuniao_realizada',   color: '#00897b', colorSecondary: '#b2dfdb' },
+  { label: 'Reunião cancelada',  value: 'reuniao_cancelada',   color: '#f4511e', colorSecondary: '#fbe9e7' },
+  { label: 'Aguardando retorno', value: 'aguardando_retorno',  color: '#0288d1', colorSecondary: '#b3e5fc' },
+  { label: 'Proposta enviada',   value: 'proposta_enviada',    color: '#8e24aa', colorSecondary: '#e1bee7' },
   { label: 'Fechado',            value: 'fechado',             color: '#43a047', colorSecondary: '#c8e6c9' },
   { label: 'Perdido',            value: 'perdido',             color: '#757575', colorSecondary: '#eeeeee' },
 ];
