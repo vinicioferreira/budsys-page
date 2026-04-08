@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CadenciaService } from '../../../services/cadencia.service';
 import { ContatoService } from '../../../services/contato.service';
 import { AgendaService } from '../../../services/agenda.service';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-modal-cadastro-cliente-potencial',
@@ -17,7 +18,9 @@ export class ModalCadastroClientePotencialComponent implements OnInit {
     telefone: '',
     empresa: '',
     mensagem: '',
-    canal: ''
+    canal: '',
+    contatarEm: null as Date | null,
+    observacaoContatar: ''
   };
 
   listaCanais: any[] = [];
@@ -33,6 +36,10 @@ export class ModalCadastroClientePotencialComponent implements OnInit {
     if (data) {
       this.cliente = { ...this.cliente, ...data };
       this.modoEdicao = !!data.id;
+      // Converte Timestamp do Firestore → Date para o datepicker
+      if (data.contatarEm?.toDate) {
+        this.cliente.contatarEm = data.contatarEm.toDate();
+      }
     }
   }
 
@@ -51,13 +58,17 @@ export class ModalCadastroClientePotencialComponent implements OnInit {
 
   async salvar(): Promise<void> {
     try {
-      const dadosParaSalvar = {
+      const dadosParaSalvar: any = {
         nome: this.cliente.nome,
         email: this.cliente.email,
         telefone: this.cliente.telefone,
         empresa: this.cliente.empresa,
         mensagem: this.cliente.mensagem,
-        canal: this.cliente.canal
+        canal: this.cliente.canal,
+        observacaoContatar: this.cliente.observacaoContatar || '',
+        contatarEm: this.cliente.contatarEm
+          ? Timestamp.fromDate(new Date(this.cliente.contatarEm))
+          : null,
       };
 
       let contatoId = this.cliente.id;
@@ -75,6 +86,12 @@ export class ModalCadastroClientePotencialComponent implements OnInit {
       console.error('❌ Erro real ao salvar cliente:', error);
       alert('❌ Ocorreu um erro ao salvar o cliente');
     }
+  }
+
+  definirData(meses: number): void {
+    const d = new Date();
+    d.setMonth(d.getMonth() + meses);
+    this.cliente.contatarEm = d;
   }
 
   fechar(): void {

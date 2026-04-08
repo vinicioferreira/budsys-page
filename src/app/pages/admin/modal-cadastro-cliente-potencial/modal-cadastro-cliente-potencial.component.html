@@ -37,6 +37,27 @@
     <mat-label>Mensagem</mat-label>
     <input matInput [(ngModel)]="cliente.mensagem">
   </mat-form-field>
+
+  <div class="contatar-em-section">
+    <mat-form-field appearance="fill" class="contatar-em-field">
+      <mat-label>Contatar em</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="cliente.contatarEm" placeholder="DD/MM/AAAA">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <div class="atalhos-data">
+      <button type="button" class="atalho-btn" (click)="definirData(3)">+3 meses</button>
+      <button type="button" class="atalho-btn" (click)="definirData(6)">+6 meses</button>
+      <button type="button" class="atalho-btn" (click)="definirData(12)">+1 ano</button>
+      <button type="button" class="atalho-btn atalho-limpar" *ngIf="cliente.contatarEm" (click)="cliente.contatarEm = null">Limpar</button>
+    </div>
+
+    <mat-form-field appearance="fill" class="full-width" *ngIf="cliente.contatarEm">
+      <mat-label>Observação (motivo / próximo passo)</mat-label>
+      <textarea matInput [(ngModel)]="cliente.observacaoContatar" rows="2"></textarea>
+    </mat-form-field>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

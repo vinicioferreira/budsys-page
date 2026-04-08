@@ -84,6 +84,22 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="contatarEm">
+        <th class="th-table" mat-header-cell *matHeaderCellDef>Contatar em</th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">
+          <ng-container *ngIf="badgeContatarEm(cliente) as badge">
+            <span class="contatar-badge" [ngClass]="badge.classe">
+              <mat-icon class="contatar-icon">schedule</mat-icon>
+              {{ badge.label }}
+            </span>
+            <div class="contatar-obs" *ngIf="cliente.observacaoContatar" [matTooltip]="cliente.observacaoContatar">
+              <mat-icon class="obs-icon">notes</mat-icon>
+            </div>
+          </ng-container>
+          <span *ngIf="!badgeContatarEm(cliente)" class="sem-atividade">—</span>
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="nome">
         <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
         <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.nome }}</td>

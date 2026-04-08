@@ -32,7 +32,8 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
 import { CadenciaComponent } from './pages/cadencias/cadencia.component';
 import { ModalCadastroCadenciaComponent } from './pages/cadencias/modal-cadastro-cadencia/modal-cadastro-cadencia.component';
 import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
+import { MatOptionModule, MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ModalCadastroClientePotencialComponent } from './pages/admin/modal-cadastro-cliente-potencial/modal-cadastro-cliente-potencial.component';
 import { ModalMessageComponent } from './pages/agenda/modal-message/modal-message.component';
 import { BlogListComponent } from './pages/blog/blog-list/blog-list.component';
@@ -83,6 +84,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatExpansionModule,
     MatSelectModule,
     MatOptionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     HttpClientModule,
     MatTooltipModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -94,7 +97,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideFirestore(() => getFirestore())
+    provideFirestore(() => getFirestore()),
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
   ],
   bootstrap: [AppComponent]
 })

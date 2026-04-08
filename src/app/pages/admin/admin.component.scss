@@ -40,7 +40,7 @@
 
 table {
   width: 100%;
-  min-width: 1420px;
+  min-width: 1570px;
   table-layout: fixed;
   border-collapse: collapse;
 }
@@ -208,6 +208,61 @@ table {
 
 .mat-column-proximaAtividade {
   width: 170px;
+}
+
+.mat-column-contatarEm {
+  width: 150px;
+}
+
+.contatar-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+
+  &.contatar-atrasado {
+    background: #ffebee;
+    color: #c62828;
+  }
+
+  &.contatar-hoje {
+    background: #fff3e0;
+    color: #e65100;
+  }
+
+  &.contatar-breve {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.contatar-futuro {
+    background: #e8eaf6;
+    color: #283593;
+  }
+}
+
+.contatar-icon {
+  font-size: 13px;
+  height: 13px;
+  width: 13px;
+}
+
+.contatar-obs {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  cursor: help;
+  color: #9e9e9e;
+
+  .obs-icon {
+    font-size: 14px;
+    height: 14px;
+    width: 14px;
+  }
 }
 
 .proxima-atividade {

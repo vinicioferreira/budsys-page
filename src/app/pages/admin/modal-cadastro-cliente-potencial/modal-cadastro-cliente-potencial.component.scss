@@ -5,5 +5,54 @@
 mat-dialog-content {
   display: flex;
   flex-direction: column;
-  gap: 12px; // espaçamento entre os campos
+  gap: 12px;
+}
+
+.contatar-em-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: #f5f8ff;
+  border-radius: 10px;
+  border: 1px solid #e3eaff;
+}
+
+.contatar-em-field {
+  width: 100%;
+}
+
+.atalhos-data {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.atalho-btn {
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid #c5cae9;
+  background: #fff;
+  color: #3949ab;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #3949ab;
+    color: #fff;
+    border-color: #3949ab;
+  }
+
+  &.atalho-limpar {
+    border-color: #ef9a9a;
+    color: #e53935;
+
+    &:hover {
+      background: #e53935;
+      color: #fff;
+      border-color: #e53935;
+    }
+  }
 }

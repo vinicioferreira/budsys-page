@@ -4,14 +4,36 @@
 
   <div class="page-header">
     <h2 class="page-title">Dashboard</h2>
-    <div class="filtro-periodo">
-      <app-button
-        *ngFor="let f of filtros"
-        variant="outline"
-        [active]="filtroSelecionado === f.value"
-        [textButton]="f.label"
-        (click)="selecionarFiltro(f.value)">
-      </app-button>
+
+    <div class="filtro-container">
+      <div class="filtro-presets">
+        <app-button
+          *ngFor="let f of filtros"
+          variant="outline"
+          [active]="filtroSelecionado === f.value"
+          [textButton]="f.label"
+          (click)="aplicarPreset(f.value)">
+        </app-button>
+      </div>
+
+      <div class="filtro-datas">
+        <mat-form-field appearance="outline" class="filtro-date-field">
+          <mat-label>De</mat-label>
+          <input matInput [matDatepicker]="pickerInicio" [ngModel]="dataInicio"
+            (dateChange)="onDataInicioChange($event.value)">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filtro-date-field">
+          <mat-label>Até</mat-label>
+          <input matInput [matDatepicker]="pickerFim" [ngModel]="dataFim"
+            [min]="dataFimMin"
+            (dateChange)="onDataFimChange($event.value)">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerFim"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFim></mat-datepicker>
+        </mat-form-field>
+      </div>
     </div>
   </div>
 
@@ -92,6 +114,49 @@
             [title]="etapa.label + ': ' + etapa.count">
           </div>
         </ng-container>
+      </div>
+    </div>
+
+    <!-- A contatar -->
+    <div class="section-title">A contatar</div>
+
+    <div class="contatar-card">
+      <div class="contatar-kpis">
+        <div class="contatar-kpi contatar-atrasado" *ngIf="contatarAtrasados > 0">
+          <mat-icon>warning</mat-icon>
+          <span class="contatar-kpi-num">{{ contatarAtrasados }}</span>
+          <span class="contatar-kpi-label">Atrasado{{ contatarAtrasados > 1 ? 's' : '' }}</span>
+        </div>
+        <div class="contatar-kpi contatar-hoje">
+          <mat-icon>today</mat-icon>
+          <span class="contatar-kpi-num">{{ contatarHoje }}</span>
+          <span class="contatar-kpi-label">Hoje</span>
+        </div>
+        <div class="contatar-kpi contatar-breve">
+          <mat-icon>date_range</mat-icon>
+          <span class="contatar-kpi-num">{{ contatarEstaSemana }}</span>
+          <span class="contatar-kpi-label">Esta semana</span>
+        </div>
+        <div class="contatar-kpi contatar-futuro">
+          <mat-icon>event_note</mat-icon>
+          <span class="contatar-kpi-num">{{ contatarProximos }}</span>
+          <span class="contatar-kpi-label">Próximos 30 dias</span>
+        </div>
+      </div>
+
+      <div class="contatar-lista" *ngIf="contatarLista.length > 0">
+        <div class="contatar-item" *ngFor="let item of contatarLista">
+          <span class="contatar-badge-mini" [ngClass]="item.classe">{{ item.labelData }}</span>
+          <span class="contatar-nome">{{ item.nome }}</span>
+          <span class="contatar-empresa" *ngIf="item.empresa">· {{ item.empresa }}</span>
+          <span class="contatar-obs-dash" *ngIf="item.observacao" [matTooltip]="item.observacao">
+            <mat-icon>notes</mat-icon>
+          </span>
+        </div>
+      </div>
+
+      <div class="contatar-vazio" *ngIf="contatarLista.length === 0 && contatarAtrasados === 0">
+        Nenhum contato agendado para os próximos 30 dias.
       </div>
     </div>
 

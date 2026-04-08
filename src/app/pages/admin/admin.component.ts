@@ -19,6 +19,7 @@ export class AdminComponent {
     'seqId',
     'status',
     'proximaAtividade',
+    'contatarEm',
     'nome',
     'email',
     'telefone',
@@ -141,6 +142,26 @@ export class AdminComponent {
     const hora = String(d.getHours()).padStart(2, '0');
     const min = String(d.getMinutes()).padStart(2, '0');
     return `${dia}/${mes} ${hora}:${min}`;
+  }
+
+  badgeContatarEm(cliente: any): { label: string; classe: string } | null {
+    const raw = cliente.contatarEm;
+    if (!raw) return null;
+    const data = raw?.toDate ? raw.toDate() : new Date(raw);
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const alvo = new Date(data);
+    alvo.setHours(0, 0, 0, 0);
+    const diffDias = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
+
+    if (diffDias < 0)  return { label: `Atrasado ${Math.abs(diffDias)}d`, classe: 'contatar-atrasado' };
+    if (diffDias === 0) return { label: 'Hoje',                            classe: 'contatar-hoje' };
+    if (diffDias === 1) return { label: 'Amanhã',                          classe: 'contatar-breve' };
+    if (diffDias <= 7)  return { label: `Em ${diffDias} dias`,             classe: 'contatar-breve' };
+    const dia = String(alvo.getDate()).padStart(2, '0');
+    const mes = String(alvo.getMonth() + 1).padStart(2, '0');
+    const ano = alvo.getFullYear();
+    return { label: `${dia}/${mes}/${ano}`, classe: 'contatar-futuro' };
   }
 
   getCanalLabel(canal: string): string {
