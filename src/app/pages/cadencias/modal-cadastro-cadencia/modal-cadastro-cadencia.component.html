@@ -22,9 +22,7 @@
 
   <div class="acoes-header">
     <h4>Ações do dia</h4>
-    <button mat-stroked-button color="primary" type="button" (click)="adicionarAcao()">
-      + Adicionar ação
-    </button>
+    <app-button variant="outline" textButton="+ Adicionar ação" (click)="adicionarAcao()"></app-button>
   </div>
 
   <div class="acoes-lista" *ngFor="let acao of novaEtapa.acoes; let i = index">
@@ -72,8 +70,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-stroked-button (click)="salvarCadencia()">
-    {{ cadenciaId ? 'Salvar Edição' : 'Criar Cadência' }}
-  </button>
-  <button mat-button (click)="fechar()">Fechar</button>
+  <app-button variant="outline" (click)="fechar()" textButton="Fechar"></app-button>
+  <app-button [textButton]="cadenciaId ? 'Salvar Edição' : 'Criar Cadência'" (click)="salvarCadencia()"></app-button>
 </mat-dialog-actions>

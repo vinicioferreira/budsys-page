@@ -9,9 +9,9 @@
 
   <div class="agenda-toolbar">
     <div class="view-buttons">
-      <button mat-button (click)="view = 'month'">Mês</button>
-      <button mat-button (click)="view = 'week'">Semana</button>
-      <button mat-button (click)="view = 'day'">Dia</button>
+      <app-button variant="outline" textButton="Mês"    [active]="view === 'month'" (click)="view = 'month'"></app-button>
+      <app-button variant="outline" textButton="Semana" [active]="view === 'week'"  (click)="view = 'week'"></app-button>
+      <app-button variant="outline" textButton="Dia"    [active]="view === 'day'"   (click)="view = 'day'"></app-button>
     </div>
 
     <div class="navigation-buttons">
@@ -33,7 +33,7 @@
     <input type="text" placeholder="Título da atividade" [(ngModel)]="newTitle">
     <input type="date" [(ngModel)]="newDateStr">
     <input type="time" [(ngModel)]="newTimeStr">
-    <button mat-raised-button color="primary" (click)="onAddActivity()">Adicionar</button>
+    <app-button textButton="Adicionar" icon="add" (click)="onAddActivity()"></app-button>
   </div>
 
   <div class="status-legenda">

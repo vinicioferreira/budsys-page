@@ -5,7 +5,7 @@
     <input type="email" [(ngModel)]="email" placeholder="Email" />
     <input type="password" [(ngModel)]="password" placeholder="Senha" />
 
-    <button (click)="login()">Entrar</button>
+    <app-button textButton="Entrar" size="100" (click)="login()"></app-button>
 
     <p *ngIf="error" class="error">{{ error }}</p>
   </div>

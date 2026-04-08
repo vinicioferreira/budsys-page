@@ -1,4 +1,10 @@
-<button class="botao-primario" [disabled]="disabled">
+<button
+  [class.botao-primario]="variant === 'primary'"
+  [class.botao-outline]="variant === 'outline'"
+  [class.botao-danger]="variant === 'danger'"
+  [class.ativo]="active"
+  [type]="type"
+  [disabled]="disabled">
   <ng-container *ngIf="!isMobile">
     <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
     <span>{{ textButton }}</span>

@@ -177,11 +177,10 @@
           placeholder="Nova anotação..."
           rows="2">
         </textarea>
-        <button mat-stroked-button class="btn-add-nota"
-          (click)="adicionarNota()"
-          [disabled]="!novaAnotacao.trim()">
-          <mat-icon>add</mat-icon> Adicionar
-        </button>
+        <app-button variant="outline" textButton="Adicionar" icon="add"
+          [disabled]="!novaAnotacao.trim()"
+          (click)="adicionarNota()">
+        </app-button>
       </div>
     </div>
 
@@ -203,27 +202,17 @@
 
 <mat-dialog-actions align="end">
   <ng-container *ngIf="!modoReagendar; else acoesReagendar">
-    <button *ngIf="!isManual" mat-button color="primary" (click)="abrirReagendamento()">
-      Reagendar
-    </button>
-    <button mat-button (click)="copiarMensagem()">Copiar</button>
-    <button *ngIf="!isManual && canalEh('whatsapp')" mat-button color="primary" (click)="abrirWhatsapp()">
-      WhatsApp
-    </button>
-    <button *ngIf="!isManual && canalEh('email')" mat-button color="accent" (click)="abrirEmail()">
-      E-mail
-    </button>
-    <button *ngIf="data.id" mat-button color="warn" (click)="excluirAtividadeAtual()">
-      Excluir atividade
-    </button>
-    <button *ngIf="data.contatoId" mat-button color="warn" (click)="excluirProximasAtividades()">
-      Excluir próximas
-    </button>
-    <button mat-button (click)="fechar()">Fechar</button>
+    <app-button *ngIf="!isManual" variant="outline" textButton="Reagendar" icon="event" (click)="abrirReagendamento()"></app-button>
+    <app-button variant="outline" textButton="Copiar" icon="content_copy" (click)="copiarMensagem()"></app-button>
+    <app-button *ngIf="!isManual && canalEh('whatsapp')" variant="outline" textButton="WhatsApp" icon="whatsapp" (click)="abrirWhatsapp()"></app-button>
+    <app-button *ngIf="!isManual && canalEh('email')" variant="outline" textButton="E-mail" icon="email" (click)="abrirEmail()"></app-button>
+    <app-button *ngIf="data.id" variant="danger" textButton="Excluir atividade" (click)="excluirAtividadeAtual()"></app-button>
+    <app-button *ngIf="data.contatoId" variant="danger" textButton="Excluir próximas" (click)="excluirProximasAtividades()"></app-button>
+    <app-button variant="outline" textButton="Fechar" (click)="fechar()"></app-button>
   </ng-container>
 
   <ng-template #acoesReagendar>
-    <button mat-button (click)="cancelarReagendamento()">Cancelar</button>
-    <button mat-button color="primary" (click)="reagendar()">Salvar</button>
+    <app-button variant="outline" textButton="Cancelar" (click)="cancelarReagendamento()"></app-button>
+    <app-button textButton="Salvar" icon="save" (click)="reagendar()"></app-button>
   </ng-template>
 </mat-dialog-actions>

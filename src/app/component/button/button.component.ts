@@ -11,6 +11,9 @@ export class ButtonComponent implements OnInit {
   @Input() size: 'auto' | '100' = 'auto';
   @Input() disabled: boolean = false;
   @Input() shortText: string = '';
+  @Input() variant: 'primary' | 'outline' | 'danger' = 'primary';
+  @Input() active: boolean = false;
+  @Input() type: 'button' | 'submit' | 'reset' = 'button';
 
   isMobile: boolean = false;
 

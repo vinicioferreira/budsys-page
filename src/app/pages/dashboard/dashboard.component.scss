@@ -6,11 +6,26 @@
   background: #f7f8fa;
 }
 
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .page-title {
-  margin: 0 0 24px;
+  margin: 0;
   font-size: 22px;
   font-weight: 700;
   color: #212121;
+}
+
+.filtro-periodo {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .loading {

@@ -4,6 +4,15 @@
 
   <div class="page-header">
     <h2 class="page-title">Dashboard</h2>
+    <div class="filtro-periodo">
+      <app-button
+        *ngFor="let f of filtros"
+        variant="outline"
+        [active]="filtroSelecionado === f.value"
+        [textButton]="f.label"
+        (click)="selecionarFiltro(f.value)">
+      </app-button>
+    </div>
   </div>
 
   <div class="loading" *ngIf="carregando">

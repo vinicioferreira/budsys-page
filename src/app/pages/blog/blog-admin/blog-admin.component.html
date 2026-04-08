@@ -32,13 +32,8 @@
                                 }}
                             </td>
                             <td class="actions-cell">
-                                <button type="button" class="btn-secondary" (click)="editar(item)">
-                                    Editar
-                                </button>
-
-                                <button type="button" class="btn-danger" (click)="excluir(item)">
-                                    Excluir
-                                </button>
+                                <app-button variant="outline" textButton="Editar" icon="edit" (click)="editar(item)"></app-button>
+                                <app-button variant="danger" textButton="Excluir" icon="delete" (click)="excluir(item)"></app-button>
                             </td>
                         </tr>
                     </tbody>
@@ -86,17 +81,12 @@
                 </div>
 
                 <div class="actions">
-                    <button type="submit" [disabled]="loading || !blogForm.form.valid">
-                        {{
-                        loading
-                        ? 'Salvando...'
-                        : (editingId ? 'Atualizar artigo' : 'Publicar')
-                        }}
-                    </button>
-
-                    <button *ngIf="editingId" type="button" class="btn-secondary" (click)="limparFormulario()">
-                        Cancelar edição
-                    </button>
+                    <app-button
+                      type="submit"
+                      [textButton]="loading ? 'Salvando...' : (editingId ? 'Atualizar artigo' : 'Publicar')"
+                      [disabled]="loading || !blogForm.form.valid">
+                    </app-button>
+                    <app-button *ngIf="editingId" variant="outline" textButton="Cancelar edição" (click)="limparFormulario()"></app-button>
                 </div>
             </form>
         </section>

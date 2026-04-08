@@ -40,6 +40,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-raised-button color="primary" (click)="salvar()">Salvar</button>
-  <button mat-button (click)="fechar()">Cancelar</button>
+  <app-button variant="outline" textButton="Cancelar" (click)="fechar()"></app-button>
+  <app-button textButton="Salvar" icon="save" (click)="salvar()"></app-button>
 </mat-dialog-actions>

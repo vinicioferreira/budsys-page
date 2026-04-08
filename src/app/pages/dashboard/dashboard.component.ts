@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, collection, getDocs } from '@angular/fire/firestore';
+import { Firestore, collection, getDocs, query, where, Timestamp } from '@angular/fire/firestore';
 import { STATUS_COMERCIAL } from '../../shared/status-comercial';
 
 interface EtapaFunil {
@@ -18,6 +18,11 @@ interface DistribuicaoItem {
   percentual: number;
 }
 
+interface FiltroPeriodo {
+  label: string;
+  value: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -34,15 +39,79 @@ export class DashboardComponent implements OnInit {
   distribuicao: DistribuicaoItem[] = [];
   carregando = true;
 
+  filtros: FiltroPeriodo[] = [
+    { label: 'Mês atual',    value: 'mes_atual' },
+    { label: 'Mês anterior', value: 'mes_anterior' },
+    { label: '3 meses',      value: '3_meses' },
+    { label: '6 meses',      value: '6_meses' },
+    { label: '1 ano',        value: '1_ano' },
+  ];
+
+  filtroSelecionado = 'mes_atual';
+
   constructor(private firestore: Firestore) {}
 
   ngOnInit(): void {
     this.carregarMetricas();
   }
 
+  selecionarFiltro(value: string): void {
+    if (this.filtroSelecionado === value) return;
+    this.filtroSelecionado = value;
+    this.carregarMetricas();
+  }
+
+  private getRangeData(): { inicio: Date; fim: Date } {
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = hoje.getMonth();
+
+    switch (this.filtroSelecionado) {
+      case 'mes_atual':
+        return {
+          inicio: new Date(ano, mes, 1),
+          fim: new Date(ano, mes + 1, 0, 23, 59, 59, 999),
+        };
+      case 'mes_anterior':
+        return {
+          inicio: new Date(ano, mes - 1, 1),
+          fim: new Date(ano, mes, 0, 23, 59, 59, 999),
+        };
+      case '3_meses':
+        return {
+          inicio: new Date(ano, mes - 2, 1),
+          fim: new Date(ano, mes + 1, 0, 23, 59, 59, 999),
+        };
+      case '6_meses':
+        return {
+          inicio: new Date(ano, mes - 5, 1),
+          fim: new Date(ano, mes + 1, 0, 23, 59, 59, 999),
+        };
+      case '1_ano':
+        return {
+          inicio: new Date(ano - 1, mes + 1, 1),
+          fim: new Date(ano, mes + 1, 0, 23, 59, 59, 999),
+        };
+      default:
+        return {
+          inicio: new Date(ano, mes, 1),
+          fim: new Date(ano, mes + 1, 0, 23, 59, 59, 999),
+        };
+    }
+  }
+
   async carregarMetricas(): Promise<void> {
+    this.carregando = true;
     try {
-      const snapshot = await getDocs(collection(this.firestore, 'contatos'));
+      const { inicio, fim } = this.getRangeData();
+
+      const q = query(
+        collection(this.firestore, 'contatos'),
+        where('dataCadastro', '>=', Timestamp.fromDate(inicio)),
+        where('dataCadastro', '<=', Timestamp.fromDate(fim))
+      );
+
+      const snapshot = await getDocs(q);
 
       const agrupado: Record<string, number> = {};
       for (const doc of snapshot.docs) {
@@ -55,8 +124,8 @@ export class DashboardComponent implements OnInit {
       const soma = (...statuses: string[]) =>
         statuses.reduce((acc, s) => acc + (agrupado[s] || 0), 0);
 
-      const contatados = soma('contatado', 'reuniao_agendada', 'reuniao_realizada', 'reuniao_cancelada', 'proposta_enviada', 'fechado');
-      const reunioes   = soma('reuniao_realizada', 'proposta_enviada', 'fechado');
+      const contatados = soma('contatado', 'aguardando_retorno', 'reuniao_agendada', 'reuniao_realizada', 'reuniao_cancelada', 'proposta_enviada', 'fechado');
+      const reunioes   = soma('reuniao_agendada', 'reuniao_realizada', 'proposta_enviada', 'fechado');
       const propostas  = soma('proposta_enviada', 'fechado');
 
       this.fechados    = agrupado['fechado'] || 0;
@@ -67,11 +136,11 @@ export class DashboardComponent implements OnInit {
       const pct = (a: number, b: number) => b > 0 ? Math.round((a / b) * 100) : 0;
 
       this.etapasFunil = [
-        { label: 'Leads',      icon: 'group_add',    color: '#546e7a', count: this.total,  conversao: null },
-        { label: 'Contatados', icon: 'phone_enabled', color: '#fb8c00', count: contatados, conversao: pct(contatados, this.total) },
-        { label: 'Reuniões',   icon: 'event',         color: '#1e88e5', count: reunioes,   conversao: pct(reunioes, contatados) },
-        { label: 'Propostas',  icon: 'description',   color: '#8e24aa', count: propostas,  conversao: pct(propostas, reunioes) },
-        { label: 'Fechados',   icon: 'handshake',     color: '#43a047', count: this.fechados, conversao: pct(this.fechados, propostas) },
+        { label: 'Leads',      icon: 'group_add',     color: '#546e7a', count: this.total,     conversao: null },
+        { label: 'Contatados', icon: 'phone_enabled',  color: '#fb8c00', count: contatados,     conversao: pct(contatados, this.total) },
+        { label: 'Reuniões',   icon: 'event',          color: '#1e88e5', count: reunioes,       conversao: pct(reunioes, contatados) },
+        { label: 'Propostas',  icon: 'description',    color: '#8e24aa', count: propostas,      conversao: pct(propostas, reunioes) },
+        { label: 'Fechados',   icon: 'handshake',      color: '#43a047', count: this.fechados,  conversao: pct(this.fechados, propostas) },
       ];
 
       this.distribuicao = STATUS_COMERCIAL
@@ -93,6 +162,6 @@ export class DashboardComponent implements OnInit {
   }
 
   iconeBg(color: string): string {
-    return color + '18'; // hex alpha ~10%
+    return color + '18';
   }
 }

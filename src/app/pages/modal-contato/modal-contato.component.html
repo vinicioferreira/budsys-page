@@ -30,6 +30,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="fechar()">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="enviar()" [disabled]="!contatoForm.valid">Enviar</button>
+  <app-button variant="outline" textButton="Cancelar" (click)="fechar()"></app-button>
+  <app-button textButton="Enviar" icon="send" [disabled]="!contatoForm.valid" (click)="enviar()"></app-button>
 </mat-dialog-actions>
