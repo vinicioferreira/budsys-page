@@ -33,6 +33,27 @@
     <input type="text" placeholder="Título da atividade" [(ngModel)]="newTitle">
     <input type="date" [(ngModel)]="newDateStr">
     <input type="time" [(ngModel)]="newTimeStr">
+
+    <div class="lead-autocomplete-wrap">
+      <mat-icon class="lead-icon">person_search</mat-icon>
+      <input
+        class="lead-input"
+        type="text"
+        placeholder="Vincular lead (opcional)"
+        [(ngModel)]="contatosBusca"
+        (input)="filtrarContatos()"
+        [matAutocomplete]="autoLead">
+      <button *ngIf="contatoSelecionado" type="button" class="lead-clear" (click)="limparContato()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-autocomplete #autoLead="matAutocomplete" (optionSelected)="selecionarContato($event.option.value)">
+        <mat-option *ngFor="let c of contatosSugestoes" [value]="c">
+          <span class="lead-option-nome">{{ c.nome }}</span>
+          <span class="lead-option-empresa" *ngIf="c.empresa"> · {{ c.empresa }}</span>
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+
     <app-button textButton="Adicionar" icon="add" (click)="onAddActivity()"></app-button>
   </div>
 

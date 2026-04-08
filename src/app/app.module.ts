@@ -34,6 +34,7 @@ import { ModalCadastroCadenciaComponent } from './pages/cadencias/modal-cadastro
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule, MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ModalCadastroClientePotencialComponent } from './pages/admin/modal-cadastro-cliente-potencial/modal-cadastro-cliente-potencial.component';
 import { ModalMessageComponent } from './pages/agenda/modal-message/modal-message.component';
 import { BlogListComponent } from './pages/blog/blog-list/blog-list.component';
@@ -86,6 +87,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatOptionModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatAutocompleteModule,
     HttpClientModule,
     MatTooltipModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),

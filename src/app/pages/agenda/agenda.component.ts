@@ -6,6 +6,8 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
+  orderBy,
 } from '@angular/fire/firestore';
 import {
   addDays,
@@ -45,6 +47,12 @@ export class AgendaComponent implements OnInit {
   locale: string = 'pt-BR';
   expandedDayKey: string | null = null;
 
+  // Lead vinculado à atividade manual
+  contatosBusca: string = '';
+  contatosSugestoes: { id: string; nome: string; empresa: string; label: string }[] = [];
+  todosContatos:    { id: string; nome: string; empresa: string; label: string }[] = [];
+  contatoSelecionado: { id: string; nome: string; empresa: string } | null = null;
+
   readonly statusList = STATUS_COMERCIAL;
 
   constructor(
@@ -56,6 +64,7 @@ export class AgendaComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarAtividades();
+    this.carregarContatos();
   }
 
   async carregarAtividades(): Promise<void> {
@@ -330,6 +339,45 @@ export class AgendaComponent implements OnInit {
     ];
   }
 
+  async carregarContatos(): Promise<void> {
+    try {
+      const q = query(collection(this.firestore, 'contatos'), orderBy('nome'));
+      const snap = await getDocs(q);
+      this.todosContatos = snap.docs.map(d => {
+        const data = d.data();
+        const nome    = String(data['nome']    || '').trim();
+        const empresa = String(data['empresa'] || '').trim();
+        return {
+          id: d.id,
+          nome,
+          empresa,
+          label: empresa ? `${nome} · ${empresa}` : nome,
+        };
+      });
+      this.contatosSugestoes = [...this.todosContatos];
+    } catch (e) {
+      console.error('Erro ao carregar contatos:', e);
+    }
+  }
+
+  filtrarContatos(): void {
+    const termo = (this.contatosBusca || '').toLowerCase();
+    this.contatosSugestoes = termo
+      ? this.todosContatos.filter(c => c.label.toLowerCase().includes(termo))
+      : [...this.todosContatos];
+  }
+
+  selecionarContato(contato: { id: string; nome: string; empresa: string; label: string }): void {
+    this.contatoSelecionado = { id: contato.id, nome: contato.nome, empresa: contato.empresa };
+    this.contatosBusca = contato.label;
+  }
+
+  limparContato(): void {
+    this.contatoSelecionado = null;
+    this.contatosBusca = '';
+    this.contatosSugestoes = [...this.todosContatos];
+  }
+
   async onAddActivity(): Promise<void> {
     if (!this.newTitle || !this.newDateStr || !this.newTimeStr) {
       alert('Preencha título, data e hora.');
@@ -341,7 +389,11 @@ export class AgendaComponent implements OnInit {
     const date = new Date(year, month - 1, day, hour, minute, 0);
 
     try {
-      await this.agendaService.criarAtividadeManual(this.newTitle, date);
+      await this.agendaService.criarAtividadeManual(
+        this.newTitle,
+        date,
+        this.contatoSelecionado ?? undefined
+      );
       await this.carregarAtividades();
 
       this.viewDate = new Date(date);
@@ -350,6 +402,7 @@ export class AgendaComponent implements OnInit {
       this.newTitle = '';
       this.newDateStr = '';
       this.newTimeStr = '';
+      this.limparContato();
 
       this.cdr.detectChanges();
     } catch (error) {

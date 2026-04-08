@@ -63,19 +63,23 @@ export class AgendaService {
     }
   }
 
-  async criarAtividadeManual(titulo: string, data: Date): Promise<void> {
+  async criarAtividadeManual(
+    titulo: string,
+    data: Date,
+    contato?: { id: string; nome: string; empresa: string }
+  ): Promise<void> {
     const atividadesRef = collection(this.firestore, 'atividades');
 
     const atividade = {
-      contatoId: null,
-      contatoNome: titulo,
-      empresa: '',
+      contatoId:   contato?.id   ?? null,
+      contatoNome: contato?.nome ?? titulo,
+      empresa:     contato?.empresa ?? '',
       canal: 'manual',
       mensagem: titulo,
-      telefone: '',
       dataPrevista: data.toISOString(),
       status: 'novo',
-      anotacao: ''
+      anotacao: '',
+      acoes: [{ canal: 'manual', mensagem: titulo, condicao: 'normal', horario: '' }]
     };
 
     await addDoc(atividadesRef, atividade);

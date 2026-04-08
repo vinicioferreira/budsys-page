@@ -224,10 +224,14 @@ export class AdminComponent {
         status: cliente.status
       });
 
-      await this.agendaService.atualizarStatusAtividadesPorContato(
-        cliente.id,
-        cliente.status
-      );
+      if (cliente.status === 'perdido') {
+        await this.agendaService.excluirTodasAtividadesPorContato(cliente.id);
+      } else {
+        await this.agendaService.atualizarStatusAtividadesPorContato(
+          cliente.id,
+          cliente.status
+        );
+      }
     } catch (error) {
       console.error('Erro ao atualizar status:', error);
       alert('Erro ao atualizar status.');
