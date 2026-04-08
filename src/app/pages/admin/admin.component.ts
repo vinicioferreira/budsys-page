@@ -205,13 +205,15 @@ export class AdminComponent {
   }
 
   async excluirCliente(cliente: any): Promise<void> {
-    const confirmacao = confirm(`Deseja realmente excluir o cliente "${cliente.nome}"?`);
+    const confirmacao = confirm(
+      `Deseja realmente excluir "${cliente.nome}"?\n\nTodas as atividades vinculadas a este lead também serão excluídas.`
+    );
 
     if (!confirmacao) return;
 
     try {
+      await this.agendaService.excluirTodasAtividadesPorContato(cliente.id);
       await this.contatoService.excluirContato(cliente.id);
-      alert('Cliente excluído com sucesso.');
     } catch (error) {
       console.error('Erro ao excluir cliente:', error);
       alert('Erro ao excluir cliente.');
