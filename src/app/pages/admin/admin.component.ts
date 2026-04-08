@@ -181,16 +181,10 @@ export class AdminComponent {
       width: '600px'
     });
 
-    dialogRef.afterClosed().subscribe((contatoId: string | null) => {
-      if (contatoId) {
-        const cliente = this.dataSource.data.find(c => c.id === contatoId);
-
-        if (!cliente) {
-          return;
-        }
-
-        this.vincularCanal(cliente);
-      }
+    dialogRef.afterClosed().subscribe(async (contatoId: string | null) => {
+      if (!contatoId) return;
+      const cliente = await this.contatoService.buscarContatoPorId(contatoId);
+      if (cliente) this.vincularCanal(cliente);
     });
   }
 

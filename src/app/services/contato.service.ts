@@ -69,6 +69,12 @@ export class ContatoService {
     return updateDoc(ref, update);
   }
 
+  async buscarContatoPorId(id: string): Promise<any | null> {
+    const ref = doc(this.firestore, 'contatos', id);
+    const snap = await getDoc(ref);
+    return snap.exists() ? { id: snap.id, ...snap.data() } : null;
+  }
+
   async excluirContato(contatoId: string): Promise<void> {
     const contatoDocRef = doc(this.firestore, `contatos/${contatoId}`);
     await deleteDoc(contatoDocRef);
