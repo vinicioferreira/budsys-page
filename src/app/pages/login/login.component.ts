@@ -20,7 +20,7 @@ export class LoginComponent {
   async login() {
     try {
       await this.afAuth.signInWithEmailAndPassword(this.email, this.password);
-      this.router.navigate(['/agenda']);
+      this.router.navigate(['/dashboard']);
     } catch (err: any) {
       this.error = 'Email ou senha inválidos';
     }
