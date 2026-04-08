@@ -18,6 +18,7 @@ export class AdminComponent {
   displayedColumns: string[] = [
     'seqId',
     'status',
+    'proximaAtividade',
     'nome',
     'email',
     'telefone',
@@ -51,19 +52,7 @@ export class AdminComponent {
       this.listaCanais = cadencias.map(c => ({ nome: c.nome, cadenciaId: c.id }));
     });
 
-    this.contatoService.listarContatos().subscribe(data => {
-      this.dataSource.data = data;
-
-      if (this.sort) {
-        this.dataSource.sort = this.sort;
-        this.sort.active = 'dataCadastro';
-        this.sort.direction = 'desc';
-        this.sort.sortChange.emit({
-          active: this.sort.active,
-          direction: this.sort.direction
-        });
-      }
-    });
+    this.carregarContatos();
 
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       const { texto, status } = JSON.parse(filter || '{"texto":"","status":""}');
@@ -127,20 +116,42 @@ export class AdminComponent {
     }
   }
 
-  listarContatos(): void {
-    this.contatoService.listarContatos().subscribe(data => {
-      this.dataSource.data = data;
+  carregarContatos(): void {
+    this.contatoService.listarContatos().subscribe(async data => {
+      const mapaAtividades = await this.agendaService.buscarProximasAtividadesPorContato();
+
+      this.dataSource.data = data.map(cliente => ({
+        ...cliente,
+        proximaAtividade: mapaAtividades.get(cliente.id) || null
+      }));
 
       if (this.sort) {
         this.dataSource.sort = this.sort;
         this.sort.active = 'dataCadastro';
         this.sort.direction = 'desc';
-        this.sort.sortChange.emit({
-          active: this.sort.active,
-          direction: this.sort.direction
-        });
+        this.sort.sortChange.emit({ active: this.sort.active, direction: this.sort.direction });
       }
     });
+  }
+
+  formatarProximaAtividade(data: Date): string {
+    const d = new Date(data);
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const hora = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${dia}/${mes} ${hora}:${min}`;
+  }
+
+  getCanalLabel(canal: string): string {
+    const v = (canal || '').toLowerCase();
+    switch (v) {
+      case 'ligacao': case 'ligar': return 'Ligação';
+      case 'whatsapp': return 'WhatsApp';
+      case 'email': return 'E-mail';
+      case 'reuniao': case 'reunião': case 'reuniao_agendada': return 'Reunião';
+      default: return canal || '';
+    }
   }
 
   abrirModalNovoCliente(): void {

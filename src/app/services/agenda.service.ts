@@ -227,6 +227,48 @@ export class AgendaService {
     });
   }
 
+  async buscarProximasAtividadesPorContato(): Promise<Map<string, { dataPrevista: Date; canal: string; atrasada: boolean }>> {
+    try {
+      const snapshot = await getDocs(collection(this.firestore, 'atividades'));
+      const agora = new Date();
+
+      const porContato = new Map<string, { dataPrevista: Date; canal: string }[]>();
+
+      for (const docSnap of snapshot.docs) {
+        const data = docSnap.data();
+        const contatoId = data['contatoId'];
+        if (!contatoId || !data['dataPrevista']) continue;
+
+        const dataPrevista = new Date(data['dataPrevista']);
+        if (isNaN(dataPrevista.getTime())) continue;
+
+        const canal = data['acoes']?.[0]?.canal || data['canal'] || '';
+
+        if (!porContato.has(contatoId)) porContato.set(contatoId, []);
+        porContato.get(contatoId)!.push({ dataPrevista, canal });
+      }
+
+      const resultado = new Map<string, { dataPrevista: Date; canal: string; atrasada: boolean }>();
+
+      for (const [contatoId, atividades] of porContato) {
+        atividades.sort((a, b) => a.dataPrevista.getTime() - b.dataPrevista.getTime());
+
+        const proxima = atividades.find(a => a.dataPrevista >= agora);
+        if (proxima) {
+          resultado.set(contatoId, { ...proxima, atrasada: false });
+        } else {
+          const ultima = atividades[atividades.length - 1];
+          resultado.set(contatoId, { ...ultima, atrasada: true });
+        }
+      }
+
+      return resultado;
+    } catch (error) {
+      console.error('Erro ao buscar próximas atividades:', error);
+      return new Map();
+    }
+  }
+
   async adicionarAnotacao(id: string, texto: string): Promise<{ texto: string; criadoEm: string }> {
     const nota = { texto: texto.trim(), criadoEm: new Date().toISOString() };
     const atividadeRef = doc(this.firestore, 'atividades', id);

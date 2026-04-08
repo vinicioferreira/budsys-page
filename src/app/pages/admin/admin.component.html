@@ -73,6 +73,19 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="proximaAtividade">
+        <th class="th-table" mat-header-cell *matHeaderCellDef>Próx. atividade</th>
+        <td class="td-table" mat-cell *matCellDef="let cliente">
+          <span *ngIf="cliente.proximaAtividade" class="proxima-atividade"
+            [class.atrasada]="cliente.proximaAtividade.atrasada">
+            <mat-icon class="prox-icon">{{ cliente.proximaAtividade.atrasada ? 'warning' : 'event' }}</mat-icon>
+            {{ formatarProximaAtividade(cliente.proximaAtividade.dataPrevista) }}
+            <span class="prox-canal">· {{ getCanalLabel(cliente.proximaAtividade.canal) }}</span>
+          </span>
+          <span *ngIf="!cliente.proximaAtividade" class="sem-atividade">—</span>
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="nome">
         <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
         <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.nome }}</td>
