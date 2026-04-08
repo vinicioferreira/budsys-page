@@ -222,9 +222,7 @@ export class AdminComponent {
 
   async atualizarStatus(cliente: any) {
     try {
-      await this.contatoService.atualizarContato(cliente.id, {
-        status: cliente.status
-      });
+      await this.contatoService.atualizarStatusComFase(cliente.id, cliente.status);
 
       if (cliente.status === 'perdido') {
         await this.agendaService.excluirTodasAtividadesPorContato(cliente.id);

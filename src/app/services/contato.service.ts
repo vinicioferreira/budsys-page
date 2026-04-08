@@ -6,9 +6,11 @@ import {
   serverTimestamp,
   onSnapshot,
   doc,
+  getDoc,
   updateDoc,
   deleteDoc
 } from '@angular/fire/firestore';
+import { calcularFaseAtingida } from '../shared/status-comercial';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -52,6 +54,19 @@ export class ContatoService {
   async atualizarContato(id: string, dados: any): Promise<void> {
     const ref = doc(this.firestore, 'contatos', id);
     return updateDoc(ref, dados);
+  }
+
+  async atualizarStatusComFase(id: string, novoStatus: string): Promise<void> {
+    const ref  = doc(this.firestore, 'contatos', id);
+    const snap = await getDoc(ref);
+    const faseAtual = snap.data()?.['faseAtingida'] ?? null;
+
+    const update: any = { status: novoStatus };
+
+    const novaFase = calcularFaseAtingida(novoStatus, faseAtual);
+    if (novaFase) update.faseAtingida = novaFase;
+
+    return updateDoc(ref, update);
   }
 
   async excluirContato(contatoId: string): Promise<void> {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Firestore, collection, getDocs, query, where, orderBy, Timestamp } from '@angular/fire/firestore';
-import { STATUS_COMERCIAL } from '../../shared/status-comercial';
+import { STATUS_COMERCIAL, inferirFasePorStatus } from '../../shared/status-comercial';
 
 interface EtapaFunil {
   label: string;
@@ -138,20 +138,28 @@ export class DashboardComponent implements OnInit {
       const snapshot = await getDocs(q);
 
       const agrupado: Record<string, number> = {};
-      for (const doc of snapshot.docs) {
-        const status = doc.data()['status'] || 'novo';
+      let contatados = 0, reunioes = 0, propostas = 0, negociacao = 0;
+
+      const FASE_NIVEL: Record<string, number> = {
+        contatado: 1, reuniao: 2, proposta: 3, negociacao: 4, fechado: 5
+      };
+
+      for (const docSnap of snapshot.docs) {
+        const d = docSnap.data();
+        const status = d['status'] || 'novo';
         agrupado[status] = (agrupado[status] || 0) + 1;
+
+        // Usa faseAtingida gravada; fallback para inferir do status atual
+        const fase  = d['faseAtingida'] || inferirFasePorStatus(status);
+        const nivel = FASE_NIVEL[fase] ?? 0;
+
+        if (nivel >= 1) contatados++;
+        if (nivel >= 2) reunioes++;
+        if (nivel >= 3) propostas++;
+        if (nivel >= 4) negociacao++;
       }
 
       this.total = snapshot.size;
-
-      const soma = (...statuses: string[]) =>
-        statuses.reduce((acc, s) => acc + (agrupado[s] || 0), 0);
-
-      const contatados = soma('contatado', 'aguardando_retorno', 'reuniao_agendada', 'reuniao_realizada', 'proposta_enviada', 'em_negociacao', 'fechado');
-      const reunioes   = soma('reuniao_agendada', 'reuniao_realizada', 'proposta_enviada', 'em_negociacao', 'fechado');
-      const propostas  = soma('proposta_enviada', 'em_negociacao', 'fechado');
-      const negociacao = soma('em_negociacao', 'fechado');
 
       this.fechados    = agrupado['fechado'] || 0;
       this.perdidos    = agrupado['perdido'] || 0;

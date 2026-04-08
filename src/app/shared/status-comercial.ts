@@ -26,6 +26,40 @@ export function getStatusLabel(value: string): string {
   return STATUS_COMERCIAL.find(s => s.value === value)?.label || value;
 }
 
+// ─── Fase atingida ───────────────────────────────────────────────────────────
+// Hierarquia das fases do funil (só avança, nunca retrocede)
+const FASE_HIERARQUIA: Record<string, number> = {
+  contatado: 1,
+  reuniao:   2,
+  proposta:  3,
+  negociacao: 4,
+  fechado:   5,
+};
+
+const STATUS_PARA_FASE: Record<string, string> = {
+  contatado:        'contatado',
+  aguardando_retorno: '',        // ambíguo — não avança fase por si só
+  reuniao_agendada: 'reuniao',
+  reuniao_realizada: 'reuniao',
+  proposta_enviada: 'proposta',
+  em_negociacao:    'negociacao',
+  fechado:          'fechado',
+};
+
+/** Retorna a nova faseAtingida se o status avança o funil; null se não avança. */
+export function calcularFaseAtingida(novoStatus: string, faseAtual: string | null | undefined): string | null {
+  const novaFase = STATUS_PARA_FASE[novoStatus];
+  if (!novaFase) return null;
+  const nivelAtual = FASE_HIERARQUIA[faseAtual || ''] ?? 0;
+  const nivelNovo  = FASE_HIERARQUIA[novaFase] ?? 0;
+  return nivelNovo > nivelAtual ? novaFase : null;
+}
+
+/** Infere a fase a partir do status atual (fallback para dados sem faseAtingida). */
+export function inferirFasePorStatus(status: string): string {
+  return STATUS_PARA_FASE[status] || '';
+}
+
 export function getStatusCor(value: string): { primary: string; secondary: string } {
   const s = STATUS_COMERCIAL.find(st => st.value === value);
   return s

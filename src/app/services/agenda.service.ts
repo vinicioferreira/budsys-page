@@ -4,6 +4,7 @@ import {
   collection,
   addDoc,
   doc,
+  getDoc,
   updateDoc,
   where,
   query,
@@ -11,6 +12,7 @@ import {
   deleteDoc,
   arrayUnion
 } from '@angular/fire/firestore';
+import { calcularFaseAtingida } from '../shared/status-comercial';
 
 @Injectable({
   providedIn: 'root'
@@ -87,10 +89,14 @@ export class AgendaService {
 
   async atualizarStatusContato(contatoId: string, status: string): Promise<void> {
     const contatoRef = doc(this.firestore, 'contatos', contatoId);
+    const snap = await getDoc(contatoRef);
+    const faseAtual = snap.data()?.['faseAtingida'] ?? null;
 
-    await updateDoc(contatoRef, {
-      status
-    });
+    const update: any = { status };
+    const novaFase = calcularFaseAtingida(status, faseAtual);
+    if (novaFase) update.faseAtingida = novaFase;
+
+    await updateDoc(contatoRef, update);
   }
 
   async atualizarStatusAtividadesPorContato(contatoId: string, status: string): Promise<void> {
