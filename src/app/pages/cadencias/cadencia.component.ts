@@ -38,11 +38,11 @@ export class CadenciaComponent implements OnInit {
     const cadenciaParaEditar = this.cadenciasSalvas.find(c => c.id === id);
     if (cadenciaParaEditar) {
       this.dialog.open(ModalCadastroCadenciaComponent, {
-        width: '600px',
+        width: '700px',
         data: { cadencia: cadenciaParaEditar }
       }).afterClosed().subscribe(resultado => {
         if (resultado) {
-          this.carregarCadencias();  // Sempre recarrega
+          this.carregarCadencias();
         }
       });
     }
@@ -50,36 +50,22 @@ export class CadenciaComponent implements OnInit {
 
   abrirModalCadastro(cadencia?: Cadencia) {
     const dialogRef = this.dialog.open(ModalCadastroCadenciaComponent, {
-      width: '600px',
-      data: cadencia // Passa os dados da cadência se for edição
+      width: '700px',
+      data: cadencia ? { cadencia } : {}
     });
 
     dialogRef.afterClosed().subscribe(resultado => {
       if (resultado) {
-        this.carregarCadencias(); // Recarrega lista se salvou/atualizou
+        this.carregarCadencias();
       }
     });
-  }
-
-  abrirModalNovaEtapa(cadenciaId: string) {
-    const dia = Number(prompt('Dia:'));
-    const canal = prompt('Canal:');
-    const mensagem = prompt('Mensagem:');
-
-    if (canal && mensagem) {
-      const novaEtapa: Etapa = { dia, canal, mensagem };
-      this.cadenciaService.adicionarEtapa(cadenciaId, novaEtapa).then(() => {
-        alert('Etapa adicionada!');
-        this.carregarCadencias();
-      });
-    }
   }
 
   editarEtapa(cadenciaId: string, etapa: Etapa, index: number) {
     const cadenciaParaEditar = this.cadenciasSalvas.find(c => c.id === cadenciaId);
     if (cadenciaParaEditar) {
       this.dialog.open(ModalCadastroCadenciaComponent, {
-        width: '600px',
+        width: '700px',
         data: { cadencia: cadenciaParaEditar, etapa, etapaIndex: index }
       }).afterClosed().subscribe(resultado => {
         if (resultado) {
@@ -89,9 +75,9 @@ export class CadenciaComponent implements OnInit {
     }
   }
 
-  excluirEtapa(cadenciaId: string, etapa: Etapa) {
+  excluirEtapa(cadenciaId: string, index: number) {
     if (confirm('Excluir esta etapa?')) {
-      this.cadenciaService.excluirEtapa(cadenciaId, etapa).then(() => {
+      this.cadenciaService.excluirEtapaPorIndex(cadenciaId, index).then(() => {
         alert('Etapa excluída!');
         this.carregarCadencias();
       });

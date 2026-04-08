@@ -7,8 +7,11 @@ export interface Cadencia {
 
 export interface Etapa {
   dia: number;
-  canal: string;
-  mensagem: string;
+  acoes: AcaoEtapa[];
 }
 
-
+export interface AcaoEtapa {
+  canal: string;
+  mensagem: string;
+  condicao?: 'normal' | 'se_nao_atender' | 'se_nao_responder';
+}

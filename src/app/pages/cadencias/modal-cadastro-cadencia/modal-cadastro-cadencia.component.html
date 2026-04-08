@@ -16,18 +16,58 @@
   <div class="etapa-fields">
     <mat-form-field appearance="fill">
       <mat-label>Dia</mat-label>
-      <input matInput type="number" [(ngModel)]="novaEtapa.dia">
+      <input matInput type="number" min="1" [(ngModel)]="novaEtapa.dia">
     </mat-form-field>
+  </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Canal</mat-label>
-      <input matInput [(ngModel)]="novaEtapa.canal">
-    </mat-form-field>
+  <div class="acoes-header">
+    <h4>Ações do dia</h4>
+    <button mat-stroked-button color="primary" type="button" (click)="adicionarAcao()">
+      + Adicionar ação
+    </button>
+  </div>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Mensagem</mat-label>
-      <input matInput [(ngModel)]="novaEtapa.mensagem">
-    </mat-form-field>
+  <div class="acoes-lista" *ngFor="let acao of novaEtapa.acoes; let i = index">
+    <div class="acao-card">
+      <div class="acao-topo">
+        <span class="acao-titulo">Ação {{ i + 1 }}</span>
+
+        <button
+          mat-icon-button
+          color="warn"
+          type="button"
+          (click)="removerAcao(i)"
+          [disabled]="novaEtapa.acoes.length === 1"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div class="linha-dupla">
+        <mat-form-field appearance="fill">
+          <mat-label>Canal</mat-label>
+          <mat-select [(ngModel)]="acao.canal">
+            <mat-option value="Telefone">Telefone</mat-option>
+            <mat-option value="WhatsApp">WhatsApp</mat-option>
+            <mat-option value="Email">Email</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Condição</mat-label>
+          <mat-select [(ngModel)]="acao.condicao">
+            <mat-option value="normal">Executar normalmente</mat-option>
+            <mat-option value="se_nao_atender">Se não atender</mat-option>
+            <mat-option value="se_nao_responder">Se não responder</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Mensagem</mat-label>
+        <textarea matInput rows="3" [(ngModel)]="acao.mensagem"></textarea>
+      </mat-form-field>
+    </div>
   </div>
 </mat-dialog-content>
 

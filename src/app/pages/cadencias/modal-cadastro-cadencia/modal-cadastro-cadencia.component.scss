@@ -12,4 +12,70 @@
   margin-bottom: 8px;
 }
 
+.full-width {
+  width: 100%;
+}
+
+.etapa-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.etapa-card {
+  margin-bottom: 12px;
+}
+
+/* NOVO: container das ações */
+.acoes-lista {
+  margin-top: 12px;
+}
+
+/* cada ação */
+.acao-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #fafafa;
+}
+
+/* topo da ação */
+.acao-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.acao-titulo {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* grid canal + condição */
+.linha-dupla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* header das ações */
+.acoes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+/* responsivo */
+@media (max-width: 768px) {
+  .linha-dupla {
+    grid-template-columns: 1fr;
+  }
+
+  .etapa-fields {
+    flex-direction: column;
+  }
+}
 

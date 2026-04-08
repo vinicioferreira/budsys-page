@@ -236,3 +236,40 @@ mat-panel-title {
 ::ng-deep .painel-header .mat-expansion-indicator {
   margin-left: 8px;
 }
+
+.lista-etapas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.linha-etapa {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #ececec;
+}
+
+.texto-etapa {
+  flex: 1;
+}
+
+.lista-acoes {
+  margin-top: 8px;
+}
+
+.acao-item {
+  background: #f7f9fc;
+  border: 1px solid #e6ebf2;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.acoes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

@@ -38,14 +38,31 @@
           <li *ngFor="let e of c.etapas; let i = index">
             <div class="linha-etapa">
               <div class="texto-etapa">
-                <strong>Dia {{ e.dia }}</strong> | Canal: {{ e.canal }} | Mensagem: {{ e.mensagem }}
+                <strong>Dia {{ e.dia }}</strong>
+
+                <div class="lista-acoes">
+                  <div class="acao-item" *ngFor="let acao of e.acoes; let j = index">
+                    <strong>Ação {{ j + 1 }}:</strong>
+                    {{ acao.canal }}
+                    <span *ngIf="acao.condicao && acao.condicao !== 'normal'">
+                      -
+                      {{
+                      acao.condicao === 'se_nao_atender'
+                      ? 'Se não atender'
+                      : 'Se não responder'
+                      }}
+                    </span>
+                    <br>
+                    <span>{{ acao.mensagem }}</span>
+                  </div>
+                </div>
               </div>
 
               <div class="acoes">
                 <button mat-icon-button (click)="editarEtapa(c.id, e, i)">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" (click)="excluirEtapa(c.id, e)">
+                <button mat-icon-button color="warn" (click)="excluirEtapa(c.id, i)">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
