@@ -12,15 +12,13 @@
 
 .page-header {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 12px;
   margin-bottom: 16px;
 }
 
 .page-title {
   margin: 0;
-  white-space: nowrap;
 }
 
 .float-end {
@@ -242,19 +240,25 @@ table {
 
 .filtros-bar {
   display: flex;
-  gap: 12px;
-  flex: 1;
-  flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 
   ::ng-deep .mat-mdc-form-field {
-    margin-bottom: -1.25em; /* remove o espaço reservado para mensagens de erro */
+    margin-bottom: -1.25em;
   }
 }
 
+.filtros-esquerda {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .filtro-busca {
-  width: 220px;
-  flex: 0 0 220px;
+  width: 260px;
 }
 
 .filtro-status {
@@ -270,13 +274,17 @@ table {
     padding: 12px !important;
   }
 
-  .page-header {
+  .filtros-bar {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
   }
 
-  .filtros-bar {
+  .filtros-esquerda {
+    width: 100%;
+  }
+
+  .filtro-busca,
+  .filtro-status {
     width: 100%;
   }
 
