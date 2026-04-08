@@ -7,6 +7,7 @@ import { CadenciaService } from '../../services/cadencia.service';
 import { AgendaService } from '../../services/agenda.service';
 import { ModalCadastroClientePotencialComponent } from '../../pages/admin/modal-cadastro-cliente-potencial/modal-cadastro-cliente-potencial.component';
 import { MatDialog } from '@angular/material/dialog';
+import { STATUS_COMERCIAL, getStatusColor, getStatusLabel } from '../../shared/status-comercial';
 
 @Component({
   selector: 'app-admin',
@@ -30,15 +31,10 @@ export class AdminComponent {
   dataSource = new MatTableDataSource<any>([]);
   listaCanais: { nome: string; cadenciaId: string }[] = [];
 
-  statusList = [
-    { label: 'Novo', value: 'novo', color: '#1e88e5' },
-    { label: 'Tentando contato', value: 'tentando_contato', color: '#e53935' },
-    { label: 'Contatado', value: 'contatado', color: '#fb8c00' },
-    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#00acc1' },
-    { label: 'Proposta enviada', value: 'proposta_enviada', color: '#8e24aa' },
-    { label: 'Fechado', value: 'fechado', color: '#43a047' },
-    { label: 'Perdido', value: 'perdido', color: '#757575' }
-  ];
+  readonly statusList = STATUS_COMERCIAL;
+
+  filtroTexto = '';
+  filtroStatus = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -69,7 +65,18 @@ export class AdminComponent {
       }
     });
 
-    this.dataSource.filterPredicate = () => true;
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const { texto, status } = JSON.parse(filter || '{"texto":"","status":""}');
+      const matchStatus = !status || data.status === status;
+      const t = (texto || '').toLowerCase();
+      const matchTexto = !t ||
+        (data.nome || '').toLowerCase().includes(t) ||
+        (data.empresa || '').toLowerCase().includes(t) ||
+        (data.email || '').toLowerCase().includes(t) ||
+        (data.telefone || '').toLowerCase().includes(t) ||
+        (data.canal || '').toLowerCase().includes(t);
+      return matchStatus && matchTexto;
+    };
   }
 
   ngAfterViewInit() {
@@ -77,18 +84,18 @@ export class AdminComponent {
     this.dataSource.sort = this.sort;
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  aplicarFiltros(): void {
+    this.dataSource.filter = JSON.stringify({
+      texto: this.filtroTexto,
+      status: this.filtroStatus
+    });
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
-  getStatusLabel(statusValue: string): string {
-    return this.statusList.find(status => status.value === statusValue)?.label || 'Sem status';
-  }
-
-  getStatusColor(statusValue: string): string {
-    return this.statusList.find(status => status.value === statusValue)?.color || '#9e9e9e';
-  }
+  getStatusLabel(value: string): string { return getStatusLabel(value); }
+  getStatusColor(value: string): string { return getStatusColor(value); }
 
   vincularCanal(cliente: any) {
     if (!cliente.canal) {

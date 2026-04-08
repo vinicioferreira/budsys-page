@@ -212,6 +212,23 @@ table {
   z-index: 1;
 }
 
+.filtros-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.filtro-busca {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filtro-status {
+  width: 200px;
+}
+
 @media (max-width: 900px) {
   .main-content,
   .page-clientes {

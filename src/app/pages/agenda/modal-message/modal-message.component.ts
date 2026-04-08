@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AgendaService } from '../../../services/agenda.service';
 import { AgendaAnotacao } from '../../../interfaces/agenda-group';
+import { STATUS_COMERCIAL, getStatusColor, getStatusLabel } from '../../../shared/status-comercial';
 
 @Component({
   selector: 'app-modal-message',
@@ -23,17 +24,7 @@ export class ModalMessageComponent {
 
   hasChanges = false;
 
-  statusList = [
-    { label: 'Novo', value: 'novo', color: '#546e7a' },
-    { label: 'Tentando contato', value: 'tentando_contato', color: '#e53935' },
-    { label: 'Contatado', value: 'contatado', color: '#fb8c00' },
-    { label: 'Reunião agendada', value: 'reuniao_agendada', color: '#1e88e5' },
-    { label: 'Reunião realizada', value: 'reuniao_realizada', color: '#00897b' },
-    { label: 'Reunião cancelada', value: 'reuniao_cancelada', color: '#f4511e' },
-    { label: 'Proposta enviada', value: 'proposta_enviada', color: '#8e24aa' },
-    { label: 'Fechado', value: 'fechado', color: '#43a047' },
-    { label: 'Perdido', value: 'perdido', color: '#757575' }
-  ];
+  readonly statusList = STATUS_COMERCIAL;
 
   constructor(
     private agendaService: AgendaService,
@@ -131,13 +122,8 @@ export class ModalMessageComponent {
     ).catch(err => console.error('Erro ao atualizar status:', err));
   }
 
-  getStatusColor(status: string): string {
-    return this.statusList.find(s => s.value === status)?.color || '#999';
-  }
-
-  getStatusLabel(status: string): string {
-    return this.statusList.find(s => s.value === status)?.label || status;
-  }
+  getStatusColor(status: string): string { return getStatusColor(status); }
+  getStatusLabel(status: string): string { return getStatusLabel(status); }
 
   // ─── Ações do dia ─────────────────────────────────────────────────────────
 

@@ -11,6 +11,27 @@
     </div>
   </div>
 
+  <div class="filtros-bar">
+    <mat-form-field appearance="outline" class="filtro-busca">
+      <mat-label>Buscar</mat-label>
+      <input matInput [(ngModel)]="filtroTexto" (input)="aplicarFiltros()" placeholder="Nome, empresa, e-mail...">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filtro-status">
+      <mat-label>Status</mat-label>
+      <mat-select [(value)]="filtroStatus" (selectionChange)="aplicarFiltros()">
+        <mat-option value="">Todos</mat-option>
+        <mat-option *ngFor="let status of statusList" [value]="status.value">
+          <span class="status-option">
+            <span class="status-dot" [style.background]="status.color"></span>
+            {{ status.label }}
+          </span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
   <div class="table-container mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
 
