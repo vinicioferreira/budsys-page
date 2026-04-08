@@ -38,7 +38,7 @@
     </ng-template>
 
     <!-- STATUS COMERCIAL -->
-    <mat-form-field appearance="outline" class="full-width status-field" *ngIf="!isManual">
+    <mat-form-field appearance="outline" class="full-width status-field">
       <mat-label>Status comercial</mat-label>
       <mat-select [value]="data.status" (selectionChange)="selecionarStatus($event.value)">
         <mat-select-trigger>
