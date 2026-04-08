@@ -42,6 +42,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { LoginComponent } from './pages/login/login.component';
 import { ButtonComponent } from './component/button/button.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -81,6 +82,7 @@ import { ButtonComponent } from './component/button/button.component';
     MatSelectModule,
     MatOptionModule,
     HttpClientModule,
+    MatTooltipModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     CalendarModule.forRoot({

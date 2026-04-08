@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AgendaService } from '../../../services/agenda.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-modal-message',
@@ -24,29 +25,47 @@ export class ModalMessageComponent {
     public dialogRef: MatDialogRef<ModalMessageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.mensagemEditada = data?.mensagem || '';
+    this.mensagemEditada =
+      data?.acoes?.[0]?.mensagem ||
+      data?.mensagem ||
+      '';
+
     this.anotacaoEditada = data?.anotacao || '';
     this.anotacao = data?.anotacao || '';
   }
 
+  get primeiraAcaoCanal(): string {
+    return this.data?.acoes?.[0]?.canal || this.data?.canal || '';
+  }
+
+  get primeiraAcaoMensagem(): string {
+    return this.data?.acoes?.[0]?.mensagem || this.data?.mensagem || '';
+  }
+
   get isManual(): boolean {
-    return this.data?.canal?.toLowerCase() === 'manual';
+    return this.primeiraAcaoCanal?.toLowerCase() === 'manual';
   }
 
   getMensagemPersonalizada(): string {
-    return (this.data.mensagem || '').replace(/{{\s*(\w+)\s*}}/g, (_match: string, chave: string) => {
-      return this.data[chave] || '';
+    const textoBase = this.primeiraAcaoMensagem || '';
+
+    return textoBase.replace(/{{\s*(\w+)\s*}}/g, (_match: string, chave: string) => {
+      return this.data?.[chave] || '';
     });
   }
 
   copiarMensagem(): void {
-    const texto = this.editandoMensagem ? this.mensagemEditada : this.getMensagemPersonalizada();
+    const texto = this.editandoMensagem
+      ? this.mensagemEditada
+      : this.getMensagemPersonalizada();
+
     navigator.clipboard.writeText(texto || '');
     alert('Mensagem copiada para a área de transferência!');
   }
 
   abrirWhatsapp(): void {
-    const telefone = this.data.contatoTelefone?.replace(/\D/g, '');
+    const telefone = this.data?.contatoTelefone?.replace(/\D/g, '');
+
     if (!telefone) {
       alert('Telefone não informado!');
       return;
@@ -61,14 +80,17 @@ export class ModalMessageComponent {
   }
 
   abrirEmail(): void {
-    const email = this.data.contatoEmail || this.data.email || '';
+    const email = this.data?.contatoEmail || this.data?.email || '';
 
     if (!email) {
       alert('E-mail não informado!');
       return;
     }
 
-    const mensagem = this.editandoMensagem ? this.mensagemEditada : this.getMensagemPersonalizada();
+    const mensagem = this.editandoMensagem
+      ? this.mensagemEditada
+      : this.getMensagemPersonalizada();
+
     navigator.clipboard.writeText(mensagem || '');
     window.open('https://mail.zoho.com/zm/#compose', '_blank');
   }
@@ -79,11 +101,11 @@ export class ModalMessageComponent {
   }
 
   canalEh(tipo: string): boolean {
-    return this.data.canal?.toLowerCase() === tipo.toLowerCase();
+    return this.primeiraAcaoCanal?.toLowerCase() === tipo.toLowerCase();
   }
 
   atualizarStatus(novoStatus: string): void {
-    if (!this.data.id) {
+    if (!this.data?.id) {
       alert('ID do documento não encontrado.');
       return;
     }
@@ -161,12 +183,12 @@ export class ModalMessageComponent {
 
   abrirEdicaoMensagem(): void {
     this.editandoMensagem = true;
-    this.mensagemEditada = this.data?.mensagem || '';
+    this.mensagemEditada = this.primeiraAcaoMensagem;
   }
 
   cancelarEdicaoMensagem(): void {
     this.editandoMensagem = false;
-    this.mensagemEditada = this.data?.mensagem || '';
+    this.mensagemEditada = this.primeiraAcaoMensagem;
   }
 
   async salvarMensagem(): Promise<void> {
@@ -184,6 +206,10 @@ export class ModalMessageComponent {
 
     try {
       await this.agendaService.atualizarMensagemAtividade(this.data.id, mensagem);
+
+      if (this.data?.acoes?.length) {
+        this.data.acoes[0].mensagem = mensagem;
+      }
 
       this.data.mensagem = mensagem;
       this.mensagemEditada = mensagem;

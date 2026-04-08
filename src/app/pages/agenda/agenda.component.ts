@@ -24,6 +24,8 @@ import {
   AgendaCalendarEvent,
   AgendaGroupedEmpresa,
   AgendaEventMeta,
+  AgendaAcao,
+  AgendaCondicao,
 } from '../../interfaces/agenda-group';
 
 @Component({
@@ -96,7 +98,26 @@ export class AgendaComponent implements OnInit {
 
         const empresa = String(data['empresa'] || '').trim();
         const contatoNome = String(data['contatoNome'] || '').trim();
-        const canal = String(data['canal'] || '').trim();
+
+        const acoes: AgendaAcao[] = Array.isArray(data['acoes'])
+          ? data['acoes'].map((acao: any): AgendaAcao => ({
+            canal: String(acao?.canal || '').trim(),
+            mensagem: String(acao?.mensagem || '').trim(),
+            condicao: (
+              ['normal', 'se_nao_atender', 'se_nao_responder'].includes(acao?.condicao)
+                ? acao.condicao
+                : 'normal'
+            ) as AgendaCondicao,
+            horario: String(acao?.horario || '').trim()
+          }))
+          : [
+            {
+              canal: String(data['canal'] || '').trim(),
+              mensagem: String(data['mensagem'] || '').trim(),
+              condicao: 'normal',
+              horario: ''
+            }
+          ];
 
         const meta: AgendaEventMeta = {
           id: docSnap.id,
@@ -105,16 +126,15 @@ export class AgendaComponent implements OnInit {
           empresa,
           contatoTelefone,
           contatoEmail,
-          canal,
-          mensagem: String(data['mensagem'] || ''),
           anotacao: String(data['anotacao'] || ''),
           status: String(data['status'] || ''),
           dataPrevista: String(data['dataPrevista'] || ''),
+          acoes
         };
 
         return {
           start: new Date(data['dataPrevista']),
-          title: this.montarTituloEvento(empresa, contatoNome, canal),
+          title: this.montarTituloEvento(empresa, contatoNome, acoes),
           color: cor,
           meta,
         };
@@ -125,22 +145,28 @@ export class AgendaComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  montarTituloEvento(empresa: string, contatoNome: string, canal: string): string {
-    const canalLabel = this.getCanalLabel(canal);
+  montarTituloEvento(empresa: string, contatoNome: string, acoes: AgendaAcao[]): string {
+    const primeiraAcao = acoes?.[0];
+    const canalLabel = primeiraAcao?.canal
+      ? this.getCanalLabel(primeiraAcao.canal)
+      : 'Atividade';
+
+    const qtd = acoes?.length || 0;
+    const sufixo = qtd > 1 ? ` +${qtd - 1}` : '';
 
     if (empresa && contatoNome) {
-      return `${empresa} • ${contatoNome} • ${canalLabel}`;
+      return `${empresa} • ${contatoNome} • ${canalLabel}${sufixo}`;
     }
 
     if (empresa) {
-      return `${empresa} • ${canalLabel}`;
+      return `${empresa} • ${canalLabel}${sufixo}`;
     }
 
     if (contatoNome) {
-      return `${contatoNome} • ${canalLabel}`;
+      return `${contatoNome} • ${canalLabel}${sufixo}`;
     }
 
-    return canalLabel;
+    return `${canalLabel}${sufixo}`;
   }
 
   getCanalLabel(canal: string): string {
@@ -212,8 +238,11 @@ export class AgendaComponent implements OnInit {
       const event = eventBase as AgendaCalendarEvent;
 
       const empresa = this.getEmpresaOuContato(event);
-      const canal = event.meta?.canal || '';
+      const primeiraAcao = event.meta?.acoes?.[0];
+      const canal = primeiraAcao?.canal || '';
+      const qtdAcoes = event.meta?.acoes?.length || 0;
       const statusColor = event.color?.primary || '#2196f3';
+
       const hora = event.start
         ? new Date(event.start).toLocaleTimeString('pt-BR', {
           hour: '2-digit',
@@ -231,10 +260,8 @@ export class AgendaComponent implements OnInit {
       mapa.get(empresa)!.items.push({
         event,
         color: statusColor,
-        canal,
-        labelCurta: `${this.getCanalCurto(canal)} ${hora}`.trim(),
-        labelCompleta: `${this.getCanalLabel(canal)}${hora ? ' • ' + hora : ''
-          }${event.meta?.contatoNome ? ' • ' + event.meta.contatoNome : ''}`.trim(),
+        labelCurta: `${this.getCanalCurto(canal)}${qtdAcoes > 1 ? ' +' + (qtdAcoes - 1) : ''} ${hora}`.trim(),
+        labelCompleta: `${this.getCanalLabel(canal)}${qtdAcoes > 1 ? ' +' + (qtdAcoes - 1) + ' ações' : ''}${hora ? ' • ' + hora : ''}${event.meta?.contatoNome ? ' • ' + event.meta.contatoNome : ''}`.trim(),
       });
     }
 
@@ -259,11 +286,12 @@ export class AgendaComponent implements OnInit {
         empresa: meta.empresa,
         contatoTelefone: meta.contatoTelefone,
         contatoEmail: meta.contatoEmail,
-        canal: meta.canal,
-        mensagem: meta.mensagem,
         anotacao: meta.anotacao || '',
         status: meta.status,
         dataPrevista: meta.dataPrevista,
+        acoes: meta.acoes || [],
+        canal: meta.acoes?.[0]?.canal || '',
+        mensagem: meta.acoes?.[0]?.mensagem || '',
       },
       width: '500px',
       height: '850px',
@@ -275,7 +303,7 @@ export class AgendaComponent implements OnInit {
       }
     });
   }
-
+  
   addActivity(date: Date, title: string): void {
     this.events = [
       ...this.events,
@@ -294,11 +322,17 @@ export class AgendaComponent implements OnInit {
           empresa: '',
           contatoTelefone: '',
           contatoEmail: '',
-          canal: 'manual',
-          mensagem: title,
           anotacao: '',
           status: 'novo',
           dataPrevista: date.toISOString(),
+          acoes: [
+            {
+              canal: 'manual',
+              mensagem: title,
+              condicao: 'normal',
+              horario: ''
+            }
+          ]
         },
       },
     ];

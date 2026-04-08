@@ -17,11 +17,6 @@
       </div>
 
       <div class="summary-row">
-        <span class="label">Canal</span>
-        <span class="value">{{ data.canal || '—' }}</span>
-      </div>
-
-      <div class="summary-row">
         <span class="label">Telefone</span>
         <span class="value">{{ data.contatoTelefone || '—' }}</span>
       </div>
@@ -65,32 +60,76 @@
       </mat-select>
     </mat-form-field>
 
-    <div class="editor-card">
+    <!-- AÇÕES DO DIA -->
+    <div class="editor-card" *ngIf="!isManual">
       <div class="editor-header">
-        <span>{{ isManual ? 'Descrição' : 'Mensagem' }}</span>
+        <span>Ações do dia</span>
+      </div>
 
-        <button
-          *ngIf="!editandoMensagem"
-          mat-icon-button
-          (click)="abrirEdicaoMensagem()"
-          aria-label="Editar mensagem">
+      <div class="acoes-dia" *ngIf="data.acoes?.length; else mensagemUnicaTpl">
+        <div class="acao-dia-item" *ngFor="let acao of data.acoes; let i = index">
+          <div class="acao-dia-topo">
+            <div class="acao-dia-esquerda">
+              <div class="acao-dia-linha1">
+                <strong>Ação {{ i + 1 }} {{ acao.canal }}</strong>
+              </div>
+
+              <div class="acao-dia-linha2" *ngIf="acao.condicao && acao.condicao !== 'normal'">
+                {{
+                acao.condicao === 'se_nao_atender'
+                ? 'Executar se não atender'
+                : acao.condicao === 'se_nao_responder'
+                ? 'Executar se não responder'
+                : acao.condicao
+                }}
+              </div>
+            </div>
+
+            <button mat-icon-button type="button" class="btn-acao-editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+
+          <div class="acao-mensagem">
+            {{ acao.mensagem || 'Sem mensagem cadastrada.' }}
+          </div>
+        </div>
+      </div>
+
+      <ng-template #mensagemUnicaTpl>
+        <div class="editor-header mt-8">
+          <span>Mensagem</span>
+
+          <button *ngIf="!editandoMensagem" mat-icon-button (click)="abrirEdicaoMensagem()"
+            aria-label="Editar mensagem">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button *ngIf="editandoMensagem" mat-icon-button (click)="salvarMensagem()" aria-label="Salvar mensagem">
+            <mat-icon>save</mat-icon>
+          </button>
+        </div>
+
+        <textarea class="editor-textarea" [(ngModel)]="mensagemEditada" [readonly]="!editandoMensagem" rows="4">
+    </textarea>
+      </ng-template>
+    </div>
+
+    <!-- atividade manual continua como antes -->
+    <div class="editor-card" *ngIf="isManual">
+      <div class="editor-header">
+        <span>Descrição</span>
+
+        <button *ngIf="!editandoMensagem" mat-icon-button (click)="abrirEdicaoMensagem()" aria-label="Editar mensagem">
           <mat-icon>edit</mat-icon>
         </button>
 
-        <button
-          *ngIf="editandoMensagem"
-          mat-icon-button
-          (click)="salvarMensagem()"
-          aria-label="Salvar mensagem">
+        <button *ngIf="editandoMensagem" mat-icon-button (click)="salvarMensagem()" aria-label="Salvar mensagem">
           <mat-icon>save</mat-icon>
         </button>
       </div>
 
-      <textarea
-        class="editor-textarea"
-        [(ngModel)]="mensagemEditada"
-        [readonly]="!editandoMensagem"
-        rows="4">
+      <textarea class="editor-textarea" [(ngModel)]="mensagemEditada" [readonly]="!editandoMensagem" rows="4">
       </textarea>
     </div>
 
@@ -98,29 +137,17 @@
       <div class="editor-header">
         <span>Anotação</span>
 
-        <button
-          *ngIf="!editandoAnotacao"
-          mat-icon-button
-          (click)="abrirEdicaoAnotacao()"
-          aria-label="Editar anotação">
+        <button *ngIf="!editandoAnotacao" mat-icon-button (click)="abrirEdicaoAnotacao()" aria-label="Editar anotação">
           <mat-icon>edit</mat-icon>
         </button>
 
-        <button
-          *ngIf="editandoAnotacao"
-          mat-icon-button
-          (click)="salvarAnotacao()"
-          aria-label="Salvar anotação">
+        <button *ngIf="editandoAnotacao" mat-icon-button (click)="salvarAnotacao()" aria-label="Salvar anotação">
           <mat-icon>save</mat-icon>
         </button>
       </div>
 
-      <textarea
-        class="editor-textarea"
-        [(ngModel)]="anotacaoEditada"
-        [readonly]="!editandoAnotacao"
-        placeholder="Adicione aqui uma observação..."
-        rows="3">
+      <textarea class="editor-textarea" [(ngModel)]="anotacaoEditada" [readonly]="!editandoAnotacao"
+        placeholder="Adicione aqui uma observação..." rows="3">
       </textarea>
     </div>
 

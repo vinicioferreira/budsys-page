@@ -15,7 +15,7 @@ import {
   providedIn: 'root'
 })
 export class AgendaService {
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) { }
 
   async gerarAtividadesDeCadencia(
     cadencia: any,
@@ -33,18 +33,29 @@ export class AgendaService {
 
     for (const etapa of cadencia.etapas) {
       const data = new Date(dataBase);
-      data.setDate(data.getDate() + (etapa.dia ?? 0));
+      data.setDate(data.getDate() + (etapa.dia ?? 1));
+
+      const acoes = Array.isArray(etapa.acoes)
+        ? etapa.acoes.map((acao: any) => ({
+          canal: acao?.canal || '',
+          mensagem: acao?.mensagem || '',
+          condicao: acao?.condicao || 'normal',
+          horario: acao?.horario || ''
+        }))
+        : [];
+
+      const primeiraAcao = acoes[0] || null;
 
       const atividade = {
         contatoId,
         contatoNome: nome,
         empresa: empresa || '',
-        canal: etapa.canal || 'Sem canal',
-        mensagem: etapa.mensagem || 'Sem mensagem',
-        telefone: etapa.telefone || 'Sem telefone',
         dataPrevista: data.toISOString(),
         status: 'novo',
-        anotacao: ''
+        anotacao: '',
+        acoes,
+        canal: primeiraAcao?.canal || '', // compatibilidade temporária
+        mensagem: primeiraAcao?.mensagem || '' // compatibilidade temporária
       };
 
       await addDoc(atividadesRef, atividade);
