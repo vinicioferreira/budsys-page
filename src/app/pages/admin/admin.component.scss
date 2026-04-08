@@ -13,19 +13,14 @@
 .page-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
   margin-bottom: 16px;
 }
 
 .page-title {
   margin: 0;
-}
-
-.btn-addCliente {
-  display: flex;
-  align-items: center;
+  white-space: nowrap;
 }
 
 .float-end {
@@ -248,18 +243,22 @@ table {
 .filtros-bar {
   display: flex;
   gap: 12px;
+  flex: 1;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 4px;
+
+  ::ng-deep .mat-mdc-form-field {
+    margin-bottom: -1.25em; /* remove o espaço reservado para mensagens de erro */
+  }
 }
 
 .filtro-busca {
-  flex: 1;
-  min-width: 200px;
+  width: 220px;
+  flex: 0 0 220px;
 }
 
 .filtro-status {
-  width: 200px;
+  width: 190px;
 }
 
 @media (max-width: 900px) {
@@ -272,15 +271,12 @@ table {
   }
 
   .page-header {
+    flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
 
-  .btn-addCliente {
-    width: 100%;
-  }
-
-  .btn-addCliente button {
+  .filtros-bar {
     width: 100%;
   }
 
