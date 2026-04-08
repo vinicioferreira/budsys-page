@@ -218,8 +218,12 @@ export class DashboardComponent implements OnInit {
       }
 
       // 2. Próxima atividade pendente por contato (ignora as com todas as ações feitas)
+      // Prefere a mais próxima futura; só usa passada como fallback
       const snapshotAtividades = await getDocs(collection(this.firestore, 'atividades'));
-      const mapaProximas = new Map<string, Date>();
+      const agora = new Date();
+      const mapaFuturas  = new Map<string, Date>(); // earliest future per contact
+      const mapaPassadas = new Map<string, Date>(); // latest past per contact (fallback)
+
       for (const docSnap of snapshotAtividades.docs) {
         const d = docSnap.data();
         const contatoId = d['contatoId'];
@@ -227,14 +231,22 @@ export class DashboardComponent implements OnInit {
         const dataPrevista = new Date(d['dataPrevista']);
         if (isNaN(dataPrevista.getTime())) continue;
 
-        // Se todas as ações foram feitas, atividade está concluída — ignora
         const acoes: any[] = d['acoes'] || [];
         if (acoes.length > 0 && acoes.every((a: any) => a.feito === true)) continue;
 
-        const atual = mapaProximas.get(contatoId);
-        if (!atual || dataPrevista < atual) {
-          mapaProximas.set(contatoId, dataPrevista);
+        if (dataPrevista >= agora) {
+          const atual = mapaFuturas.get(contatoId);
+          if (!atual || dataPrevista < atual) mapaFuturas.set(contatoId, dataPrevista);
+        } else {
+          const atual = mapaPassadas.get(contatoId);
+          if (!atual || dataPrevista > atual) mapaPassadas.set(contatoId, dataPrevista);
         }
+      }
+
+      // Monta mapa final: futuras têm prioridade; passadas como fallback
+      const mapaProximas = new Map<string, Date>(mapaFuturas);
+      for (const [id, data] of mapaPassadas) {
+        if (!mapaProximas.has(id)) mapaProximas.set(id, data);
       }
 
       // 3. Para cada contato, usa a data mais próxima entre contatarEm (só futuro) e próxima atividade
