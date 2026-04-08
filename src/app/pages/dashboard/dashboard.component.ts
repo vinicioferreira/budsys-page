@@ -48,11 +48,10 @@ export class DashboardComponent implements OnInit {
   distribuicao: DistribuicaoItem[] = [];
   carregando = true;
 
-  contatarAtrasados = 0;
-  contatarHoje = 0;
-  contatarEstaSemana = 0;
-  contatarProximos = 0;
-  contatarLista: ContatarItem[] = [];
+  listaAtrasados:  ContatarItem[] = [];
+  listaHoje:       ContatarItem[] = [];
+  listaSemana:     ContatarItem[] = [];
+  listaProximos:   ContatarItem[] = [];
 
   filtros: FiltroPeriodo[] = [
     { label: 'Mês atual',    value: 'mes_atual' },
@@ -206,7 +205,7 @@ export class DashboardComponent implements OnInit {
         mapaContatos.set(docSnap.id, docSnap.data());
       }
 
-      // 2. Busca próxima atividade por contato (cadências)
+      // 2. Próxima atividade pendente por contato (ignora as com todas as ações feitas)
       const snapshotAtividades = await getDocs(collection(this.firestore, 'atividades'));
       const mapaProximas = new Map<string, Date>();
       for (const docSnap of snapshotAtividades.docs) {
@@ -215,27 +214,38 @@ export class DashboardComponent implements OnInit {
         if (!contatoId || !d['dataPrevista']) continue;
         const dataPrevista = new Date(d['dataPrevista']);
         if (isNaN(dataPrevista.getTime())) continue;
+
+        // Se todas as ações foram feitas, atividade está concluída — ignora
+        const acoes: any[] = d['acoes'] || [];
+        if (acoes.length > 0 && acoes.every((a: any) => a.feito === true)) continue;
+
         const atual = mapaProximas.get(contatoId);
         if (!atual || dataPrevista < atual) {
           mapaProximas.set(contatoId, dataPrevista);
         }
       }
 
-      // 3. Para cada contato, usa a data mais próxima entre contatarEm e próxima atividade
+      // 3. Para cada contato, usa a data mais próxima entre contatarEm (só futuro) e próxima atividade
       const itens: { contatoId: string; data: Date; observacao: string }[] = [];
 
       for (const [id, contato] of mapaContatos) {
         let melhorData: Date | null = null;
         let observacao = '';
 
+        // contatarEm: só inclui se é data futura (sem rastreio de conclusão)
         if (contato['contatarEm']) {
           const d: Date = contato['contatarEm'].toDate
             ? contato['contatarEm'].toDate()
             : new Date(contato['contatarEm']);
-          melhorData = d;
-          observacao = contato['observacaoContatar'] || '';
+          const alvo = new Date(d); alvo.setHours(0, 0, 0, 0);
+          const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
+          if (diff >= 0) {
+            melhorData = d;
+            observacao = contato['observacaoContatar'] || '';
+          }
         }
 
+        // atividade de cadência: inclui passadas se pendentes (acoes não feitas)
         const proxAtiv = mapaProximas.get(id);
         if (proxAtiv && (!melhorData || proxAtiv < melhorData)) {
           melhorData = proxAtiv;
@@ -253,33 +263,42 @@ export class DashboardComponent implements OnInit {
 
       itens.sort((a, b) => a.data.getTime() - b.data.getTime());
 
-      this.contatarAtrasados  = 0;
-      this.contatarHoje       = 0;
-      this.contatarEstaSemana = 0;
-      this.contatarProximos   = 0;
-      this.contatarLista      = [];
+      this.listaAtrasados = [];
+      this.listaHoje      = [];
+      this.listaSemana    = [];
+      this.listaProximos  = [];
 
       for (const item of itens) {
         const contato = mapaContatos.get(item.contatoId)!;
         const alvo = new Date(item.data); alvo.setHours(0, 0, 0, 0);
         const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
 
-        let classe = 'contatar-futuro';
-        let labelData = '';
-
-        if (diff < 0)        { this.contatarAtrasados++;  classe = 'contatar-atrasado'; labelData = `Atrasado ${Math.abs(diff)}d`; }
-        else if (diff === 0) { this.contatarHoje++;        classe = 'contatar-hoje';     labelData = 'Hoje'; }
-        else if (diff <= 7)  { this.contatarEstaSemana++;  classe = 'contatar-breve';    labelData = diff === 1 ? 'Amanhã' : `Em ${diff} dias`; }
-        else                 { this.contatarProximos++;    classe = 'contatar-futuro';   labelData = item.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }); }
-
-        this.contatarLista.push({
+        const entry: ContatarItem = {
           nome:      contato['nome']    || '—',
           empresa:   contato['empresa'] || '',
           data:      item.data,
           observacao: item.observacao,
-          classe,
-          labelData,
-        });
+          classe:    '',
+          labelData: '',
+        };
+
+        if (diff < 0) {
+          entry.classe    = 'contatar-atrasado';
+          entry.labelData = `${Math.abs(diff)}d atrás`;
+          this.listaAtrasados.push(entry);
+        } else if (diff === 0) {
+          entry.classe    = 'contatar-hoje';
+          entry.labelData = 'Hoje';
+          this.listaHoje.push(entry);
+        } else if (diff <= 7) {
+          entry.classe    = 'contatar-breve';
+          entry.labelData = diff === 1 ? 'Amanhã' : `Em ${diff} dias`;
+          this.listaSemana.push(entry);
+        } else {
+          entry.classe    = 'contatar-futuro';
+          entry.labelData = item.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+          this.listaProximos.push(entry);
+        }
       }
     } catch (error) {
       console.error('Erro ao carregar contatarEm:', error);
