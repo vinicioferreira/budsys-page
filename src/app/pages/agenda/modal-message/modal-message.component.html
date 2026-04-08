@@ -70,19 +70,7 @@
         <div class="acao-dia-item" *ngFor="let acao of data.acoes; let i = index">
           <div class="acao-dia-topo">
             <div class="acao-dia-esquerda">
-              <div class="acao-dia-linha1">
-                <strong>Ação {{ i + 1 }} {{ acao.canal }}</strong>
-              </div>
-
-              <div class="acao-dia-linha2" *ngIf="acao.condicao && acao.condicao !== 'normal'">
-                {{
-                acao.condicao === 'se_nao_atender'
-                ? 'Executar se não atender'
-                : acao.condicao === 'se_nao_responder'
-                ? 'Executar se não responder'
-                : acao.condicao
-                }}
-              </div>
+              <strong>Ação {{ i + 1 }} {{ acao.canal }}</strong>
             </div>
 
             <button mat-icon-button type="button" class="btn-acao-editar">

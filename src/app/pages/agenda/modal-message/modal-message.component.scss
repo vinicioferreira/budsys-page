@@ -136,3 +136,48 @@
     grid-template-columns: 1fr;
   }
 }
+
+.acoes-dia {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; // 👈 espaço entre ações
+}
+
+.acao-dia-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.acao-dia-item {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.acao-mensagem {
+  margin-top: 2px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.acao-dia-esquerda {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-acao-editar {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-acao-editar mat-icon {
+  font-size: 20px;
+}
