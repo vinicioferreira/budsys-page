@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, collection, getDocs, query, where, Timestamp } from '@angular/fire/firestore';
+import { Firestore, collection, getDocs, query, where, Timestamp, doc, getDoc } from '@angular/fire/firestore';
 import { MatDialog } from '@angular/material/dialog';
 import { STATUS_COMERCIAL, inferirFasePorStatus } from '../../shared/status-comercial';
 import { ModalMessageComponent } from '../agenda/modal-message/modal-message.component';
@@ -27,6 +27,7 @@ interface FiltroPeriodo {
 
 interface ContatarItem {
   contatoId: string;
+  atividadeId?: string; // preenchido para tarefas manuais sem contato
   nome: string;
   empresa: string;
   data: Date;
@@ -224,42 +225,109 @@ export class DashboardComponent implements OnInit {
       // Prefere a mais próxima futura; só usa passada como fallback
       const snapshotAtividades = await getDocs(collection(this.firestore, 'atividades'));
       const agora = new Date();
-      const mapaFuturas  = new Map<string, Date>(); // earliest future per contact
-      const mapaPassadas = new Map<string, Date>(); // latest past per contact (fallback)
+      const mapaFuturas   = new Map<string, Date>(); // earliest future per contact
+      const mapaAtrasadas = new Map<string, Date>(); // latest overdue per contact (always shown)
+      const contatosComAtividadeConcluida = new Set<string>(); // contacts with all acoes done
+
+      // Atividades sem contato vinculado (tarefas manuais avulsas)
+      const atividadesSemContato: { id: string; nome: string; empresa: string; data: Date; acoes: any[]; anotacao: string; anotacaoLog: any[] }[] = [];
 
       for (const docSnap of snapshotAtividades.docs) {
         const d = docSnap.data();
         const contatoId = d['contatoId'];
-        if (!contatoId || !d['dataPrevista']) continue;
+        if (!d['dataPrevista']) continue;
         const dataPrevista = new Date(d['dataPrevista']);
         if (isNaN(dataPrevista.getTime())) continue;
 
+        // Atividade sem contato: vai para lista avulsa se pendente e dentro de 30 dias
+        if (!contatoId) {
+          const acoes: any[] = d['acoes'] || [];
+          const concluida = acoes.length > 0 && acoes.every((a: any) => a.feito === true);
+          if (!concluida) {
+            const alvo = new Date(dataPrevista); alvo.setHours(0, 0, 0, 0);
+            const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
+            if (diff <= 30) {
+              atividadesSemContato.push({
+                id:         docSnap.id,
+                nome:       String(d['contatoNome'] || d['mensagem'] || 'Tarefa'),
+                empresa:    String(d['empresa'] || ''),
+                data:       dataPrevista,
+                acoes:      d['acoes'] || [],
+                anotacao:   String(d['anotacao'] || ''),
+                anotacaoLog: d['anotacaoLog'] || [],
+              });
+            }
+          }
+          continue;
+        }
+
         const acoes: any[] = d['acoes'] || [];
-        if (acoes.length > 0 && acoes.every((a: any) => a.feito === true)) continue;
+        if (acoes.length > 0 && acoes.every((a: any) => a.feito === true)) {
+          contatosComAtividadeConcluida.add(contatoId);
+          continue;
+        }
 
         if (dataPrevista >= agora) {
           const atual = mapaFuturas.get(contatoId);
           if (!atual || dataPrevista < atual) mapaFuturas.set(contatoId, dataPrevista);
         } else {
-          const atual = mapaPassadas.get(contatoId);
-          if (!atual || dataPrevista > atual) mapaPassadas.set(contatoId, dataPrevista);
+          const atual = mapaAtrasadas.get(contatoId);
+          if (!atual || dataPrevista > atual) mapaAtrasadas.set(contatoId, dataPrevista);
         }
       }
 
-      // Monta mapa final: futuras têm prioridade; passadas como fallback
-      const mapaProximas = new Map<string, Date>(mapaFuturas);
-      for (const [id, data] of mapaPassadas) {
-        if (!mapaProximas.has(id)) mapaProximas.set(id, data);
-      }
+      this.listaAtrasados = [];
+      this.listaHoje      = [];
+      this.listaSemana    = [];
+      this.listaProximos  = [];
 
-      // 3. Para cada contato, usa a data mais próxima entre contatarEm (só futuro) e próxima atividade
-      const itens: { contatoId: string; data: Date; observacao: string }[] = [];
-
+      // 3a. ATRASADOS: overdue de atividade ou contatarEm passado (sem atividade concluída)
       for (const [id, contato] of mapaContatos) {
-        let melhorData: Date | null = null;
+        let dataAtrasada: Date | null = null;
         let observacao = '';
 
-        // contatarEm: só inclui se é data futura (sem rastreio de conclusão)
+        // contatarEm passado → atrasado se não há atividade concluída
+        if (contato['contatarEm']) {
+          const d: Date = contato['contatarEm'].toDate
+            ? contato['contatarEm'].toDate()
+            : new Date(contato['contatarEm']);
+          const alvo = new Date(d); alvo.setHours(0, 0, 0, 0);
+          const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
+          if (diff < 0 && !contatosComAtividadeConcluida.has(id)) {
+            dataAtrasada = d;
+            observacao   = contato['observacaoContatar'] || '';
+          }
+        }
+
+        // atividade de cadência atrasada (mais recente)
+        const atrasadaAtiv = mapaAtrasadas.get(id);
+        if (atrasadaAtiv && (!dataAtrasada || atrasadaAtiv > dataAtrasada)) {
+          dataAtrasada = atrasadaAtiv;
+          observacao   = '';
+        }
+
+        if (!dataAtrasada) continue;
+
+        const alvo = new Date(dataAtrasada); alvo.setHours(0, 0, 0, 0);
+        const diffDias = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
+        this.listaAtrasados.push({
+          contatoId:  id,
+          nome:       contato['nome']    || '—',
+          empresa:    contato['empresa'] || '',
+          data:       dataAtrasada,
+          observacao,
+          classe:     'contatar-atrasado',
+          labelData:  `${Math.abs(diffDias)}d atrás`,
+        });
+      }
+
+      // 3b. FUTUROS: atividades de amanhã em diante (independente de ter overdue)
+      //     + contatarEm futuro (hoje ou depois)
+      for (const [id, contato] of mapaContatos) {
+        let dataFutura: Date | null = null;
+        let observacao = '';
+
+        // contatarEm hoje ou futuro
         if (contato['contatarEm']) {
           const d: Date = contato['contatarEm'].toDate
             ? contato['contatarEm'].toDate()
@@ -267,49 +335,63 @@ export class DashboardComponent implements OnInit {
           const alvo = new Date(d); alvo.setHours(0, 0, 0, 0);
           const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
           if (diff >= 0) {
-            melhorData = d;
+            dataFutura = d;
             observacao = contato['observacaoContatar'] || '';
           }
         }
 
-        // atividade de cadência: inclui passadas se pendentes (acoes não feitas)
-        const proxAtiv = mapaProximas.get(id);
-        if (proxAtiv && (!melhorData || proxAtiv < melhorData)) {
-          melhorData = proxAtiv;
+        // atividade futura mais próxima
+        const futuraAtiv = mapaFuturas.get(id);
+        if (futuraAtiv && (!dataFutura || futuraAtiv < dataFutura)) {
+          dataFutura = futuraAtiv;
           observacao = '';
         }
 
-        if (!melhorData) continue;
+        if (!dataFutura) continue;
 
-        const alvo = new Date(melhorData); alvo.setHours(0, 0, 0, 0);
+        const alvo = new Date(dataFutura); alvo.setHours(0, 0, 0, 0);
         const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
         if (diff > 30) continue;
 
-        itens.push({ contatoId: id, data: melhorData, observacao } as any);
-      }
-
-      itens.sort((a, b) => a.data.getTime() - b.data.getTime());
-
-      this.listaAtrasados = [];
-      this.listaHoje      = [];
-      this.listaSemana    = [];
-      this.listaProximos  = [];
-
-      for (const item of itens) {
-        const contato = mapaContatos.get(item.contatoId)!;
-        const alvo = new Date(item.data); alvo.setHours(0, 0, 0, 0);
-        const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
-
         const entry: ContatarItem = {
-          contatoId: item.contatoId,
-          nome:      contato['nome']    || '—',
-          empresa:   contato['empresa'] || '',
-          data:      item.data,
-          observacao: item.observacao,
-          classe:    '',
-          labelData: '',
+          contatoId:  id,
+          nome:       contato['nome']    || '—',
+          empresa:    contato['empresa'] || '',
+          data:       dataFutura,
+          observacao,
+          classe:     '',
+          labelData:  '',
         };
 
+        if (diff === 0) {
+          entry.classe    = 'contatar-hoje';
+          entry.labelData = 'Hoje';
+          this.listaHoje.push(entry);
+        } else if (diff <= 7) {
+          entry.classe    = 'contatar-breve';
+          entry.labelData = diff === 1 ? 'Amanhã' : `Em ${diff} dias`;
+          this.listaSemana.push(entry);
+        } else {
+          entry.classe    = 'contatar-futuro';
+          entry.labelData = dataFutura.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+          this.listaProximos.push(entry);
+        }
+      }
+
+      // 3c. Tarefas manuais sem contato
+      for (const av of atividadesSemContato) {
+        const alvo = new Date(av.data); alvo.setHours(0, 0, 0, 0);
+        const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
+        const entry: ContatarItem = {
+          contatoId:   '',
+          atividadeId: av.id,
+          nome:        av.nome,
+          empresa:     av.empresa,
+          data:        av.data,
+          observacao:  '',
+          classe:      '',
+          labelData:   '',
+        };
         if (diff < 0) {
           entry.classe    = 'contatar-atrasado';
           entry.labelData = `${Math.abs(diff)}d atrás`;
@@ -324,42 +406,56 @@ export class DashboardComponent implements OnInit {
           this.listaSemana.push(entry);
         } else {
           entry.classe    = 'contatar-futuro';
-          entry.labelData = item.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+          entry.labelData = av.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
           this.listaProximos.push(entry);
         }
       }
+
+      // Ordena cada lista por data
+      const porData = (a: ContatarItem, b: ContatarItem) => a.data.getTime() - b.data.getTime();
+      this.listaAtrasados.sort(porData);
+      this.listaHoje.sort(porData);
+      this.listaSemana.sort(porData);
+      this.listaProximos.sort(porData);
     } catch (error) {
       console.error('Erro ao carregar contatarEm:', error);
     }
   }
 
   async abrirModalContato(item: ContatarItem): Promise<void> {
-    const snapshotAtividades = await getDocs(
-      query(collection(this.firestore, 'atividades'),
-        where('contatoId', '==', item.contatoId))
-    );
-
-    const agora = new Date();
     let atividadeMaisProxima: any = null;
-    let dataMaisProxima: Date | null = null;
 
-    for (const docSnap of snapshotAtividades.docs) {
-      const d = docSnap.data();
-      if (!d['dataPrevista']) continue;
-      const dataPrevista = new Date(d['dataPrevista']);
-      const acoes: any[] = d['acoes'] || [];
-      if (acoes.length > 0 && acoes.every((a: any) => a.feito === true)) continue;
+    if (item.atividadeId) {
+      // Tarefa manual sem contato: carrega diretamente pelo ID
+      const snap = await getDoc(doc(this.firestore, 'atividades', item.atividadeId));
+      if (snap.exists()) atividadeMaisProxima = { id: snap.id, ...snap.data() };
+    } else {
+      const snapshotAtividades = await getDocs(
+        query(collection(this.firestore, 'atividades'),
+          where('contatoId', '==', item.contatoId))
+      );
 
-      if (!dataMaisProxima || Math.abs(dataPrevista.getTime() - agora.getTime()) < Math.abs(dataMaisProxima.getTime() - agora.getTime())) {
-        dataMaisProxima = dataPrevista;
-        atividadeMaisProxima = { id: docSnap.id, ...d };
+      const agora = new Date();
+      let dataMaisProxima: Date | null = null;
+
+      for (const docSnap of snapshotAtividades.docs) {
+        const d = docSnap.data();
+        if (!d['dataPrevista']) continue;
+        const dataPrevista = new Date(d['dataPrevista']);
+        const acoes: any[] = d['acoes'] || [];
+        if (acoes.length > 0 && acoes.every((a: any) => a.feito === true)) continue;
+
+        if (!dataMaisProxima || Math.abs(dataPrevista.getTime() - agora.getTime()) < Math.abs(dataMaisProxima.getTime() - agora.getTime())) {
+          dataMaisProxima = dataPrevista;
+          atividadeMaisProxima = { id: docSnap.id, ...d };
+        }
       }
     }
 
-    const snapshotContato = await getDocs(
+    const snapshotContato = item.contatoId ? await getDocs(
       query(collection(this.firestore, 'contatos'), where('__name__', '==', item.contatoId))
-    );
-    const contato = snapshotContato.docs[0]?.data() || {};
+    ) : null;
+    const contato = snapshotContato?.docs[0]?.data() || {};
 
     this.dialog.open(ModalMessageComponent, {
       width: '500px',

@@ -173,7 +173,7 @@
           <div class="contatar-col-header contatar-breve">
             <mat-icon>date_range</mat-icon>
             <span class="col-num">{{ listaSemana.length }}</span>
-            <span class="col-label">Esta semana</span>
+            <span class="col-label">Próximos dias</span>
           </div>
           <div class="col-items" [class.col-items--expanded]="isColunaExpanded('semana')">
             <ng-container *ngFor="let item of listaSemana; let i = index">
@@ -196,7 +196,7 @@
           <div class="contatar-col-header contatar-futuro">
             <mat-icon>event_note</mat-icon>
             <span class="col-num">{{ listaProximos.length }}</span>
-            <span class="col-label">Próximos 30 dias</span>
+            <span class="col-label">Próximas semanas</span>
           </div>
           <div class="col-items" [class.col-items--expanded]="isColunaExpanded('proximos')">
             <ng-container *ngFor="let item of listaProximos; let i = index">
