@@ -70,6 +70,13 @@ table {
   vertical-align: middle;
 }
 
+.nome-link {
+  color: #1e88e5;
+  cursor: pointer;
+  font-weight: 600;
+  &:hover { text-decoration: underline; }
+}
+
 .truncate-cell {
   white-space: nowrap;
   overflow: hidden;
@@ -292,6 +299,12 @@ table {
 
 .sem-atividade {
   color: #bdbdbd;
+}
+
+.botoes-acao {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .filtros-bar {

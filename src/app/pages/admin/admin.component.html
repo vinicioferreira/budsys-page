@@ -26,7 +26,10 @@
         </mat-form-field>
       </div>
 
-      <app-button textButton="Novo Cliente" icon="add" (click)="abrirModalNovoCliente()"></app-button>
+      <div class="botoes-acao">
+        <app-button textButton="Importar" icon="upload_file" (click)="irParaImportacao()"></app-button>
+        <app-button textButton="Novo Cliente" icon="add" (click)="abrirModalNovoCliente()"></app-button>
+      </div>
     </div>
   </div>
 
@@ -102,7 +105,9 @@
 
       <ng-container matColumnDef="nome">
         <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-        <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.nome }}</td>
+        <td class="td-table" mat-cell *matCellDef="let cliente">
+          <span class="nome-link" (click)="abrirPerfil(cliente)">{{ cliente.nome }}</span>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="email">
@@ -126,7 +131,7 @@
       </ng-container>
 
       <ng-container matColumnDef="canal">
-        <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Canal</th>
+        <th class="th-table" mat-header-cell *matHeaderCellDef mat-sort-header>Cadência</th>
         <td class="td-table" mat-cell *matCellDef="let cliente">{{ cliente.canal }}</td>
       </ng-container>
 

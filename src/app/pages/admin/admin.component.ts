@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ContatoService } from '../../services/contato.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -45,7 +46,8 @@ export class AdminComponent {
     private contatoService: ContatoService,
     private cadenciaService: CadenciaService,
     private agendaService: AgendaService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -230,6 +232,14 @@ export class AdminComponent {
         }
       }
     });
+  }
+
+  abrirPerfil(cliente: any): void {
+    this.router.navigate(['/admin', cliente.id]);
+  }
+
+  irParaImportacao(): void {
+    this.router.navigate(['/admin-importar']);
   }
 
   async excluirCliente(cliente: any): Promise<void> {

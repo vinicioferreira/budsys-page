@@ -1,0 +1,89 @@
+<app-menu></app-menu>
+
+<div class="importar main-content">
+
+  <div class="importar-header">
+    <button class="btn-voltar" (click)="voltar()">
+      <mat-icon>arrow_back</mat-icon> Voltar
+    </button>
+    <h2>Importar Leads</h2>
+  </div>
+
+  <!-- Upload -->
+  <div class="card" *ngIf="!leads.length">
+    <div class="card-titulo">Selecione o arquivo</div>
+    <p class="instrucao">Suporta <strong>Excel (.xlsx)</strong> e <strong>CSV</strong> direto da lista CNAE.</p>
+    <div class="upload-area" (click)="fileInput.click()">
+      <mat-icon>upload_file</mat-icon>
+      <span>Clique para selecionar o arquivo</span>
+    </div>
+    <input #fileInput type="file" accept=".xlsx,.xls,.csv" (change)="onFileChange($event)" style="display:none">
+  </div>
+
+  <!-- Prévia -->
+  <ng-container *ngIf="leads.length">
+
+    <div class="card config-card">
+      <div class="config-linha">
+        <span><strong>{{ leads.length }}</strong> leads encontrados · <strong>{{ selecionados.length }}</strong> selecionados · <strong>{{ leads.length - selecionados.length }}</strong> duplicatas</span>
+
+        <mat-form-field appearance="outline" class="cadencia-field">
+          <mat-label>Cadência (opcional)</mat-label>
+          <mat-select [(ngModel)]="cadenciaSelecionada">
+            <mat-option value="">Sem cadência</mat-option>
+            <mat-option *ngFor="let c of cadencias" [value]="c.id">{{ c.nome }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <app-button textButton="Importar selecionados" icon="download" [disabled]="importando || !selecionados.length" (click)="importar()"></app-button>
+        <app-button variant="outline" textButton="Novo arquivo" icon="upload_file" (click)="leads = []"></app-button>
+      </div>
+    </div>
+
+    <div class="card tabela-card">
+      <table class="tabela-preview">
+        <thead>
+          <tr>
+            <th><input type="checkbox" (change)="toggleTodos($event)"></th>
+            <th>Empresa</th>
+            <th>Nome / Cargo</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Cidade / UF</th>
+            <th>Porte</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lead of leads" [class.duplicata]="lead.duplicata">
+            <td><input type="checkbox" [(ngModel)]="lead.selecionado" [disabled]="lead.duplicata"></td>
+            <td>
+              <div class="empresa-nome">{{ lead.empresa }}</div>
+              <div class="empresa-cnpj">{{ lead.cnpj }}</div>
+            </td>
+            <td>
+              <div>{{ lead.nome || '—' }}</div>
+              <div class="sub">{{ lead.cargo }}</div>
+              <div class="sub" *ngIf="lead.faixaEtaria">{{ lead.faixaEtaria }}</div>
+            </td>
+            <td>{{ lead.telefone || '—' }}</td>
+            <td class="truncate">{{ lead.email || '—' }}</td>
+            <td>{{ lead.cidade }}<span *ngIf="lead.uf"> · {{ lead.uf }}</span></td>
+            <td>{{ lead.porte || '—' }}</td>
+            <td>
+              <span class="tag tag--duplicata" *ngIf="lead.duplicata">Já existe</span>
+              <span class="tag tag--novo" *ngIf="!lead.duplicata">Novo</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </ng-container>
+
+  <div class="importando" *ngIf="importando">
+    <mat-icon>hourglass_empty</mat-icon>
+    Importando... {{ importadosCount }} leads processados
+  </div>
+
+</div>

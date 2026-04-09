@@ -301,6 +301,12 @@
   border-radius: 8px;
   background: #fafafa;
   font-size: 13px;
+
+  &--clicavel {
+    cursor: pointer;
+    transition: background 0.15s;
+    &:hover { background: #eeeeee; }
+  }
 }
 
 .col-item-detalhe {
@@ -340,7 +346,6 @@
   margin-bottom: 32px;
 }
 
-.dist-item {}
 
 .dist-header {
   display: flex;

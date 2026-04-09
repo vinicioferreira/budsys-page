@@ -132,7 +132,7 @@
           </div>
           <div class="col-items" [class.col-items--expanded]="isColunaExpanded('atrasado')">
             <ng-container *ngFor="let item of listaAtrasados; let i = index">
-              <div class="col-item" *ngIf="isColunaExpanded('atrasado') || i < 3">
+              <div class="col-item col-item--clicavel" *ngIf="isColunaExpanded('atrasado') || i < 3" (click)="abrirModalContato(item)">
                 <span class="col-item-detalhe">{{ item.labelData }}</span>
                 <span class="col-item-nome">{{ item.nome }}</span>
                 <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
@@ -155,7 +155,7 @@
           </div>
           <div class="col-items" [class.col-items--expanded]="isColunaExpanded('hoje')">
             <ng-container *ngFor="let item of listaHoje; let i = index">
-              <div class="col-item" *ngIf="isColunaExpanded('hoje') || i < 3">
+              <div class="col-item col-item--clicavel" *ngIf="isColunaExpanded('hoje') || i < 3" (click)="abrirModalContato(item)">
                 <span class="col-item-nome">{{ item.nome }}</span>
                 <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
                 <span class="col-item-obs" *ngIf="item.observacao" [matTooltip]="item.observacao"><mat-icon>notes</mat-icon></span>
@@ -177,7 +177,7 @@
           </div>
           <div class="col-items" [class.col-items--expanded]="isColunaExpanded('semana')">
             <ng-container *ngFor="let item of listaSemana; let i = index">
-              <div class="col-item" *ngIf="isColunaExpanded('semana') || i < 3">
+              <div class="col-item col-item--clicavel" *ngIf="isColunaExpanded('semana') || i < 3" (click)="abrirModalContato(item)">
                 <span class="col-item-detalhe">{{ item.labelData }}</span>
                 <span class="col-item-nome">{{ item.nome }}</span>
                 <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>
@@ -200,7 +200,7 @@
           </div>
           <div class="col-items" [class.col-items--expanded]="isColunaExpanded('proximos')">
             <ng-container *ngFor="let item of listaProximos; let i = index">
-              <div class="col-item" *ngIf="isColunaExpanded('proximos') || i < 3">
+              <div class="col-item col-item--clicavel" *ngIf="isColunaExpanded('proximos') || i < 3" (click)="abrirModalContato(item)">
                 <span class="col-item-detalhe">{{ item.labelData }}</span>
                 <span class="col-item-nome">{{ item.nome }}</span>
                 <span class="col-item-empresa" *ngIf="item.empresa">{{ item.empresa }}</span>

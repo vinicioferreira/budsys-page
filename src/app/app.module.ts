@@ -44,6 +44,8 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { LeadPerfilComponent } from './pages/admin/lead-perfil/lead-perfil.component';
+import { ImportarLeadsComponent } from './pages/admin/importar-leads/importar-leads.component';
 import { ButtonComponent } from './component/button/button.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -65,7 +67,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     BlogPostComponent,
     BlogAdminComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    LeadPerfilComponent,
+    ImportarLeadsComponent
   ],
   imports: [
     BrowserModule,

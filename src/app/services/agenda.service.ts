@@ -40,6 +40,10 @@ export class AgendaService {
       const data = new Date(dataBase);
       data.setDate(data.getDate() + (etapa.dia ?? 1));
 
+      // Pula fim de semana
+      if (data.getDay() === 6) data.setDate(data.getDate() + 2); // sábado → segunda
+      if (data.getDay() === 0) data.setDate(data.getDate() + 1); // domingo → segunda
+
       const acoes = Array.isArray(etapa.acoes)
         ? etapa.acoes.map((acao: any) => ({
           canal: acao?.canal || '',

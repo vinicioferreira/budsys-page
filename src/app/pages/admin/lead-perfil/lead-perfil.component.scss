@@ -1,0 +1,241 @@
+.perfil {
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.btn-voltar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #424242;
+  transition: background 0.15s;
+
+  &:hover { background: #f5f5f5; }
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+.perfil-titulo {
+  flex: 1;
+
+  h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: #212121;
+  }
+
+  .perfil-empresa {
+    font-size: 14px;
+    color: #757575;
+  }
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.perfil-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 20px;
+
+  &--timeline { padding: 20px 24px; }
+}
+
+.card-titulo {
+  font-size: 13px;
+  font-weight: 700;
+  color: #9e9e9e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+.dado-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 14px;
+  color: #424242;
+
+  &:last-child { border-bottom: none; }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #bdbdbd;
+  }
+}
+
+// Timeline
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 24px;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    bottom: 0;
+    width: 2px;
+    background: #e0e0e0;
+  }
+
+  &:last-child::before { display: none; }
+
+  &--feita .timeline-icon { background: #e8f5e9; color: #43a047; }
+  &--atrasada .timeline-icon { background: #ffebee; color: #e53935; }
+  &--futura .timeline-icon { background: #e3f2fd; color: #1e88e5; }
+}
+
+.timeline-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+.timeline-conteudo {
+  flex: 1;
+  padding-top: 8px;
+}
+
+.timeline-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+
+  strong { font-size: 14px; color: #212121; }
+}
+
+.timeline-data {
+  font-size: 12px;
+  color: #9e9e9e;
+  margin-left: auto;
+}
+
+.timeline-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+
+  &--feita    { background: #e8f5e9; color: #43a047; }
+  &--atrasada { background: #ffebee; color: #e53935; }
+  &--futura   { background: #e3f2fd; color: #1e88e5; }
+}
+
+.timeline-acoes {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #616161;
+}
+
+.acao-label {
+  font-weight: 600;
+  color: #424242;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.acao-mensagem {
+  color: #757575;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.acao-feita-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #43a047;
+  flex-shrink: 0;
+}
+
+.timeline-anotacoes {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.anotacao-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  color: #757575;
+  background: #fafafa;
+  border-radius: 6px;
+  padding: 6px 8px;
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; color: #bdbdbd; flex-shrink: 0; margin-top: 1px; }
+}
+
+.anotacao-data {
+  margin-left: auto;
+  white-space: nowrap;
+  color: #bdbdbd;
+  font-size: 11px;
+}
+
+.sem-dados {
+  color: #9e9e9e;
+  font-size: 14px;
+  text-align: center;
+  padding: 24px 0;
+}

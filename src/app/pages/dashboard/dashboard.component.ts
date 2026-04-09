@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Firestore, collection, getDocs, query, where, Timestamp } from '@angular/fire/firestore';
+import { MatDialog } from '@angular/material/dialog';
 import { STATUS_COMERCIAL, inferirFasePorStatus } from '../../shared/status-comercial';
+import { ModalMessageComponent } from '../agenda/modal-message/modal-message.component';
 
 interface EtapaFunil {
   label: string;
@@ -24,6 +26,7 @@ interface FiltroPeriodo {
 }
 
 interface ContatarItem {
+  contatoId: string;
   nome: string;
   empresa: string;
   data: Date;
@@ -78,7 +81,7 @@ export class DashboardComponent implements OnInit {
   dataFim!: Date;
   dataFimMin!: Date; // nunca menor que dataInicio
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.aplicarPreset('mes_atual');
@@ -282,7 +285,7 @@ export class DashboardComponent implements OnInit {
         const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
         if (diff > 30) continue;
 
-        itens.push({ contatoId: id, data: melhorData, observacao });
+        itens.push({ contatoId: id, data: melhorData, observacao } as any);
       }
 
       itens.sort((a, b) => a.data.getTime() - b.data.getTime());
@@ -298,6 +301,7 @@ export class DashboardComponent implements OnInit {
         const diff = Math.round((alvo.getTime() - hoje.getTime()) / 86400000);
 
         const entry: ContatarItem = {
+          contatoId: item.contatoId,
           nome:      contato['nome']    || '—',
           empresa:   contato['empresa'] || '',
           data:      item.data,
@@ -327,6 +331,57 @@ export class DashboardComponent implements OnInit {
     } catch (error) {
       console.error('Erro ao carregar contatarEm:', error);
     }
+  }
+
+  async abrirModalContato(item: ContatarItem): Promise<void> {
+    const snapshotAtividades = await getDocs(
+      query(collection(this.firestore, 'atividades'),
+        where('contatoId', '==', item.contatoId))
+    );
+
+    const agora = new Date();
+    let atividadeMaisProxima: any = null;
+    let dataMaisProxima: Date | null = null;
+
+    for (const docSnap of snapshotAtividades.docs) {
+      const d = docSnap.data();
+      if (!d['dataPrevista']) continue;
+      const dataPrevista = new Date(d['dataPrevista']);
+      const acoes: any[] = d['acoes'] || [];
+      if (acoes.length > 0 && acoes.every((a: any) => a.feito === true)) continue;
+
+      if (!dataMaisProxima || Math.abs(dataPrevista.getTime() - agora.getTime()) < Math.abs(dataMaisProxima.getTime() - agora.getTime())) {
+        dataMaisProxima = dataPrevista;
+        atividadeMaisProxima = { id: docSnap.id, ...d };
+      }
+    }
+
+    const snapshotContato = await getDocs(
+      query(collection(this.firestore, 'contatos'), where('__name__', '==', item.contatoId))
+    );
+    const contato = snapshotContato.docs[0]?.data() || {};
+
+    this.dialog.open(ModalMessageComponent, {
+      width: '500px',
+      height: '850px',
+      data: {
+        id: atividadeMaisProxima?.id || null,
+        contatoId: item.contatoId,
+        contatoNome: item.nome,
+        empresa: item.empresa,
+        contatoTelefone: contato['telefone'] || '',
+        contatoEmail: contato['email'] || '',
+        anotacao: atividadeMaisProxima?.anotacao || '',
+        anotacaoLog: atividadeMaisProxima?.anotacaoLog || [],
+        status: contato['status'] || '',
+        dataPrevista: atividadeMaisProxima?.dataPrevista || '',
+        acoes: atividadeMaisProxima?.acoes || [],
+        canal: atividadeMaisProxima?.acoes?.[0]?.canal || '',
+        mensagem: atividadeMaisProxima?.acoes?.[0]?.mensagem || '',
+      }
+    }).afterClosed().subscribe(reload => {
+      if (reload) this.carregarContatarEm();
+    });
   }
 
   iconeBg(color: string): string {

@@ -8,6 +8,14 @@ mat-dialog-content {
   gap: 12px;
 }
 
+.row-dois {
+  display: flex;
+  gap: 12px;
+
+  .full-width { flex: 1; }
+  .uf-field { width: 80px; flex-shrink: 0; }
+}
+
 .contatar-em-section {
   display: flex;
   flex-direction: column;

@@ -1,0 +1,107 @@
+<app-menu></app-menu>
+
+<div class="perfil main-content" *ngIf="!carregando && lead">
+
+  <!-- Cabeçalho -->
+  <div class="perfil-header">
+    <button class="btn-voltar" (click)="voltar()">
+      <mat-icon>arrow_back</mat-icon> Voltar
+    </button>
+    <div class="perfil-titulo">
+      <h2>{{ lead.nome }}</h2>
+      <span class="perfil-empresa">{{ lead.empresa }}</span>
+    </div>
+    <span class="status-badge" [style.background]="getStatusColor(lead.status) + '22'" [style.color]="getStatusColor(lead.status)">
+      {{ getStatusLabel(lead.status) }}
+    </span>
+  </div>
+
+  <div class="perfil-grid">
+
+    <!-- Dados do lead -->
+    <div class="card">
+      <div class="card-titulo">Dados do contato</div>
+      <div class="dado-row">
+        <mat-icon>person</mat-icon>
+        <span>{{ lead.nome || '—' }}</span>
+      </div>
+      <div class="dado-row">
+        <mat-icon>business</mat-icon>
+        <span>{{ lead.empresa || '—' }}</span>
+      </div>
+      <div class="dado-row" *ngIf="lead.cnpj">
+        <mat-icon>badge</mat-icon>
+        <span>{{ lead.cnpj }}</span>
+      </div>
+      <div class="dado-row">
+        <mat-icon>phone</mat-icon>
+        <span>{{ lead.telefone || '—' }}</span>
+      </div>
+      <div class="dado-row">
+        <mat-icon>email</mat-icon>
+        <span>{{ lead.email || '—' }}</span>
+      </div>
+      <div class="dado-row">
+        <mat-icon>place</mat-icon>
+        <span>{{ lead.cidade || '—' }}</span>
+      </div>
+      <div class="dado-row">
+        <mat-icon>route</mat-icon>
+        <span>{{ lead.canal || '—' }}</span>
+      </div>
+    </div>
+
+    <!-- Linha do tempo -->
+    <div class="card card--timeline">
+      <div class="card-titulo">Linha do tempo</div>
+
+      <div class="timeline" *ngIf="atividades.length; else semAtividades">
+        <div class="timeline-item"
+          *ngFor="let atv of atividades"
+          [class.timeline-item--feita]="todasFeitas(atv)"
+          [class.timeline-item--atrasada]="isPassada(atv.dataPrevista) && !todasFeitas(atv)"
+          [class.timeline-item--futura]="isFutura(atv.dataPrevista)">
+
+          <div class="timeline-icon">
+            <mat-icon>{{ getCanalIcon(atv.acoes?.[0]?.canal || atv.canal) }}</mat-icon>
+          </div>
+
+          <div class="timeline-conteudo">
+            <div class="timeline-topo">
+              <strong>{{ getCanalLabel(atv.acoes?.[0]?.canal || atv.canal) }}</strong>
+              <span class="timeline-data">{{ formatarData(atv.dataPrevista) }}</span>
+              <span class="timeline-tag timeline-tag--feita" *ngIf="todasFeitas(atv)">Concluída</span>
+              <span class="timeline-tag timeline-tag--atrasada" *ngIf="isPassada(atv.dataPrevista) && !todasFeitas(atv)">Atrasada</span>
+              <span class="timeline-tag timeline-tag--futura" *ngIf="isFutura(atv.dataPrevista) && !todasFeitas(atv)">Pendente</span>
+            </div>
+
+            <!-- Ações -->
+            <div class="timeline-acoes" *ngFor="let acao of atv.acoes">
+              <span class="acao-label">{{ getCanalLabel(acao.canal) }}</span>
+              <span class="acao-mensagem">{{ acao.mensagem }}</span>
+              <mat-icon class="acao-feita-icon" *ngIf="acao.feito">check_circle</mat-icon>
+            </div>
+
+            <!-- Anotações -->
+            <div class="timeline-anotacoes" *ngIf="atv.anotacaoLog?.length">
+              <div class="anotacao-entry" *ngFor="let nota of atv.anotacaoLog">
+                <mat-icon>notes</mat-icon>
+                <span>{{ nota.texto }}</span>
+                <span class="anotacao-data">{{ formatarData(nota.criadoEm) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #semAtividades>
+        <p class="sem-dados">Nenhuma atividade registrada ainda.</p>
+      </ng-template>
+    </div>
+
+  </div>
+</div>
+
+<div class="perfil main-content" *ngIf="carregando">
+  <p>Carregando...</p>
+</div>
