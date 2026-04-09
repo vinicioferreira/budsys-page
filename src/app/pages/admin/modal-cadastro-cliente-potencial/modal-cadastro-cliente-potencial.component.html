@@ -39,9 +39,10 @@
     </mat-form-field>
   </div>
 
-  <mat-form-field appearance="fill" class="full-width" *ngIf="listaCanais.length > 0">
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>Canal</mat-label>
     <mat-select [(ngModel)]="cliente.canal">
+      <mat-option value="">Selecione</mat-option>
       <mat-option *ngFor="let c of listaCanais" [value]="c.nome || ''">
         {{ c.nome || '(Sem nome)' }}
       </mat-option>
@@ -66,7 +67,8 @@
       <button type="button" class="atalho-btn" (click)="definirData(3)">+3 meses</button>
       <button type="button" class="atalho-btn" (click)="definirData(6)">+6 meses</button>
       <button type="button" class="atalho-btn" (click)="definirData(12)">+1 ano</button>
-      <button type="button" class="atalho-btn atalho-limpar" *ngIf="cliente.contatarEm" (click)="cliente.contatarEm = null">Limpar</button>
+      <button type="button" class="atalho-btn atalho-limpar" *ngIf="cliente.contatarEm"
+        (click)="cliente.contatarEm = null">Limpar</button>
     </div>
 
     <mat-form-field appearance="fill" class="full-width" *ngIf="cliente.contatarEm">
