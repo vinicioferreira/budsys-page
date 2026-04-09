@@ -55,6 +55,11 @@ export class AdminComponent {
 
     this.carregarContatos();
 
+    // Sempre que atividades mudam, atualiza a coluna Próx. atividade
+    this.agendaService.escutarAtividades().subscribe(() => {
+      this.atualizarProximasAtividades();
+    });
+
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       const { texto, status } = JSON.parse(filter || '{"texto":"","status":""}');
       const matchStatus = !status || data.status === status;
@@ -116,7 +121,6 @@ export class AdminComponent {
       new Date()
     );
 
-    await this.atualizarProximasAtividades();
     alert(`✅ Cadência vinculada e atividades criadas na agenda para o canal "${cliente.canal}"`);
   }
 

@@ -10,8 +10,10 @@ import {
   query,
   getDocs,
   deleteDoc,
-  arrayUnion
+  arrayUnion,
+  onSnapshot
 } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { calcularFaseAtingida } from '../shared/status-comercial';
 
 @Injectable({
@@ -63,6 +65,17 @@ export class AgendaService {
 
       await addDoc(atividadesRef, atividade);
     }
+  }
+
+  escutarAtividades(): Observable<void> {
+    return new Observable(observer => {
+      const unsubscribe = onSnapshot(
+        collection(this.firestore, 'atividades'),
+        () => observer.next(),
+        error => observer.error(error)
+      );
+      return () => unsubscribe();
+    });
   }
 
   async criarAtividadeManual(
