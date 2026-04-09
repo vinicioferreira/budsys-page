@@ -241,5 +241,27 @@
       </div>
     </div>
 
+    <!-- Motivos de perda -->
+    <ng-container *ngIf="motivosPerda.length">
+      <div class="section-title">Motivos de perda</div>
+
+      <div class="dist-card">
+        <div class="dist-item" *ngFor="let item of motivosPerda">
+          <div class="dist-header">
+            <span class="dist-dot" style="background: #757575"></span>
+            <span class="dist-label">{{ item.label }}</span>
+            <span class="dist-count">{{ item.count }}</span>
+            <span class="dist-pct">{{ item.percentual }}%</span>
+          </div>
+          <div class="dist-bar-bg">
+            <div class="dist-bar-fill"
+              [style.width.%]="item.percentual"
+              style="background: #757575">
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
   </ng-container>
 </div>

@@ -388,6 +388,24 @@ export class AgendaService {
     await Promise.all(pendentes.map(d => deleteDoc(d.ref)));
   }
 
+  async excluirAtividadesDeHojeEmDiantePorContato(contatoId: string): Promise<void> {
+    const amanha = new Date();
+    amanha.setHours(0, 0, 0, 0);
+    amanha.setDate(amanha.getDate() + 1);
+
+    const q = query(collection(this.firestore, 'atividades'), where('contatoId', '==', contatoId));
+    const snapshot = await getDocs(q);
+
+    const paraExcluir = snapshot.docs.filter(d => {
+      const dataPrevista = d.data()['dataPrevista'];
+      if (!dataPrevista) return false;
+      const data = new Date(dataPrevista);
+      return data >= amanha;
+    });
+
+    await Promise.all(paraExcluir.map(d => deleteDoc(d.ref)));
+  }
+
   async excluirTodasAtividadesPorContato(contatoId: string): Promise<void> {
     const atividadesRef = collection(this.firestore, 'atividades');
     const q = query(atividadesRef, where('contatoId', '==', contatoId));

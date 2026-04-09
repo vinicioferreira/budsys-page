@@ -60,6 +60,26 @@ export function inferirFasePorStatus(status: string): string {
   return STATUS_PARA_FASE[status] || '';
 }
 
+// ─── Motivos de perda ────────────────────────────────────────────────────────
+export interface MotivoPerdido {
+  label: string;
+  value: string;
+}
+
+export const MOTIVOS_PERDIDO: MotivoPerdido[] = [
+  { label: 'Já tem solução',            value: 'ja_tem_solucao' },
+  { label: 'Preço / sem verba',         value: 'preco_sem_verba' },
+  { label: 'Não é o momento',           value: 'nao_e_o_momento' },
+  { label: 'Escolheu concorrente',      value: 'escolheu_concorrente' },
+  { label: 'Sem interesse / não respondeu', value: 'sem_interesse' },
+  { label: 'Não era o decisor',         value: 'nao_era_decisor' },
+  { label: 'Outro',                     value: 'outro' },
+];
+
+export function getMotivoPerdidoLabel(value: string): string {
+  return MOTIVOS_PERDIDO.find(m => m.value === value)?.label || value;
+}
+
 export function getStatusCor(value: string): { primary: string; secondary: string } {
   const s = STATUS_COMERCIAL.find(st => st.value === value);
   return s

@@ -46,31 +46,44 @@
       <ng-container matColumnDef="status">
         <th class="th-table" mat-header-cell *matHeaderCellDef>Status</th>
         <td class="td-table status-cell" mat-cell *matCellDef="let cliente">
-          <mat-select
-            class="status-select"
-            [(value)]="cliente.status"
-            (selectionChange)="atualizarStatus(cliente)">
+          <div class="status-cell-inner">
+            <mat-select
+              class="status-select"
+              [(value)]="cliente.status"
+              (selectionChange)="atualizarStatus(cliente)">
 
-            <mat-select-trigger>
-              <span class="status-badge">
-                <span
-                  class="status-dot"
-                  [style.background]="getStatusColor(cliente.status)">
+              <mat-select-trigger>
+                <span class="status-badge">
+                  <span
+                    class="status-dot"
+                    [style.background]="getStatusColor(cliente.status)">
+                  </span>
+                  {{ getStatusLabel(cliente.status) }}
                 </span>
-                {{ getStatusLabel(cliente.status) }}
-              </span>
-            </mat-select-trigger>
+              </mat-select-trigger>
 
-            <mat-option *ngFor="let status of statusList" [value]="status.value">
-              <span class="status-option">
-                <span
-                  class="status-dot"
-                  [style.background]="status.color">
+              <mat-option *ngFor="let status of statusList" [value]="status.value">
+                <span class="status-option">
+                  <span
+                    class="status-dot"
+                    [style.background]="status.color">
+                  </span>
+                  {{ status.label }}
                 </span>
-                {{ status.label }}
-              </span>
-            </mat-option>
-          </mat-select>
+              </mat-option>
+            </mat-select>
+
+            <mat-select
+              *ngIf="cliente.status === 'perdido'"
+              class="status-select motivo-select"
+              [(value)]="cliente.motivoPerdido"
+              (selectionChange)="atualizarMotivoPerdido(cliente)"
+              placeholder="Motivo...">
+              <mat-option *ngFor="let m of motivosPerdido" [value]="m.value">
+                {{ m.label }}
+              </mat-option>
+            </mat-select>
+          </div>
         </td>
       </ng-container>
 

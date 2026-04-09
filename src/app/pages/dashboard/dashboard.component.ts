@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Firestore, collection, getDocs, query, where, Timestamp, doc, getDoc } from '@angular/fire/firestore';
 import { MatDialog } from '@angular/material/dialog';
-import { STATUS_COMERCIAL, inferirFasePorStatus } from '../../shared/status-comercial';
+import { STATUS_COMERCIAL, MOTIVOS_PERDIDO, inferirFasePorStatus, getMotivoPerdidoLabel } from '../../shared/status-comercial';
 import { ModalMessageComponent } from '../agenda/modal-message/modal-message.component';
 
 interface EtapaFunil {
@@ -50,6 +50,7 @@ export class DashboardComponent implements OnInit {
 
   etapasFunil: EtapaFunil[] = [];
   distribuicao: DistribuicaoItem[] = [];
+  motivosPerda: { label: string; count: number; percentual: number }[] = [];
   carregando = true;
 
   listaAtrasados: ContatarItem[] = [];
@@ -201,6 +202,23 @@ export class DashboardComponent implements OnInit {
           percentual: this.total > 0 ? Math.round(((agrupado[s.value] || 0) / this.total) * 100) : 0
         }))
         .filter(s => s.count > 0)
+        .sort((a, b) => b.count - a.count);
+
+      // Motivos de perda
+      const agrupMotivos: Record<string, number> = {};
+      for (const docSnap of snapshot.docs) {
+        const d = docSnap.data();
+        if (d['status'] === 'perdido' && d['motivoPerdido']) {
+          const m = d['motivoPerdido'] as string;
+          agrupMotivos[m] = (agrupMotivos[m] || 0) + 1;
+        }
+      }
+      this.motivosPerda = Object.entries(agrupMotivos)
+        .map(([value, count]) => ({
+          label: getMotivoPerdidoLabel(value),
+          count,
+          percentual: this.perdidos > 0 ? Math.round((count / this.perdidos) * 100) : 0
+        }))
         .sort((a, b) => b.count - a.count);
 
     } catch (error) {

@@ -8,7 +8,7 @@ import { CadenciaService } from '../../services/cadencia.service';
 import { AgendaService } from '../../services/agenda.service';
 import { ModalCadastroClientePotencialComponent } from '../../pages/admin/modal-cadastro-cliente-potencial/modal-cadastro-cliente-potencial.component';
 import { MatDialog } from '@angular/material/dialog';
-import { STATUS_COMERCIAL, getStatusColor, getStatusLabel } from '../../shared/status-comercial';
+import { STATUS_COMERCIAL, MOTIVOS_PERDIDO, getStatusColor, getStatusLabel } from '../../shared/status-comercial';
 
 @Component({
   selector: 'app-admin',
@@ -35,6 +35,7 @@ export class AdminComponent {
   listaCanais: { nome: string; cadenciaId: string }[] = [];
 
   readonly statusList = STATUS_COMERCIAL;
+  readonly motivosPerdido = MOTIVOS_PERDIDO;
 
   filtroTexto = '';
   filtroStatus = '';
@@ -263,8 +264,11 @@ export class AdminComponent {
       await this.contatoService.atualizarStatusComFase(cliente.id, cliente.status);
 
       if (cliente.status === 'perdido') {
-        await this.agendaService.excluirTodasAtividadesPorContato(cliente.id);
+        cliente.motivoPerdido = cliente.motivoPerdido || null;
+        await this.agendaService.excluirAtividadesDeHojeEmDiantePorContato(cliente.id);
       } else {
+        cliente.motivoPerdido = null;
+        await this.contatoService.atualizarContato(cliente.id, { motivoPerdido: null });
         await this.agendaService.atualizarStatusAtividadesPorContato(
           cliente.id,
           cliente.status
@@ -273,6 +277,14 @@ export class AdminComponent {
     } catch (error) {
       console.error('Erro ao atualizar status:', error);
       alert('Erro ao atualizar status.');
+    }
+  }
+
+  async atualizarMotivoPerdido(cliente: any) {
+    try {
+      await this.contatoService.atualizarContato(cliente.id, { motivoPerdido: cliente.motivoPerdido });
+    } catch (error) {
+      console.error('Erro ao atualizar motivo:', error);
     }
   }
 }

@@ -156,6 +156,17 @@ table {
   padding-right: 12px;
 }
 
+.status-cell-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.motivo-select {
+  font-size: 11px !important;
+  opacity: 0.75;
+}
+
 .status-select {
   width: 100%;
   font-size: 14px;
