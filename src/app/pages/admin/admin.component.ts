@@ -204,13 +204,31 @@ export class AdminComponent {
   }
 
   editarCliente(cliente: any): void {
+    const canalAnterior = cliente.canal || '';
+
     const dialogRef = this.dialog.open(ModalCadastroClientePotencialComponent, {
       width: '600px',
       data: cliente
     });
 
-    dialogRef.afterClosed().subscribe((contatoId: string | null) => {
+    dialogRef.afterClosed().subscribe(async (contatoId: string | null) => {
       if (!contatoId) return;
+
+      const atualizado = await this.contatoService.buscarContatoPorId(contatoId);
+      if (!atualizado) return;
+
+      const canalNovo = atualizado.canal || '';
+      if (canalNovo && canalNovo !== canalAnterior) {
+        const confirmar = confirm(
+          `O canal foi alterado de "${canalAnterior || '—'}" para "${canalNovo}".\n\n` +
+          `Deseja substituir as atividades pendentes pela nova cadência?\n` +
+          `(As atividades já concluídas serão mantidas.)`
+        );
+        if (confirmar) {
+          await this.agendaService.excluirAtividadesPendentesPorContato(contatoId);
+          await this.vincularCanal(atualizado);
+        }
+      }
     });
   }
 

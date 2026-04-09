@@ -374,6 +374,16 @@ export class AgendaService {
     }
   }
 
+  async excluirAtividadesPendentesPorContato(contatoId: string): Promise<void> {
+    const q = query(collection(this.firestore, 'atividades'), where('contatoId', '==', contatoId));
+    const snapshot = await getDocs(q);
+    const pendentes = snapshot.docs.filter(d => {
+      const acoes: any[] = d.data()['acoes'] || [];
+      return !(acoes.length > 0 && acoes.every((a: any) => a.feito === true));
+    });
+    await Promise.all(pendentes.map(d => deleteDoc(d.ref)));
+  }
+
   async excluirTodasAtividadesPorContato(contatoId: string): Promise<void> {
     const atividadesRef = collection(this.firestore, 'atividades');
     const q = query(atividadesRef, where('contatoId', '==', contatoId));
