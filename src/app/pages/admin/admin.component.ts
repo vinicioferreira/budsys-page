@@ -87,7 +87,7 @@ export class AdminComponent {
   getStatusLabel(value: string): string { return getStatusLabel(value); }
   getStatusColor(value: string): string { return getStatusColor(value); }
 
-  vincularCanal(cliente: any) {
+  async vincularCanal(cliente: any): Promise<void> {
     if (!cliente.canal) {
       alert('⚠ Este cliente não tem canal definido!');
       return;
@@ -97,24 +97,35 @@ export class AdminComponent {
       c => c.nome.toLowerCase() === cliente.canal.toLowerCase()
     );
 
-    if (canalSelecionado) {
-      this.cadenciaService.getCadenciaById(canalSelecionado.cadenciaId).then(cadencia => {
-        if (cadencia) {
-          this.agendaService.gerarAtividadesDeCadencia(
-            cadencia,
-            cliente.id,
-            cliente.nome,
-            cliente.empresa || '',
-            new Date()
-          );
-          alert(`✅ Cadência vinculada e atividades criadas na agenda para o canal "${cliente.canal}"`);
-        } else {
-          alert('⚠ Cadência não encontrada no banco!');
-        }
-      });
-    } else {
+    if (!canalSelecionado) {
       alert(`⚠ Nenhuma cadência vinculada ao canal: "${cliente.canal}"`);
+      return;
     }
+
+    const cadencia = await this.cadenciaService.getCadenciaById(canalSelecionado.cadenciaId);
+    if (!cadencia) {
+      alert('⚠ Cadência não encontrada no banco!');
+      return;
+    }
+
+    await this.agendaService.gerarAtividadesDeCadencia(
+      cadencia,
+      cliente.id,
+      cliente.nome,
+      cliente.empresa || '',
+      new Date()
+    );
+
+    await this.atualizarProximasAtividades();
+    alert(`✅ Cadência vinculada e atividades criadas na agenda para o canal "${cliente.canal}"`);
+  }
+
+  async atualizarProximasAtividades(): Promise<void> {
+    const mapaAtividades = await this.agendaService.buscarProximasAtividadesPorContato();
+    this.dataSource.data = this.dataSource.data.map(cliente => ({
+      ...cliente,
+      proximaAtividade: mapaAtividades.get(cliente.id) || null
+    }));
   }
 
   carregarContatos(): void {
