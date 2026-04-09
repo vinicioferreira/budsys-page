@@ -10,7 +10,8 @@ import { getStatusColor, getStatusLabel } from '../../../shared/status-comercial
 })
 export class LeadPerfilComponent implements OnInit {
   lead: any = null;
-  atividades: any[] = [];
+  historico: any[] = [];
+  proximasAtividades: any[] = [];
   carregando = true;
 
   constructor(
@@ -34,9 +35,24 @@ export class LeadPerfilComponent implements OnInit {
         query(collection(this.firestore, 'atividades'), where('contatoId', '==', id))
       );
 
-      this.atividades = snap.docs
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+
+      const todas = snap.docs
         .map(d => ({ id: d.id, ...d.data() }))
         .sort((a: any, b: any) => new Date(a.dataPrevista).getTime() - new Date(b.dataPrevista).getTime());
+
+      this.historico = todas.filter((a: any) => {
+        const data = new Date(a.dataPrevista);
+        data.setHours(0, 0, 0, 0);
+        return data <= hoje;
+      }).reverse(); // mais recente primeiro no histórico
+
+      this.proximasAtividades = todas.filter((a: any) => {
+        const data = new Date(a.dataPrevista);
+        data.setHours(0, 0, 0, 0);
+        return data > hoje;
+      });
     } catch (e) {
       console.error(e);
     } finally {

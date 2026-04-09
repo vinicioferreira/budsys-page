@@ -53,14 +53,15 @@
 
     <!-- Linha do tempo -->
     <div class="card card--timeline">
-      <div class="card-titulo">Linha do tempo</div>
 
-      <div class="timeline" *ngIf="atividades.length; else semAtividades">
+      <!-- Histórico -->
+      <div class="card-titulo">Histórico</div>
+
+      <div class="timeline" *ngIf="historico.length; else semHistorico">
         <div class="timeline-item"
-          *ngFor="let atv of atividades"
+          *ngFor="let atv of historico"
           [class.timeline-item--feita]="todasFeitas(atv)"
-          [class.timeline-item--atrasada]="isPassada(atv.dataPrevista) && !todasFeitas(atv)"
-          [class.timeline-item--futura]="isFutura(atv.dataPrevista)">
+          [class.timeline-item--atrasada]="!todasFeitas(atv)">
 
           <div class="timeline-icon">
             <mat-icon>{{ getCanalIcon(atv.acoes?.[0]?.canal || atv.canal) }}</mat-icon>
@@ -71,15 +72,14 @@
               <strong>{{ getCanalLabel(atv.acoes?.[0]?.canal || atv.canal) }}</strong>
               <span class="timeline-data">{{ formatarData(atv.dataPrevista) }}</span>
               <span class="timeline-tag timeline-tag--feita" *ngIf="todasFeitas(atv)">Concluída</span>
-              <span class="timeline-tag timeline-tag--atrasada" *ngIf="isPassada(atv.dataPrevista) && !todasFeitas(atv)">Atrasada</span>
-              <span class="timeline-tag timeline-tag--futura" *ngIf="isFutura(atv.dataPrevista) && !todasFeitas(atv)">Pendente</span>
+              <span class="timeline-tag timeline-tag--atrasada" *ngIf="!todasFeitas(atv)">Não realizada</span>
             </div>
 
             <!-- Ações -->
             <div class="timeline-acoes" *ngFor="let acao of atv.acoes">
+              <mat-icon class="acao-feita-icon" *ngIf="acao.feito">check_circle</mat-icon>
               <span class="acao-label">{{ getCanalLabel(acao.canal) }}</span>
               <span class="acao-mensagem">{{ acao.mensagem }}</span>
-              <mat-icon class="acao-feita-icon" *ngIf="acao.feito">check_circle</mat-icon>
             </div>
 
             <!-- Anotações -->
@@ -94,9 +94,38 @@
         </div>
       </div>
 
-      <ng-template #semAtividades>
-        <p class="sem-dados">Nenhuma atividade registrada ainda.</p>
+      <ng-template #semHistorico>
+        <p class="sem-dados">Nenhum contato realizado ainda.</p>
       </ng-template>
+
+      <!-- Próximas atividades -->
+      <ng-container *ngIf="proximasAtividades.length">
+        <div class="card-titulo card-titulo--proximas">Próximas atividades</div>
+
+        <div class="timeline">
+          <div class="timeline-item timeline-item--futura"
+            *ngFor="let atv of proximasAtividades">
+
+            <div class="timeline-icon">
+              <mat-icon>{{ getCanalIcon(atv.acoes?.[0]?.canal || atv.canal) }}</mat-icon>
+            </div>
+
+            <div class="timeline-conteudo">
+              <div class="timeline-topo">
+                <strong>{{ getCanalLabel(atv.acoes?.[0]?.canal || atv.canal) }}</strong>
+                <span class="timeline-data">{{ formatarData(atv.dataPrevista) }}</span>
+                <span class="timeline-tag timeline-tag--futura">Pendente</span>
+              </div>
+
+              <div class="timeline-acoes" *ngFor="let acao of atv.acoes">
+                <span class="acao-label">{{ getCanalLabel(acao.canal) }}</span>
+                <span class="acao-mensagem">{{ acao.mensagem }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
     </div>
 
   </div>
