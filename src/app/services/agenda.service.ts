@@ -36,13 +36,15 @@ export class AgendaService {
 
     const atividadesRef = collection(this.firestore, 'atividades');
 
+    let offsetDias = 0; // acumula dias extras adicionados por pulos de fim de semana
+
     for (const etapa of cadencia.etapas) {
       const data = new Date(dataBase);
-      data.setDate(data.getDate() + (etapa.dia ?? 1));
+      data.setDate(data.getDate() + (etapa.dia ?? 1) + offsetDias);
 
-      // Pula fim de semana
-      if (data.getDay() === 6) data.setDate(data.getDate() + 2); // sábado → segunda
-      if (data.getDay() === 0) data.setDate(data.getDate() + 1); // domingo → segunda
+      // Pula fim de semana e acumula o deslocamento para as etapas seguintes
+      if (data.getDay() === 6) { data.setDate(data.getDate() + 2); offsetDias += 2; }
+      else if (data.getDay() === 0) { data.setDate(data.getDate() + 1); offsetDias += 1; }
 
       const acoes = Array.isArray(etapa.acoes)
         ? etapa.acoes.map((acao: any) => ({
