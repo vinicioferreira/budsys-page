@@ -155,11 +155,18 @@ export class AgendaService {
     }
   }
 
+  private pularFimDeSemana(data: Date): Date {
+    const d = new Date(data);
+    if (d.getDay() === 6) d.setDate(d.getDate() + 2); // sábado → segunda
+    if (d.getDay() === 0) d.setDate(d.getDate() + 1); // domingo → segunda
+    return d;
+  }
+
   async reagendarAtividade(id: string, novaData: Date, anotacao?: string): Promise<void> {
     const atividadeRef = doc(this.firestore, 'atividades', id);
 
     const updateData: any = {
-      dataPrevista: novaData.toISOString()
+      dataPrevista: this.pularFimDeSemana(novaData).toISOString()
     };
 
     if (anotacao?.trim()) {
@@ -212,7 +219,7 @@ export class AgendaService {
     const atividadeAtualRef = doc(this.firestore, 'atividades', atividadeId);
 
     const updateData: any = {
-      dataPrevista: novaData.toISOString()
+      dataPrevista: this.pularFimDeSemana(novaData).toISOString()
     };
 
     if (anotacao?.trim()) {
@@ -230,7 +237,7 @@ export class AgendaService {
       const dataPrevista = normalizarData(new Date(data['dataPrevista']));
 
       if (dataPrevista > dataAntiga) {
-        const novaDataFutura = new Date(dataPrevista.getTime() + diffMs);
+        const novaDataFutura = this.pularFimDeSemana(new Date(dataPrevista.getTime() + diffMs));
         const atividadeRef = doc(this.firestore, 'atividades', docSnap.id);
 
         await updateDoc(atividadeRef, {
