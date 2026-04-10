@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
 import {
   Firestore,
@@ -6,6 +6,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   orderBy,
 } from '@angular/fire/firestore';
@@ -37,7 +38,7 @@ import { STATUS_COMERCIAL, getStatusCor } from '../../shared/status-comercial';
   templateUrl: './agenda.component.html',
   styleUrls: ['./agenda.component.scss'],
 })
-export class AgendaComponent implements OnInit {
+export class AgendaComponent implements OnInit, OnDestroy {
   viewDate: Date = new Date();
   view: string = 'month';
   events: AgendaCalendarEvent[] = [];
@@ -55,6 +56,8 @@ export class AgendaComponent implements OnInit {
 
   readonly statusList = STATUS_COMERCIAL;
 
+  private unsubscribeAtividades?: () => void;
+
   constructor(
     private firestore: Firestore,
     public dialog: MatDialog,
@@ -63,13 +66,29 @@ export class AgendaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.carregarAtividades();
+    this.escutarAtividades();
     this.carregarContatos();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAtividades?.();
+  }
+
+  escutarAtividades(): void {
+    const atividadesRef = collection(this.firestore, 'atividades');
+    this.unsubscribeAtividades = onSnapshot(atividadesRef, async (snapshot) => {
+      await this.processarAtividades(snapshot.docs);
+    });
   }
 
   async carregarAtividades(): Promise<void> {
     const atividadesRef = collection(this.firestore, 'atividades');
     const snapshot = await getDocs(atividadesRef);
+    await this.processarAtividades(snapshot.docs);
+  }
+
+  private async processarAtividades(docs: any[]): Promise<void> {
+    const snapshot = { docs };
 
     const eventos: AgendaCalendarEvent[] = await Promise.all(
       snapshot.docs.map(async (docSnap) => {
