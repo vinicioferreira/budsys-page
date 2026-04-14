@@ -18,11 +18,11 @@ const routes: Routes = [
 
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  { path: 'admin/blog', component: BlogAdminComponent, canActivate: [AuthGuard] },
   { path: 'admin/:id', component: LeadPerfilComponent, canActivate: [AuthGuard] },
   { path: 'admin-importar', component: ImportarLeadsComponent, canActivate: [AuthGuard] },
   { path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard] },
   { path: 'cadencia', component: CadenciaComponent, canActivate: [AuthGuard] },
-  { path: 'admin/blog', component: BlogAdminComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
 
   { path: 'blog', component: BlogListComponent },
